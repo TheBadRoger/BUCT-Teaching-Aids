@@ -11,7 +11,7 @@
 
 ## 部署方法
 
-### **1. 安装Java** 
+### **1. 安装并配置Java** 
 
 选择 ***[Java 21](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html)*** 版本并进行下载安装。安装成功后，按如下方式编辑系统环境变量：
 
@@ -24,7 +24,7 @@
 完成后，启动命令行。输入命令```java --version```以验证是否安装成功
 
 ---
-### **2. 安装Maven**
+### **2. 安装并配置Maven**
 下载 ***[Maven](https://maven.apache.org/download.cgi)*** 最新版。直接解压到合适的目录下后，按如下方式配置环境变量：
 
 * 新建：MAVEN_HOME，值：【Maven解压路径】
@@ -34,7 +34,7 @@
 完成后，启动命令行。输入命令```mvn --version```以验证是否配置成功
 
 ---
-### **3.配置MySQL**
+### **3. 安装并配置MySQL**
 
 选择 ***[MySQL 8.0.44 Community](https://dev.mysql.com/downloads/installer/)*** 版本并进行下载安装。只需安装组件 ***MySQL Server*** 和 ***MySQL Shell***。为方便起见可以选择安装 ***MySQL Workbench***。
 
@@ -69,7 +69,7 @@ CREATE TABLE admin_users
   将```spring.datasource.url```的值改为```jdbc:mysql://localhost:3306/[数据库名称]?serverTimezone=UTC```
 
 ---
-### **4. 配置Nodejs和Vue**
+### **4. 安装并配置Nodejs和Vue**
 选择 ***[Nodejs 22.21.0](https://registry.npmmirror.com/binary.html?path=node/v22.21.0/)*** 版本并进行下载安装。注意安装过程中不要勾选“Automatically install the necessary tools”。安装完成后配置环境变量。配置过程相对复杂，在此不多赘述。可以参考[这篇文章](https://blog.csdn.net/AV_VA1/article/details/149789138)。
 
 配置完成后，启动命令行。输入命令```node --version```或```npm --version```以验证Nodejs是否安装成功。
