@@ -72,9 +72,11 @@ CREATE TABLE admin_users
 ### **4. 配置Nodejs和Vue**
 选择 ***[Nodejs 22.21.0](https://registry.npmmirror.com/binary.html?path=node/v22.21.0/)*** 版本并进行下载安装。注意安装过程中不要勾选“Automatically install the necessary tools”。安装完成后配置环境变量。配置过程相对复杂，在此不多赘述。可以参考[这篇文章](https://blog.csdn.net/AV_VA1/article/details/149789138)。
 
+完成后，启动命令行。输入命令```node --version```或```npm --version```以验证Nodejs是否安装成功。
+
 配置Nodejs完成后，打开命令行。输入```npm install -g @vue/cli```来安装Vue脚手架。
 
-完成后，启动命令行。输入命令```node --version```或```npm --version```以验证Nodejs是否安装成功；输入命令```vue --version```以验证Vue脚手架是否安装成功。
+输入命令```vue --version```以验证Vue脚手架是否安装成功。
 
 ---
 ### **5. 启动并测试项目**
