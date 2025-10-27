@@ -62,7 +62,7 @@ CREATE TABLE admin_users
 
 * 打开项目文件夹下的 ***\AdminWeb\src\main\resources\application.properties*** 文件
   
-  将```spring.datasource.username```的值改为```"root"```
+  将```spring.datasource.username```的值改为```root```（默认已是这个值）
 
   将```spring.datasource.password```的值改为刚刚设置的数据库密码
   
