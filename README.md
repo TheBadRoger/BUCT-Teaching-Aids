@@ -68,7 +68,7 @@ CREATE TABLE admin_users
   
   将```spring.datasource.url```的值改为```jdbc:mysql://localhost:3306/[数据库名称]?serverTimezone=UTC```
 
-> *本项目默认的数据库名称为 BUCTTA_DATABASE，如果不想修改项目的数据库，那么请在创建数据库的时候把数据库名称设置为 BUCTTA_DATABASE*
+> *本项目默认的数据库名称为 BUCTTA_DATABASE，如果不想修改```spring.datasource.url```，那么请在创建数据库的时候把数据库名称设置为 BUCTTA_DATABASE*
 
 ---
 ### **4. 安装并配置Nodejs和Vue**
