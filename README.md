@@ -19,7 +19,7 @@
 
 * 修改：Path，添加值：%JAVA_HOME%\bin,%JAVA_HOME%\jre\bin
 
-* 修改：ClassPath，值：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar; 
+* 新建：ClassPath，值：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar; 
   
 完成后，启动命令行。输入命令```java --version```以验证是否安装成功
 
