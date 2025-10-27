@@ -81,7 +81,7 @@ CREATE TABLE admin_users
 ---
 ### **5. 启动并测试项目**
    
-* 启动后端：打开命令行，进入\AdminWeb目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保存并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。
+* 启动后端：打开命令行，进入\AdminWeb目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保持并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。
 * 启动前端：打开命令行，进入\WebView\adminwebview目录，输入命令```npm run serve```，等到命令行显示前端的本机访问地址，说明启动成功。启动成功后不要关闭命令行窗口。
 * 测试项目：访问前端命令行所给出的链接（默认为 ***localhost:8080*** 或 ***127.0.0.1:8080*** ），即可访问前端。在前端进行的登录，注册等操作，均会在后端产生相应（此时可以打开后端命令行查看）。
 
@@ -90,4 +90,4 @@ CREATE TABLE admin_users
 
 * 后端默认跑在8081端口。如果想要更改端口，需要打开 ***\AdminWeb\src\main\resources\application.properties*** 文件，将```server.port```的值改为想要开放的端口即可。
 * 后端端口被更改后，同样需要在前端更改连接到后端的端口。打开 ***\WebView\adminwebview\vue.config.js*** 文件，将其中```devServer:proxy```的```target```属性的值改成```http://localhost:[后端端口]```（具体可以参考文件内的注释）
-* 前端默认跑在8080端口。如果想要更改端口，需要打开 ***\WebView\adminwebview\vue.config.js*** 文件，将```devServer：port```的值改为想要开放的端口即可。（具体可以参考文件内的注释）
+* 前端默认跑在8080端口。如果想要更改端口，需要打开 ***\WebView\adminwebview\vue.config.js*** 文件，将```devServer:port```的值改为想要开放的端口即可。（具体可以参考文件内的注释）
