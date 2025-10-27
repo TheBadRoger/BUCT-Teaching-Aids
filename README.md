@@ -68,6 +68,8 @@ CREATE TABLE admin_users
   
   将```spring.datasource.url```的值改为```jdbc:mysql://localhost:3306/[数据库名称]?serverTimezone=UTC```
 
+> *本项目默认的数据库名称为 BUCTTA_DATABASE，如果不想修改项目的数据库，那么请在创建数据库的时候把数据库名称设置为 BUCTTA_DATABASE*
+
 ---
 ### **4. 安装并配置Nodejs和Vue**
 选择 ***[Nodejs 22.21.0](https://registry.npmmirror.com/binary.html?path=node/v22.21.0/)*** 版本并进行下载安装。注意安装过程中不要勾选“Automatically install the necessary tools”。安装完成后配置环境变量。配置过程相对复杂，在此不多赘述。可以参考[这篇文章](https://blog.csdn.net/AV_VA1/article/details/149789138)。
