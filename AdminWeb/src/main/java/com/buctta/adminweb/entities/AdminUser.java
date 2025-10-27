@@ -1,7 +1,6 @@
 package com.buctta.adminweb.entities;
 
 import jakarta.persistence.*;
-import lombok.Setter;
 
 @Table(name = "admin_users")
 @Entity
