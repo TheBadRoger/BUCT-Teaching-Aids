@@ -5,9 +5,18 @@
 **后台管理系统：完成前后端分离**
 * 后端业务逻辑采用Java+SpringBoot框架，数据库采用MySQL
 * 前端临时用Vue写了一个，设计图里提到的要素下一步实现。视图UI看UI组那边的进度了
-* 目前已实现了管理员用户的登录功能，具体是否要用验证码系统之后再作讨论
 
 > 其余项目组的进度，以后就在这里加就行
+
+## 项目文件结构
+* ***/API*** - 后端项目文件夹。使用Maven作为包管理器，后端项目组主要维护这一部分。
+* ***/WebUI*** - 前端项目文件夹。 前端项目组主要维护这一部分。
+* ***/Resources*** - 资源文件夹。主要存放备用文件（***/Backup***），文档和文档相关资源
+
+## 后端接口指南
+后端的根路由为 ***/api***，前端发送消息时根据目标路由来发送到指定的接口
+
+> [后端接口文档](./Resources/Documents/README.md)
 
 ## 部署方法
 
@@ -15,7 +24,7 @@
 
 选择 ***[Java 21](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html)*** 版本并进行下载安装。安装成功后，按如下方式编辑系统环境变量：
 
-* 新建：JAVA_HOME，值：【Java安装路径】
+* 新建：JAVA_HOME，值：[Java安装路径]
 
 * 修改：Path，添加值：%JAVA_HOME%\bin,%JAVA_HOME%\jre\bin
 
@@ -27,7 +36,7 @@
 ### **2. 安装并配置Maven**
 下载 ***[Maven](https://maven.apache.org/download.cgi)*** 最新版。直接解压到合适的目录下后，按如下方式配置环境变量：
 
-* 新建：MAVEN_HOME，值：【Maven解压路径】
+* 新建：MAVEN_HOME，值：[Maven解压路径]
 
 * 修改：Path，添加值：%MAVEN_HOME%\bin
 
@@ -83,8 +92,15 @@ CREATE TABLE admin_users
 ---
 ### **5. 启动并测试项目**
    
-* 启动后端：打开命令行，进入\AdminWeb目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保持并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。
-* 启动前端：打开命令行，进入\WebView\adminwebview目录，输入命令```npm install```，完成后。再输入```npm run serve```等到命令行显示前端的本机访问地址，说明启动成功。启动成功后不要关闭命令行窗口。
+* 启动后端：打开命令行，进入\AdminWeb目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保持并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。（如下图所示）
+
+
+![如图，出现“Spring”的LOGO，并且不显示任何ERROR错误，即表示启动成功](./Resources/ReadmeRes/backsucceed.png "后端启动成功的参考图")
+
+* 启动前端：打开命令行，进入\WebView\adminwebview目录，输入命令```npm install```，完成后。再输入```npm run serve```等到命令行显示前端的本机访问地址，说明启动成功。启动成功后不要关闭命令行窗口。（如下图所示）
+
+![如图，出现前端的两个地址，并且不显示任何ERROR错误，即表示启动成功](./Resources/ReadmeRes/frontsucceed.png "前端启动成功的参考图")
+
 * 测试项目：访问前端命令行所给出的链接（默认为 ***localhost:8080*** 或 ***127.0.0.1:8080*** ），即可访问前端。在前端进行的登录，注册等操作，均会在后端产生相应（此时可以打开后端命令行查看）。
 
 ---
