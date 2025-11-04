@@ -18,4 +18,4 @@
   * 请求头：***application/json***
   * 参数名称：***username***，***password***
 * 返回：***CallBackContaioner::code***，***CallBackContaioner::msg***，***AdminUser***
-* 作用：处理管理员用户的请求
+* 作用：处理管理员用户的注册请求
