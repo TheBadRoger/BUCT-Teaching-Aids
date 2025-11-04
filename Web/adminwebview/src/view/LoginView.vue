@@ -68,7 +68,7 @@ export default {
           let _this = this;
           // 使用 axios 将登录信息发送到后端
           this.axios({
-            url: "/api/userlogin/login",               // 请求地址
+            url: "/api/admin/login",               // 请求地址
             method: "post",                       // 请求方法
             headers: {                            // 请求头
               "Content-Type": "application/x-www-form-urlencoded",

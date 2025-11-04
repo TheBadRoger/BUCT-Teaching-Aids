@@ -87,7 +87,7 @@ export default {
         if (valid) {
           let _this = this;
           this.axios({     // axios 向后端发起请求
-            url: "/api/userlogin/register",  // 请求地址
+            url: "/api/admin/register",  // 请求地址
             method: "post",             // 请求方法
             headers: {                  // 请求头
               "Content-Type": "application/json",
