@@ -5,7 +5,7 @@
 **后台管理系统：完成前后端分离**
 * 后端业务逻辑采用Java+SpringBoot框架，数据库采用MySQL
 * 前端临时用Vue写了一个，设计图里提到的要素下一步实现。视图UI看UI组那边的进度了
-
+* 完成了新增教师与搜索教师的后端功能，支持分页和模糊搜索
 > 其余项目组的进度，以后就在这里加就行
 
 ## 项目文件结构
@@ -51,9 +51,9 @@
 
 安装完成后，启动 ***MySQL Command Line Client*** （不是 ***MySQL Shell*** ）。打开后界面会显示“Enter Password”，这是在要求你登录根用户，此时输入刚刚设置的根用户密码即可登录。
 
-输入命令```create database [数据库名称]```创建数据库
+输入命令```create database [数据库名称];```创建数据库
 
-输入命令```use [数据库名称]```进入数据库
+输入命令```use [数据库名称];```进入数据库
 
 输入如下代码:
 ```
@@ -64,8 +64,20 @@ CREATE TABLE admin_users
     password varchar(255) NOT NULL,
     UNIQUE (username)
 );
+CREATE TABLE teacher_list (
+    name VARCHAR(50),
+    organization VARCHAR(50),
+    gender VARCHAR(5),
+    education VARCHAR(50),
+    telephone VARCHAR(50),
+    email VARCHAR(50),
+    jointime VARCHAR(30),
+    id INT AUTO_INCREMENT,
+    PRIMARY KEY (id),
+    UNIQUE KEY name (name)
+);
 ```
-即可创建一个新的数据表：```admin_user```，这个数据表用来存放后台管理员用户信息。
+即可创建两个新的数据表：```admin_user```和```teacher_list```，这个数据表用来存放后台管理员用户信息。
 
 数据库创建完成后，进行如下工作：
 
