@@ -1,4 +1,4 @@
-package com.buctta.adminweb.entities;
+package com.buctta.api.entities;
 
 import jakarta.persistence.*;
 
