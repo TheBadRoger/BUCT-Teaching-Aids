@@ -1,6 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.service.FileExtract;
+import com.buctta.api.utils.CallBackContainer;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.*;
@@ -38,5 +39,17 @@ public class IMPL_FileExtract implements FileExtract {
             content=catchText.getText(document);
         }
         return content;
+    }
+
+    @Override
+    public CallBackContainer<String> DocumentExtractor(String path) throws IOException {
+        String ext = path.substring(path.lastIndexOf(".") + 1);
+        if(ext.equals("docx")){
+            return new CallBackContainer<>("1","解析成功",ExtractDocxFile(path));
+        }
+        else if(ext.equals("pdf")){
+            return new CallBackContainer<>("1","解析成功",ExtractPdfFile(path));
+        }
+        else return new CallBackContainer<>("-101","无法解析文件类型","");
     }
 }
