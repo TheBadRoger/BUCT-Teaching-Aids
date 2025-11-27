@@ -4,8 +4,8 @@ import com.buctta.api.service.FileExtract;
 import com.buctta.api.utils.CallBackContainer;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.*;
 
 @RestController
 @RequestMapping("/api/fileextract")
@@ -14,27 +14,17 @@ public class FileExtractCall {
     @Resource
     private FileExtract fileExtract;
 
-    @PostMapping("/docx")
-    public CallBackContainer<String> ExtractDocx(@RequestBody String path){
-        System.out.println("收到文件解析请求："+path+"\n");
+    @PostMapping("/temp")
+    public CallBackContainer<String> FileUploader(@RequestParam("files") MultipartFile file) throws IOException {
         try{
-            return new CallBackContainer<>("0","解析成功",fileExtract.ExtractDocxFile(path));
+            byte[] bytes = file.getBytes();
+            String uploadDir = "/fileextract/temp";
+            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
+            file.transferTo(uploadedFile);
+            return fileExtract.DocumentExtractor(uploadedFile.getPath());
         }
-        catch (IOException e){
-            System.out.println("解析失败。异常为："+e);
-            return new CallBackContainer<String>("-100","解析失败。异常为："+e,"");
-        }
-    }
-
-    @PostMapping("/pdf")
-    public CallBackContainer<String> ExtractPdf(@RequestBody String path){
-        System.out.println("收到文件解析请求："+path+"\n");
-        try{
-            return new CallBackContainer<>("0","解析成功",fileExtract.ExtractPdfFile(path));
-        }
-        catch (IOException e){
-            System.out.println("解析失败。异常为："+e);
-            return new CallBackContainer<String>("-100","解析失败。异常为："+e,"");
+        catch (IOException e) {
+            return new CallBackContainer<>("-102", "解析失败", "");
         }
     }
 }
