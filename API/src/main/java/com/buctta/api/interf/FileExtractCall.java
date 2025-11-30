@@ -1,44 +1,61 @@
 package com.buctta.api.interf;
 
+import java.io.*;
+import java.util.*;
+import org.springframework.web.bind.annotation.*;
 import com.buctta.api.utils.FileContentExtractor;
 import com.buctta.api.utils.CallBackContainer;
-import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+
 
 @RestController
 public class FileExtractCall {
 
     @PostMapping("/api/fileextract/temp")
-    public CallBackContainer<String> upload(@RequestParam("files") MultipartFile file) {
-        /* 1. 基础校验 */
-        if (file.isEmpty()) {
-            return new CallBackContainer<>("400", "文件为空", "");
-        }
-        String original = file.getOriginalFilename();
-        if (original == null ||
-                !(original.toLowerCase().endsWith(".docx") || original.toLowerCase().endsWith(".pdf"))) {
-            return new CallBackContainer<>("400", "仅支持 .docx / .pdf", "");
+    public CallBackContainer<List<DocResult>> upload(@RequestParam("files") MultipartFile[] files) {
+        if (files == null || files.length == 0) {
+            return new CallBackContainer<>("400", "文件为空", Collections.emptyList());
         }
 
-        try {
-            /* 2. 直接从内存流解析 */
-            String content;
-            String ext = original.substring(original.lastIndexOf('.'));
-            if (ext.equalsIgnoreCase(".docx")) {
-                content = FileContentExtractor.parseDocxByIS(file.getInputStream());
-            } else {   // pdf
-                content = FileContentExtractor.parsePdfByIS(file.getInputStream());
+        List<DocResult> list = new ArrayList<>(files.length);
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {          // 跳过空文件
+                continue;
             }
+            String original = file.getOriginalFilename();
+            if (original == null ||
+                    !(original.toLowerCase().endsWith(".docx") || original.toLowerCase().endsWith(".pdf"))) {
+                // 单文件格式错误，记一条失败记录，继续
+                list.add(new DocResult(original, false, "仅支持 .docx / .pdf", null));
+                continue;
+            }
+            try {
+                String ext = original.substring(original.lastIndexOf('.'));
+                String content = ext.equalsIgnoreCase(".docx")
+                        ? FileContentExtractor.parseDocxByIS(file.getInputStream())
+                        : FileContentExtractor.parsePdfByIS(file.getInputStream());
+                list.add(new DocResult(original, true, "解析成功", content));
+            } catch (Exception e) {
+                // 单文件解析异常，记一条失败记录，继续
+                list.add(new DocResult(original, false, "解析失败：" + e.getMessage(), null));
+            }
+        }
 
-            return new CallBackContainer<>("200", "解析成功", content);
-        } catch (Exception e) {
-            return new CallBackContainer<>("500", "解析失败：" + e.getMessage(), "");
+        // 全部跑完再统一返回
+        return new CallBackContainer<>("200", "批量处理完成", list);
+    }
+
+    /* 简单 DTO，用来装单个文件的结果 */
+    public static class DocResult {
+        public String fileName;
+        public boolean success;
+        public String msg;
+        public String content;
+        public DocResult(String fileName, boolean success, String msg, String content) {
+            this.fileName = fileName;
+            this.success = success;
+            this.msg = msg;
+            this.content = content;
         }
     }
 }
