@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>实验报告提交</title>
-    <link rel="stylesheet" href="AI.css">
+    <link rel="stylesheet" href="judgecss.css">
 </head>
 <body>
 <div class="container">
 
-    <h2 class="title">实验报告提交</h2>
+    <h2 class="title" style="text-align: center;">实验报告提交</h2>
 
     <div class="upload-area">
-        <input type="file" id="fileUpload" accept=".jpg,.jpeg,.png,.bmp,.pdf">
+       <input type="file" id="fileUpload" accept=".doc,.docx,.pdf" multiple>
         <div class="upload-box" id="uploadBox">
             <span>将文件拖拽到此处，或点击上传</span>
         </div>
-        <p class="tip">只能上传 word、jpg、jpeg、png、bmp、pdf，文件不能超过200M,支持批量上传</p>
+        <p class="tip">只能上传 doc、docx、pdf，文件名格式为：姓名_日期_报告名称_学号，文件不能超过10M,支持批量上传</p>
     </div>
 
     <form id="reportForm">
         <label>是否批改 <span style="color: red;">*</span></label>
         <select required>
-            <option value="">请选择</option>
             <option value="是">是</option>
             <option value="否">否</option>
         </select>
@@ -31,7 +30,6 @@
 
         <label>学段 <span style="color: red;">*</span></label>
         <select required>
-            <option value="">请选择学段</option>
             <option>大一</option>
             <option>大二</option>
             <option>大三</option>
@@ -40,27 +38,26 @@
 
         <label>试卷分类 <span style="color: red;">*</span></label>
         <select required>
-            <option value="">请选择试卷分类</option>
             <option>测试试卷</option>
             <option>课程作业</option>
             <option>实验报告</option>
         </select>
 
-        <label>小题分数（如未批改可不选填）</label>
+        <label>小题分数</label>
         <textarea placeholder="请输入小题分数，例如：选择题20分，填空题20分，解答题60分"></textarea>
 
-        <label>学生成绩（如未批改可不选填）</label>
-        <textarea placeholder="请输入成绩"></textarea>
+        <label>学生成绩汇总</label>
+        <textarea placeholder="成绩汇总" readonly="readonly"></textarea>
 
-        <div class="btns">
+        <!--<div class="btns">
             <button type="button" class="think-btn">深度思考</button>
             <button type="button" class="search-btn">联网搜索</button>
-        </div>
+        </div>-->
 
-        <button type="submit" class="submit-btn">📄 一键生成</button>
+        <button type="submit" class="submit-btn">📄 一键批改</button>
     </form>
 </div>
 
-<script src="AI.js"></script>
+<script src="judgescript.js"></script>
 </body>
 </html>

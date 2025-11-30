@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class IMPL_TeacherService implements TeacherService {
-    @Resource
+//    @Resource
     private TeacherReposit teacherReposit;
     @Override
     public TeacherList AddTeacher(TeacherList teacherList)
