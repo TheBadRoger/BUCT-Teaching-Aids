@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+
 public class IMPL_TeacherService implements TeacherService {
-//    @Resource
+    @Resource
     private TeacherReposit teacherReposit;
+
     @Override
     public TeacherList AddTeacher(TeacherList teacherList)
     {
@@ -30,6 +32,7 @@ public class IMPL_TeacherService implements TeacherService {
             return newTeacher;
         }
     }
+
     @Override
     public Page<TeacherList> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable) {
         Specification<TeacherList> specification = (root, query, criteriaBuilder) -> {

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/cloneproject.iml" filepath="$PROJECT_DIR$/.idea/cloneproject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BUCT-Teaching-Aids.iml" filepath="$PROJECT_DIR$/.idea/BUCT-Teaching-Aids.iml" />
+      <module fileurl="file://$PROJECT_DIR$/API/BUCTTAAPI.iml" filepath="$PROJECT_DIR$/API/BUCTTAAPI.iml" />
     </modules>
   </component>
 </project>

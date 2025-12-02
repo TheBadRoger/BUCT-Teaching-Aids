@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 
 public class IMPL_AdminUserLogin implements AdminUserLogin {
-
-//    @Resource
+    @Resource
     private AdminQuery adminQuery;
 
     @Override
