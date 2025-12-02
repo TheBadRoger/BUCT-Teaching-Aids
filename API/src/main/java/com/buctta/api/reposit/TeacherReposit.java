@@ -6,7 +6,7 @@ import com.buctta.api.entities.TeacherList;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-//@Repository
+@Repository
 
 public interface TeacherReposit extends JpaRepository<TeacherList,Long>, JpaSpecificationExecutor<TeacherList> {
     TeacherList findTeacherListById(long Id);

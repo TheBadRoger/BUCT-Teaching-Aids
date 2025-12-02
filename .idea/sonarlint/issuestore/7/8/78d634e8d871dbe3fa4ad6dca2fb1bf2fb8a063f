@@ -1,11 +1,0 @@
-
-|
-java:S1192"aDefine a constant instead of duplicating this literal "å¤„ç†å®Œæˆã€‚è¿”å›æ¶ˆæ¯ï¼š\"" 3 times.(Ç²€»ıÿÿÿÿ
-E	java:S106"+Replace this use of System.out by a logger.(ÑÃúÿÿÿÿ
-E	java:S106"+Replace this use of System.out by a logger.(Ç²€»ıÿÿÿÿ
-E	java:S106""+Replace this use of System.out by a logger.(Ç²€»ıÿÿÿÿ
-c	java:S100("NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢ƒ²
-E	java:S1062"+Replace this use of System.out by a logger.(ÇôÍşøÿÿÿÿ
-@	java:S106F"+Replace this use of System.out by a logger.(£¦§Å
-E	java:S106L"+Replace this use of System.err by a logger.(»õ‡ğÿÿÿÿÿ
-E	java:S106S"+Replace this use of System.out by a logger.(Ö‘åŒıÿÿÿÿ
