@@ -5,65 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eec83ef2-bb37-4185-8d2a-58add4d356aa" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/BUCT-Teaching-Aids.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jpa.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cloneproject.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/2/02bc00ca4823c76d28d6228e72932b24d0a4cab4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/9/0972ebbe9bf8a1cc2c875cb41ae55cd6dc5bcf91" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/a/0a11b391730bb92535038063d175873c31b346ed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/0/10c7e371ba5a0d5629dbf5268315a40631be9669" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/a/2a651b04ee3abc81448af0a8b41c5bd46cbaccca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/8/3843b39bd4c4aa6d53539546931e12df8b211647" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/9/497f33c6a9b3408b37fd3b76b2b7e0d68cd53cfc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/0/6006b440b8e8b68bc73c8d621d75085440a2c6fa" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/8/78d634e8d871dbe3fa4ad6dca2fb1bf2fb8a063f" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/a/8a8da5a5249a5f0b9ed8ab9d144d5a1209278fba" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/0/905a21f52d1353f046fb7d6a6b315cb18022710c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/6/96015444b8bcebe8095170394fb1e356b23a7ed1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/3/c3f11faacf7614e626b8dd859ca5a5acb79757ef" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/c/ecdbcd4ee4db1d0f8f2ebae5d01b9b680bf53328" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/2/02bc00ca4823c76d28d6228e72932b24d0a4cab4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/9/0972ebbe9bf8a1cc2c875cb41ae55cd6dc5bcf91" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/a/0a11b391730bb92535038063d175873c31b346ed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/1/0/10c7e371ba5a0d5629dbf5268315a40631be9669" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/a/2a651b04ee3abc81448af0a8b41c5bd46cbaccca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/8/3843b39bd4c4aa6d53539546931e12df8b211647" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/9/497f33c6a9b3408b37fd3b76b2b7e0d68cd53cfc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/0/6006b440b8e8b68bc73c8d621d75085440a2c6fa" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/8/78d634e8d871dbe3fa4ad6dca2fb1bf2fb8a063f" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/a/8a8da5a5249a5f0b9ed8ab9d144d5a1209278fba" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/0/905a21f52d1353f046fb7d6a6b315cb18022710c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/6/96015444b8bcebe8095170394fb1e356b23a7ed1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/c/3/c3f11faacf7614e626b8dd859ca5a5acb79757ef" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/c/ecdbcd4ee4db1d0f8f2ebae5d01b9b680bf53328" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/API/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/ApiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/interf/AdminUserLoginCalls.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/interf/AdminUserLoginCalls.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/interf/TeacherListCalls.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/interf/TeacherListCalls.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/reposit/AdminQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/reposit/AdminQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/reposit/TeacherReposit.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/reposit/TeacherReposit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/serviceimp/IMPL_AdminUserLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/serviceimp/IMPL_AdminUserLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/serviceimp/IMPL_TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/java/com/buctta/api/serviceimp/IMPL_TeacherService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/ai/AI.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/ai/AI.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/ai/AI.js" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-12-02T223910.200.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-12-02T224439.200.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Backup/ReferStyle.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Backup/White.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/ExternalAPI/AdminUserLogin.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/ExternalAPI/TeacherService.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminQuery.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminUser.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminUserLogin.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/CallBackContainer.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/TeacherList.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/TeacherReposit.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Tutorials/HowToCodeAnAPI.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/Documents/Tutorials/Structure.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ReadmeRes/backsucceed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ReadmeRes/frontsucceed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/AIJudge.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/judgecss.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/judgescript.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,40 +61,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HTTP 请求.generated-requests | #1.executor": "Run",
-    "Maven.BUCTTAAPI [clean].executor": "Run",
-    "Maven.BUCTTAAPI [install].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.ApiApplication.executor": "Run",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.sync",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP 请求.generated-requests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.BUCTTAAPI [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.BUCTTAAPI [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.BUCTTAAPI [package].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ApiApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.buctta.api.interf" />
@@ -181,6 +148,8 @@
       <updated>1764046128189</updated>
       <workItem from="1764683783438" duration="2899000" />
       <workItem from="1764687304857" duration="24000" />
+      <workItem from="1764854907601" duration="1310000" />
+      <workItem from="1764856709138" duration="376000" />
     </task>
     <servers />
   </component>
