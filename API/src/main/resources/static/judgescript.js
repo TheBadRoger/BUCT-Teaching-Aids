@@ -53,7 +53,7 @@ function sendFiles() {
   const formData = new FormData();
   for (const file of upload.files) formData.append("files", file);
 
-  fetch("http://localhost:8081/api/fileextract/temp", {
+  fetch("http://10.15.2.38:4444/api/fileextract/temp", {
   method: "POST",
   body: formData
   })
@@ -109,7 +109,7 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
   lastExtractedFileName.forEach(t => params.append("fileNames", t));
 
   // POST /generate/start 拿到任务 id
-  fetch("http://localhost:8081/api/ai/generate/start", {
+  fetch("http://10.15.2.38:4444/api/ai/generate/start", {
     method: "POST",
     body: params
   })
@@ -129,7 +129,7 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
  *  3. SSE 接收流，并把 AI 返回写到「学生成绩」文本框
  *****************************************************************/
 function openSSE(id) {
-  const evt = new EventSource(`http://localhost:8081/api/ai/generate/stream/${id}`);
+  const evt = new EventSource(`http://10.15.2.38:4444/api/ai/generate/stream/${id}`);
   const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩']");
 
   /* 工具：追加文本并自动滚动 */
