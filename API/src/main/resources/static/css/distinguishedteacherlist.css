@@ -1,0 +1,236 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft YaHei", sans-serif;
+    background-color: #fff;
+}
+
+/* 顶部栏样式 */
+.top-bar {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.top-bar-right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo {
+    height: 40px;
+}
+
+.search-area {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+}
+
+.search-area input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+
+.search-area button {
+    padding: 4px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.user-area img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* 导航栏样式 */
+.nav-bar {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+
+.nav-item:hover{
+    color: #007bff;
+}
+
+.nav-item.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.nav-right button {
+    padding: 6px 10px;
+    margin-left: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 内容区样式 */
+.content {
+    display: grid;
+    grid-template-columns: 220px 1fr 260px; /* 左 220，中 自适应，右 260 */
+    gap: 20px;
+    padding: 20px;
+    align-items: start;
+}
+
+/* 左侧名师卡 */
+.sidebar {
+    border-right: 0;
+}
+
+.teacher-card {
+    text-align: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 18px;
+}
+
+.teacher-large-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 4px; 
+    object-fit: cover;
+    display: block;
+    margin: 10px auto;
+    border: 1px solid #ddd;
+}
+
+.teacher-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+.teacher-stats {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+}
+.teacher-stats div { margin: 6px 0; }
+.teacher-stats span { float:right; color:#333; }
+
+/* 头像网格 */
+.box { margin-top: 16px; }
+.box h4 { font-size: 14px; margin: 0 0 8px 0; color:#333; border-bottom: 1px solid #eee; padding-bottom:6px; }
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+.avatar-grid img {
+    width: 100%;
+    height: 60px;
+    object-fit: cover;
+    border:1px solid #ddd;
+}
+
+/* 中间主区域 */
+.main {
+    padding: 0 10px;
+}
+
+/* 名师头部*/
+.teacher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #e9f6f6; 
+    padding-bottom: 18px;
+}
+.header-left {}
+.t-name { margin: 0; font-size: 28px; font-weight: 700; }
+.rating { display:flex; align-items:center; gap:12px; margin-top:8px; }
+
+
+.stars {
+    display: inline-block;
+    font-size: 20px; 
+    color: #e5e5e5; 
+    position: relative;
+    unicode-bidi: bidi-override;
+}
+
+
+.stars::before {
+    content: "★★★★★"; 
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0%; 
+    overflow: hidden;
+    color: #ff8a00; 
+}
+
+.score { font-weight:700; color:#ff6a00; }
+.count { font-weight:normal; color:#666; font-size:13px; margin-left:6px; }
+
+
+.teacher-btns {}
+.header-right { display:flex; gap:8px; }
+.follow-btn, .msg-btn, .follow-small {
+    padding:8px 12px;
+    border-radius:4px;
+    border:1px solid #ccc;
+    background:#f7f7f7;
+    cursor:pointer;
+}
+.follow-btn.active { background:#007bff; color:#fff; border-color:#007bff; }
+
+/* 课程列表 */
+.courses { margin-top:18px; }
+.courses-title { text-align:center; border:1px solid #ddd; padding:8px; margin:8px 0 18px 0; background:#fafafa; }
+.course-item {
+    padding:18px 8px;
+    border-bottom: 1px solid #eee;
+}
+.course-name { margin:0 0 6px 0; }
+.course-meta { color:#888; font-size:13px; margin-bottom:8px; }
+
+/* 右侧面板 */
+.right-panel { padding-left: 8px; }
+.hot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:8px;
+    margin-top:8px;
+}
+.hot-item {
+    border:1px solid #ddd;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+}
+.recommend-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+.rec-item { display:flex; align-items:center; gap:8px; }
+.rec-item img { width:44px; height:44px; object-fit:cover; border:1px solid #ddd; }
+.rec-name { flex:1; }
+
+/* 响应式：屏幕窄时改为单列 */
+@media (max-width: 960px) {
+    .content { grid-template-columns: 1fr; }
+    .right-panel, .sidebar { order: 99; }
+}
