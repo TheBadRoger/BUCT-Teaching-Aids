@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程介绍</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .top{
+            width: 100%;
+            height: 40px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .top p{
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .top button{
+            background-color: #f8a5c2;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container{
+            display: flex;
+        }
+        .left{
+            width: 300px;
+            border-right: 1px solid #eee;
+            padding: 10px;
+        }
+        .leftTopImg img{
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .leftQuestion{
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .leftQuestion p{
+            font-weight: bold;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .leftQuestion span{
+            opacity: 0.6;
+            font-size: 12px;
+        }
+        .leftIntroduce h3{
+            font-size: 16px;
+            margin-bottom: 10px;
+            margin: 10px 0;
+        }
+        .leftIntroduce p{
+            font-size: 14px;
+            line-height: 1.5;
+            color: #666;
+        }
+        .leftContent{
+            margin: 15px 0;
+            padding: 20px;
+        }
+        .leftContent ul{
+            list-style: none;
+        }
+        .leftContent li{
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .leftContent li:last-child{
+            border-bottom: none;
+        }
+        .leftBottom{
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .leftBottomContent{
+            text-align: center;
+            flex: 1;
+        }
+        .leftBottomContentNumber{
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        .leftBottomContentlabel{
+            font-size: 14px;
+            color: #666;
+        }
+        .right{
+            flex: 1;
+            padding: 10px;
+        }
+        .rightTab{
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .rightTab button{
+            padding: 8px 15px;
+            border: none;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 2px solid transparent;
+        }
+        .rightTab button.active{
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .rightContent{
+            background-color: #f8f9fa;
+            padding: 15px;
+            min-height: 400px;
+        }
+        .rightContent p{
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        .rightContent img{
+            height:400px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .recordContent{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <p>课程介绍</p>
+        <button>返回</button>
+    </div>
+    <div class="container">
+        <div class="left">
+            <div class="leftTopImg">
+                <img src="https://pic.yupi.icu/1/image-20240717135849951.png" alt="课程图片">
+            </div>
+            <div class="leftQuestion">
+                <p>为什么早期教育是必要的？</p>
+                <span>2020-12-08</span>
+            </div>
+            <div class="leftIntroduce">
+                <h3>关于课程</h3>
+                <p>本课程主要介绍了国家预算管理的相关基础理论以及国家预算的编制、执行及决算等预算管理理论，并通过介绍安全的形式，注重理论实际。通过对该课程的学习，使学生对国家预算管理的主要内容有一个全面的了解，并能将相关理论应用于实践。</p>
+            </div>
+            <div class="leftContent">
+                <ul>
+                    <li><p>开课时间</p><p>2020-12-19</p></li>
+                    <li><p>课程时长</p> <p>1周</p></li>
+                    <li><p>课程老师</p><p>杰克·罗南</p></li>
+                    <li><p>已读数量</p><p>10000</p></li>
+                    <li><p>上课地址</p><p>明市马粪拉路6901演示地址</p></li>
+                </ul>
+            </div>
+            <div class="leftBottom">
+                <div class="leftBottomContent">
+                    <div class="leftBottomContentNumber">7000</div>
+                    <div class="leftBottomContentlabel">累计上课时长</div>
+                </div>
+                <div class="leftBottomContent">
+                    <div class="leftBottomContentNumber">120</div>
+                    <div class="leftBottomContentlabel">累计参与人数</div>
+                </div>
+                <div class="leftBottomContent">
+                    <div class="leftBottomContentNumber">85</div>
+                    <div class="leftBottomContentlabel">综合平均课时</div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="rightTab">
+                <button class="active" id="introBtn">课程介绍</button>
+                <button id="recordBtn">签到记录</button>
+            </div>
+            <div class="rightContent introduction" id="introContent">
+                <p>《国家预算管理》：本课程主要介绍了国家预算管理的相关基础理论以及国家预算的编制、执行及决算等预算管理理论，并通过介绍安全的形式，注重理论实际。通过对该课程的学习，使学生对国家预算管理的主要内容有一个全面的了解，并能将相关理论应用于实践。</p>
+                <p>《公共部门经济学》：是一门研究公共部门经济行为的部门经济学学科，它从经济学的角度解释、分析和规范在市场经济体制下，公共部门应具有的职能和作用。本课程系统、全面阐述公共部门经济学的基本概念与原理，从理论上弄清在市场经济条件下，什么是公共部门、什么是政府、政府必须做什么、以及政府应该怎样做等问题。</p>
+                <p>《公共部门经济学》（双语教学）采用的是斯蒂格利茨所编的教科书，主要内容包括混合经济中的公共部门、市场效率、市场失灵、效率与公平、公共商品、公共选择、公共生产与官僚机构、外部性与环境、支出政策分析、成本收益分析、保健、国防与技术、社会保险、收入再分配、税收导论、税收归宿、税收与经济效率、最适课税、资本课税、个人所得税、公司所得税、税制改革、财政联邦制、州和地方的税收与支出以及赤字财政，基本上包含了公共财政学中的所有主要内容。</p>
+                <p>《中国财政史》：是高等院校财经类财政税务专业的基础课，着重于结合财政学的基本理论、知识和方法，阐述中国财政在数千年历史发展过程中的基本演变轨迹、特点及其规律，以便学生据以了解、掌握和运用中国财政演变发展的规律，为我国正在进行的财政体制改革提供某些有益的借鉴作用。</p>
+                <p>《西方财政思想史》：主要介绍西方经济学家及流派的财政思想，包括古典经济学、马克思主义经济学、新古典学派、凯恩斯主义学派、供给学派、制度学派、新经济学等学派有关财政方面的观点、看法，如关于政府职能、财政目标、财政支出、公平效率目标、最优税制等方面的财政思想，学习本门课程对财政学和税务学专业的学生掌握最基本的理论有着十分重要的意义。</p>
+                <p>《预算会计》：是一门理论性强、核算方法有特色的应用专业会计课程。它应用会计学的一般理论和方法，阐明政府财政、行政和事业单位会计核算的基本理论、基本方法和基本技能。通过对本课程的学习，使学生比较全面和系统地明确预算会计的相关理论，掌握预算会计的核算方法及管理要求，提高利用会计信息资料为管理服务的能力。</p>
+                <img src="https://pic.yupi.icu/1/image-20240717135849951.png" alt="课程相关图片">
+            </div>
+            <div class="rightContent recordContent" id="recordContent">
+                <p>签到记录暂无数据，请后续关注。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 选项卡切换功能
+        const introBtn = document.getElementById('introBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const introContent = document.getElementById('introContent');
+        const recordContent = document.getElementById('recordContent');
+
+        introBtn.addEventListener('click', function() {
+            introBtn.classList.add('active');
+            recordBtn.classList.remove('active');
+            introContent.style.display = 'block';
+            recordContent.style.display = 'none';
+        });
+
+        recordBtn.addEventListener('click', function() {
+            recordBtn.classList.add('active');
+            introBtn.classList.remove('active');
+            recordContent.style.display = 'block';
+            introContent.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
