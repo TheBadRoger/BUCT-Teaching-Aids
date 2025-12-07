@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" conte、nt="width=device-width, initial-scale=1.0">
+    <title>新增教师 - 教育管理系统</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;/*Border-Box盒模型有width后，padding和border影响不了它 */
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-save {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background-color: #2980b9;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .avatar-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+        
+        .avatar-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        
+        .avatar-upload {
+            flex: 1;
+        }
+        
+        .avatar-placeholder {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>新增教师</h1>
+        
+        <form id="teacherForm">
+            <div class="form-section">
+                <h2 class="section-title">基本信息</h2>
+                
+                <div class="form-grid">
+                    <!-- 第一行 -->
+                    <div class="form-group">
+                        <label for="teacherName" class="required">教师姓名</label>
+                        <input type="text" id="teacherName" name="teacherName" placeholder="请输入教师姓名">
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="required">电子邮件</label>
+                        <input type="email" id="email" name="email" placeholder="请输入电子邮件">
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+                    
+                    <!-- 第二行 -->
+                    <div class="form-group">
+                        <label for="phone" class="required">联系电话</label>
+                        <input type="tel" id="phone" name="phone" placeholder="请输入联系电话" maxlength="11">
+                        <div class="error-message" id="phoneError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender" class="required">性别</label>
+                        <select id="gender" name="gender">
+                            <option value="">请选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                        <div class="error-message" id="genderError"></div>
+                    </div>
+                    
+                    <!-- 第三行 -->
+                    <div class="form-group">
+                        <label for="education" class="required">教育</label>
+                        <select id="education" name="education">
+                            <option value="">请选择</option>
+                            <option value="doctor">博士</option>
+                            <option value="master">硕士</option>
+                            <option value="bachelor">本科</option>
+                            <option value="college">专科</option>
+                            <option value="highschool">高中</option>
+                            <option value="middleschool">初中</option>
+                            <option value="primaryschool">小学</option>
+                        </select>
+                        <div class="error-message" id="educationError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="department" class="required">所属部门</label>
+                        <select id="department" name="department">
+                            <option value="">请选择所属部门</option>
+                            <option value="math">数学系</option>
+                            <option value="physics">物理系</option>
+                            <option value="chemistry">化学系</option>
+                            <option value="english">英语系</option>
+                            <option value="history">历史系</option>
+                        </select>
+                        <div class="error-message" id="departmentError"></div>
+                    </div>
+                    
+                    <!-- 第四行 -->
+                    <div class="form-group">
+                        <label for="birthDate">出生日期</label>
+                        <input type="date" id="birthDate" name="birthDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="joinDate" class="required">加入日期</label>
+                        <input type="date" id="joinDate" name="joinDate">
+                        <div class="error-message" id="joinDateError"></div>
+                    </div>
+                    
+                    <!-- 第五行 -->
+                    <div class="form-group">
+                        <label for="password" class="required">登录密码</label>
+                        <input type="password" id="password" name="password" placeholder="请输入系统登录密码">
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword" class="required">确认密码</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码">
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+                    
+                    <!-- 头像部分 - 左下角 -->
+                    <div class="form-group full-width">
+                        <div class="avatar-section">
+                            <div class="avatar-preview" id="avatarPreview">
+                                <div class="avatar-placeholder">头像预览</div>
+                                <img id="avatarImage" src="" alt="头像预览">
+                            </div>
+                            <div class="avatar-upload">
+                                <label for="avatar">头像照片</label>
+                                <input type="file" id="avatar" name="avatar" accept=".jpg,.jpeg,.png">
+                                <div class="error-message" id="avatarError"></div>
+                                <p style="font-size: 12px; color: #666; margin-top: 5px;">支持JPG、JPEG、PNG格式，文件大小不超过1M</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn-cancel" id="cancelBtn">取消</button>
+                <button type="button" class="btn-save" id="saveBtn">保存</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 获取表单元素
+        const teacherForm = document.getElementById('teacherForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const avatarImage = document.getElementById('avatarImage');
+        const avatarPlaceholder = document.querySelector('.avatar-placeholder');
+        
+        // 验证函数
+        function validateName() {
+            const name = document.getElementById('teacherName').value.trim();
+            const errorElement = document.getElementById('nameError');
+            
+            if (!name) {
+                errorElement.textContent = '教师姓名为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (name.length < 4 || name.length > 20) {
+                errorElement.textContent = '教师姓名长度需在4到20个字符之间';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const errorElement = document.getElementById('emailError');
+            
+            if (!email) {
+                errorElement.textContent = '邮箱不能为空';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // 更严格的邮箱验证正则表达式
+            const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                errorElement.textContent = '邮箱格式不正确';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validatePhone() {
+            const phone = document.getElementById('phone').value.trim();
+            const errorElement = document.getElementById('phoneError');
+            
+            if (!phone) {
+                errorElement.textContent = '手机号码为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // 手机号验证（11位数字）
+            const phoneRegex = /^1[3-9]\d{9}$/;
+            if (!phoneRegex.test(phone)) {
+                errorElement.textContent = '您输入的手机号码格式有误';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateGender() {
+            const gender = document.getElementById('gender').value;
+            const errorElement = document.getElementById('genderError');
+            
+            if (!gender) {
+                errorElement.textContent = '性别为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateEducation() {
+            const education = document.getElementById('education').value;
+            const errorElement = document.getElementById('educationError');
+            
+            if (!education) {
+                errorElement.textContent = '教育为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateDepartment() {
+            const department = document.getElementById('department').value;
+            const errorElement = document.getElementById('departmentError');
+            
+            if (!department) {
+                errorElement.textContent = '机构为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateJoinDate() {
+            const joinDate = document.getElementById('joinDate').value;
+            const errorElement = document.getElementById('joinDateError');
+            
+            if (!joinDate) {
+                errorElement.textContent = '加入日期为必填';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('passwordError');
+            
+            if (!password) {
+                errorElement.textContent = '密码不能为空';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (password.length < 8 || password.length > 16) {
+                errorElement.textContent = '密码为8-16位，请重新设定';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // 检查密码强度
+            const hasNumber = /\d/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            if (!hasNumber || !hasLower || !hasUpper || !hasSpecial) {
+                errorElement.textContent = '密码强度弱，请重新设定';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // 检查常见密码
+            const commonPasswords = ['123456', 'password', '12345678', 'qwerty', 'abc123'];
+            if (commonPasswords.includes(password.toLowerCase())) {
+                errorElement.textContent = '密码过于常见，请重新设定';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (!confirmPassword) {
+                errorElement.textContent = '确认密码不能为空';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = '确认密码与登录密码不一致，请检查后重新输入';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        function validateAvatar() {
+            const avatar = avatarInput.files[0];
+            const errorElement = document.getElementById('avatarError');
+            
+            if (avatar) {
+                // 检查文件大小 (1MB = 1024 * 1024 bytes)
+                if (avatar.size > 1024 * 1024) {
+                    errorElement.textContent = '文件大小不能超过1MB';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                
+                // 检查文件类型
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                if (!allowedTypes.includes(avatar.type)) {
+                    errorElement.textContent = '仅支持JPG、JPEG、PNG格式';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        // 头像预览功能
+        avatarInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    avatarImage.src = e.target.result;
+                    avatarImage.style.display = 'block';
+                    avatarPlaceholder.style.display = 'none';
+                }
+                
+                reader.readAsDataURL(file);
+                validateAvatar();
+            } else {
+                avatarImage.style.display = 'none';
+                avatarPlaceholder.style.display = 'block';
+            }
+        });
+        
+        // 表单提交处理
+        saveBtn.addEventListener('click', function() {
+            // 执行所有验证
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isGenderValid = validateGender();
+            const isEducationValid = validateEducation();
+            const isDepartmentValid = validateDepartment();
+            const isJoinDateValid = validateJoinDate();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            const isAvatarValid = validateAvatar();
+            
+            // 如果所有验证都通过
+            if (isNameValid && isEmailValid && isPhoneValid && isGenderValid && 
+                isEducationValid && isDepartmentValid && isJoinDateValid && 
+                isPasswordValid && isConfirmPasswordValid && isAvatarValid) {
+                
+                // 这里应该是发送数据到服务器的代码
+                alert('数据保存成功！');
+                // 在实际应用中，这里会跳转到教师列表页面
+                // window.location.href = 'teacher-list.html';
+            }
+        });
+        
+        // 取消按钮处理
+        cancelBtn.addEventListener('click', function() {
+            if (confirm('确定要取消吗？所有未保存的数据将丢失。')) {
+                // 在实际应用中，这里会跳转到教师列表页面
+                // window.location.href = 'teacher-list.html';
+                alert('已取消，返回教师列表');
+            }
+        });
+        
+        // 实时验证
+        document.getElementById('teacherName').addEventListener('blur', validateName);
+        document.getElementById('email').addEventListener('blur', validateEmail);
+        document.getElementById('phone').addEventListener('blur', validatePhone);
+        document.getElementById('gender').addEventListener('change', validateGender);
+        document.getElementById('education').addEventListener('change', validateEducation);
+        document.getElementById('department').addEventListener('change', validateDepartment);
+        document.getElementById('joinDate').addEventListener('change', validateJoinDate);
+        document.getElementById('password').addEventListener('blur', validatePassword);
+        document.getElementById('confirmPassword').addEventListener('blur', validateConfirmPassword);
+        
+        // 限制手机号只能输入数字
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        // 设置日期输入框的默认值为今天
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('joinDate').value = today;
+    </script>
+</body>
+</html>
