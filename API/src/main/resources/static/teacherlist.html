@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师列表</title>
+    <link rel="stylesheet" href="./css/teacherlist.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部导航 -->
+        <div class="header">
+            <h1>教师列表</h1>
+            <div class="breadcrumbs">首页 &gt; 教师列表</div>
+        </div>
+
+        <!-- 筛选条件区域 -->
+        <div class="filter-area">
+            <div class="filter-item">
+                <label for="teacherName">教师姓名</label>
+                <input type="text" id="teacherName" placeholder="请输入教师姓名">
+            </div>
+            <div class="filter-item">
+                <label for="institution">机构</label>
+                <input type="text" id="institution" placeholder="请输入机构名称">
+            </div>
+            <div class="filter-item">
+                <label>加入时间</label>
+                <input type="date" id="startDate"> 至 <input type="date" id="endDate">
+            </div>
+            <div class="filter-item">
+                <label for="gender">性别</label>
+                <select id="gender">
+                    <option value="">请选择</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="education">教育</label>
+                <select id="education">
+                    <option value="">请选择</option>
+                    <option value="博士学位">博士学位</option>
+                    <option value="硕士学位">硕士学位</option>
+                    <option value="本科学历">本科学历</option>
+                </select>
+            </div>
+            <div class="filter-btn-group">
+                <button id="queryBtn">查询</button>
+                <button id="resetBtn">重置</button>
+                <button id="addBtn">新增教师</button>
+                <button id="deleteBtn">删除</button>
+                <button id="exportBtn">导出</button>
+            </div>
+        </div>
+
+        <!-- 数据统计与列表区域 -->
+        <div class="data-area">
+            <div class="data-count">共查询到XX条数据</div>
+            <table class="teacher-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll"> 全选
+                        </th>
+                        <th>教师姓名</th>
+                        <th>机构</th>
+                        <th>性别</th>
+                        <th>教育</th>
+                        <th>联系电话</th>
+                        <th>电子邮件</th>
+                        <th>加入时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="teacherTbody">
+                    <!-- 表格数据由JS动态生成 -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button>上一页</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>下一页</button>
+            </div>
+        </div>
+    </div>
+    <script src="./js/teacherlist.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/enter.css">
+    <title>北化教育管理系统</title>
+</head>
+<body>
+
+  <!-- 顶部导航栏 -->
+  <header class="top-bar">
+    <div class="left">
+      <img src="./image/BUCT-Logo-blue.png" alt="BUCT" class="logo">
+      <span class="title">教育管理系统</span>
+    </div>
+    <div class="right">
+      <a href="#">中文</a> | <a href="#">English</a>
+      <span class="time" id="time"></span>
+    </div>
+  </header>
+
+  <!-- 背景主区 -->
+  <main class="main">
+    <div class="login-box">
+      <h2>密码登录</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="username" placeholder="学号/工号" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="密码" required>
+        </div>
+        <button type="submit" class="login-btn">登录</button>
+        <div class="links">
+          <a href="#">忘记/修改密码</a>
+          <a href="register.html">注册</a>
+        </div>
+      </form>
+      <p id="errorMsg" class="error"></p>
+    </div>
+  </main>
+
+  <!-- 底部导航栏 -->
+  <footer class="foot-bar">
+    <div class="more">
+      <a href="#" style="border-right:1px #333;margin-right: 20px;">关于平台</a>
+      <a href="#">服务协议</a>
+    </div>
+  </footer>
+  <script src="./js/enter.js"></script>
+</body>
+</html>

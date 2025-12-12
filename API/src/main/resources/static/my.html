@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人资料页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+        body {
+            padding: 10px;
+        }
+        /* 顶部logo栏 */
+        .header-logo {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        /* 顶部功能栏 */
+        .top-bar {
+            display: flex;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-bottom: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar-left {
+            display: flex;
+            gap: 10px;
+        }
+        .top-bar-left span {
+            border: 1px solid #ccc;
+            padding: 3px 12px;
+        }
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .top-bar-right input {
+            border: 1px solid #ccc;
+            padding: 3px;
+        }
+        .top-bar-right .login-avatar {
+            border: 1px solid #ccc;
+            padding: 3px 8px;
+        }
+        .top-bar-right .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+        .top-bar-right .btn-group span {
+            border: 1px solid #ccc;
+            padding: 3px 8px;
+        }
+        /* 主体容器 */
+        .main-container {
+            display: flex;
+            gap: 10px;
+        }
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .user-info {
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .nav-list {
+            list-style: none;
+        }
+        .nav-list li {
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+        /* 内容标签页 */
+        .content-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .content-tabs span {
+            border: 1px solid #ccc;
+            padding: 6px 15px;
+        }
+        /* 表单区域 */
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .form-group label {
+            width: 80px;
+            text-align: right;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 4px;
+            border: 1px solid #ccc;
+            flex: 1;
+            max-width: 300px;
+        }
+        .form-group .gender-radio {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group .gender-radio label {
+            width: auto;
+            text-align: left;
+        }
+        .form-group .birth-select {
+            display: flex;
+            gap: 8px;
+        }
+        .form-group .birth-select select {
+            width: 80px;
+            max-width: none;
+        }
+        .form-group .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group .avatar-upload .avatar-preview {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ccc;
+        }
+        .form-group .avatar-upload button {
+            padding: 4px 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+        /* 保存按钮 */
+        .save-btn {
+            padding: 6px 20px;
+            border: 1px solid #ccc;
+            background: #fff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部logo -->
+    <div class="header-logo">易班logo</div>
+
+    <!-- 顶部功能栏 -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <span>首页</span>
+            <span>课程</span>
+            <span>合理</span>
+            <span>机构</span>
+        </div>
+        <div class="top-bar-right">
+            <input type="text" placeholder="搜索">
+            <span class="login-avatar">登录头像</span>
+            <div class="btn-group">
+                <span>选课</span>
+                <span>地图</span>
+                <span>记录</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体容器 -->
+    <div class="main-container">
+        <!-- 左侧导航 -->
+        <div class="sidebar">
+            <div class="user-info">
+                <p>当前登录用户头像</p >
+                <p>张三</p >
+                <p>个人签名</p >
+            </div>
+            <ul class="nav-list">
+                <li>我的学习记录</li>
+                <li>还未看的课</li>
+                <li>已经看的课</li>
+                <li>我的收藏</li>
+                <li>我的订单</li>
+                <li>我的消息</li>
+                <li>成长地图</li>
+                <li>个人详情</li>
+                <li>好友动态</li>
+            </ul>
+        </div>
+
+        <!-- 右侧内容区 -->
+        <div class="content">
+            <!-- 内容标签页 -->
+            <div class="content-tabs">
+                <span>个人资料</span>
+                <span>我的纸张</span>
+            </div>
+
+            <!-- 基础资料表单 -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label>用户名:</label>
+                    <input type="text" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>性别:</label>
+                    <div class="gender-radio">
+                        <label><input type="radio" name="gender">男</label>
+                        <label><input type="radio" name="gender">女</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>出生年月:</label>
+                    <div class="birth-select">
+                        <select><option>年</option></select>
+                        <select><option>月</option></select>
+                        <select><option>日</option></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>邮箱:</label>
+                    <input type="text" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>学校:</label>
+                    <input type="text" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>头像:</label>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview"></div>
+                        <button>修改头像</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 完善资料表单 -->
+            <div class="form-section">
+                <p>完善资料，获得更好使用体验</p >
+                <div class="form-group">
+                    <label>手机号码:</label>
+                    <input type="text" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>QQ号码:</label>
+                    <input type="text" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>个性签名:</label>
+                    <textarea placeholder="输入文本..."></textarea>
+                </div>
+            </div>
+
+            <!-- 密码修改表单 -->
+            <div class="form-section">
+                <p>完善资料，获得更好使用体验</p >
+                <div class="form-group">
+                    <label>原密码:</label>
+                    <input type="password" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>新密码:</label>
+                    <input type="password" placeholder="输入文本...">
+                </div>
+                <div class="form-group">
+                    <label>确认密码:</label>
+                    <input type="password" placeholder="输入文本...">
+                </div>
+                <button class="save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

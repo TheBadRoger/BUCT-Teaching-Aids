@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我要开课-上传课程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        /* 顶部栏 */
+        .top-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .top-header .logo {
+            flex: 1;
+            height: 36px;
+            background-color: #fff;
+            border: 1px solid #e1e5eb;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .top-header .search {
+            width: 200px;
+            height: 36px;
+            border: 1px solid #e1e5eb;
+            margin: 0 10px;
+            padding: 0 10px;
+        }
+        .top-header .user-area {
+            display: flex;
+            align-items: center;
+        }
+        .top-header .user-area .avatar {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #e1e5eb;
+            margin-right: 5px;
+        }
+        .top-header .user-area .btn-group button {
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #e1e5eb;
+            margin-left: 5px;
+            background-color: #fff;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            display: flex;
+            height: 36px;
+            border: 1px solid #e1e5eb;
+            background-color: #fff;
+            margin-bottom: 15px;
+        }
+        .nav-bar .nav-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #e1e5eb;
+            cursor: pointer;
+        }
+        .nav-bar .nav-item.active {
+            background-color: #e8f3ff;
+            color: #007bff;
+        }
+        .nav-bar .nav-item:last-child {
+            border-right: none;
+        }
+
+        /* 主体容器 */
+        .main-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* 左侧侧边栏 */
+        .sidebar {
+            width: 160px;
+            background-color: #fff;
+            border: 1px solid #e1e5eb;
+            padding: 10px;
+        }
+        .sidebar .user-profile {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e1e5eb;
+        }
+        .sidebar .user-profile .avatar {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #e1e5eb;
+            margin: 0 auto 5px;
+        }
+        .sidebar .menu-list {
+            list-style: none;
+        }
+        .sidebar .menu-list li {
+            padding: 8px 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .sidebar .menu-list li:hover {
+            background-color: #f5f7fa;
+        }
+
+        /* 右侧表单区 */
+        .form-area {
+            flex: 1;
+            background-color: #fff;
+            border: 1px solid #e1e5eb;
+            padding: 20px;
+        }
+        .form-area .tab-header {
+            display: flex;
+            border-bottom: 1px solid #e1e5eb;
+            margin-bottom: 20px;
+        }
+        .form-area .tab-header .tab-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .form-area .tab-header .tab-item.active {
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+        .form-group label {
+            width: 80px;
+            text-align: right;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #e1e5eb;
+            border-radius: 3px;
+        }
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .form-group .upload-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group .upload-group .upload-btn {
+            padding: 6px 12px;
+            border: 1px solid #e1e5eb;
+            background-color: #f5f7fa;
+            cursor: pointer;
+        }
+        .form-group .file-list {
+            flex: 1;
+        }
+        .form-group .file-list .file-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e1e5eb;
+        }
+        .form-group .file-list .file-item span {
+            color: #666;
+        }
+        .form-group .file-list .file-item button {
+            border: none;
+            background: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .form-footer button {
+            padding: 8px 16px;
+            border: 1px solid #e1e5eb;
+            background-color: #f5f7fa;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部栏 -->
+    <div class="top-header">
+        <div class="logo">易班logo</div>
+        <input type="text" class="search" placeholder="搜索...">
+        <div class="user-area">
+            <div class="avatar">头像</div>
+            <div class="btn-group">
+                <button>选课</button>
+                <button>地图</button>
+                <button>记录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <div class="nav-item">猜你需要</div>
+        <div class="nav-item active">AI智能助手</div>
+        <div class="nav-item">未登录首页</div>
+        <div class="nav-item">机构详情</div>
+        <div class="nav-item">机构专区</div>
+        <div class="nav-item">名师详情</div>
+        <div class="nav-item">我要开课-上传课程</div>
+    </div>
+
+    <!-- 主体容器 -->
+    <div class="main-container">
+        <!-- 左侧侧边栏 -->
+        <div class="sidebar">
+            <div class="user-profile">
+                <div class="avatar">头像</div>
+                <div>张三</div>
+                <div>个人签名</div>
+            </div>
+            <ul class="menu-list">
+                <li>我的学习记录</li>
+                <li>我的课</li>
+                <li>成长地图</li>
+                <li>个人详情</li>
+                <li>好友动态</li>
+            </ul>
+        </div>
+
+        <!-- 右侧表单区 -->
+        <div class="form-area">
+            <div class="tab-header">
+                <div class="tab-item">我要开课</div>
+                <div class="tab-item active">我已开课</div>
+                <div class="tab-item">我的课</div>
+            </div>
+
+            <div class="form-group">
+                <label>录制视频</label>
+                <input type="text" placeholder="输入文本...">
+            </div>
+            <div class="form-group">
+                <label>录制屏幕</label>
+                <input type="text" placeholder="输入文本...">
+            </div>
+            <div class="form-group">
+                <label>上传课程</label>
+                <input type="text" placeholder="输入文本...">
+            </div>
+
+            <div class="form-group">
+                <label>课程分类</label>
+                <select>
+                    <option>一级分类</option>
+                </select>
+                <select>
+                    <option>二级分类</option>
+                </select>
+                <select>
+                    <option>三级分类</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>课程名称</label>
+                <input type="text" placeholder="输入文本...">
+            </div>
+
+            <div class="form-group">
+                <label>课程介绍</label>
+                <textarea placeholder="输入文本..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>课程概念</label>
+                <input type="text" placeholder="输入文本...">
+            </div>
+
+            <div class="form-group">
+                <label>课程配图</label>
+                <div class="upload-group">
+                    <div style="width:60px;height:60px;border:1px dashed #e1e5eb;"></div>
+                    <button class="upload-btn">添加</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>上传视频</label>
+                <div class="upload-group">
+                    <input type="text" placeholder="输入文本...">
+                    <button class="upload-btn">添加</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label></label>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span>请附件1：未选择文件</span>
+                        <button>移除</button>
+                    </div>
+                    <div class="file-item">
+                        <span>请附件2：未选择文件</span>
+                        <button>移除</button>
+                    </div>
+                    <div class="file-item">
+                        <span>请附件3：未选择文件</span>
+                        <button>移除</button>
+                    </div>
+                    <div class="file-item">
+                        <span>请附件4：未选择文件</span>
+                        <button>移除</button>
+                    </div>
+                    <div class="file-item">
+                        <span>请附件5：未选择文件</span>
+                        <button>移除</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button>保存</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

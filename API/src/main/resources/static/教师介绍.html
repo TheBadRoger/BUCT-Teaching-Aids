@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师详情 - 德安杰洛-塞纳</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 顶部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1c423e; /* 蓝绿色 */
+        }
+        
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            background: #f98294; /* 淡粉色 */
+            color: #747272;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-back:hover {
+            background: #ff9aae;
+        }
+        
+        /* 主体内容 */
+        .content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* 左侧信息卡片 */
+        .left-panel {
+            flex: 0 0 350px;
+        }
+        
+        .teacher-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .teacher-header {
+            background: #9856d1de 100%; /* 紫色渐变 */
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .teacher-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* 圆形头像 */
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 15px;
+        }
+        
+        .teacher-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .teacher-title {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .teacher-stats {
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .teacher-details {
+            padding: 20px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3d3941; /* 紫色 */
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+        }
+        
+        .expertise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .expertise-item {
+            background: #f0f4ff;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .expertise-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #e0e6ff;
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #8a2be2; /* 紫色 */
+            border-radius: 3px;
+        }
+        
+        /* 右侧内容 */
+        .right-panel {
+            flex: 1;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f4ff;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .honor-btn {
+            background: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .honor-btn:hover {
+            background: #7a1bd2;
+        }
+        
+        .teacher-intro {
+            line-height: 1.8;
+            text-indent: 2em; /* 首行缩进两个字 */
+        }
+        
+        .teacher-intro p {
+            margin-bottom: 15px;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background: #f0f4ff;
+            color: #8a2be2; /* 紫色 */
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .personal-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .info-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .info-pair {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-pair .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                flex: 1;
+            }
+            
+            .personal-info {
+                flex-direction: column;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <div class="header">
+            <h1 class="page-title">教师介绍</h1>
+            <button class="btn-back" onclick="history.back()">
+                <span>←</span> 返回
+            </button>
+        </div>
+        
+        <!-- 主体内容 -->
+        <div class="content">
+            <!-- 左侧信息卡片 -->
+            <div class="left-panel">
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <img src="https://via.placeholder.com/100" alt="教师头像" class="teacher-avatar">
+                        <h2 class="teacher-name">德安杰洛-塞纳</h2>
+                        <p class="teacher-title">高级外语教师</p>
+                        
+                        <div class="teacher-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">加入时间</span>
+                                <span class="stat-value">5年</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">工龄</span>
+                                <span class="stat-value">20年</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">学生</span>
+                                <span class="stat-value">1000人</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="teacher-details">
+                        <!-- 关于老师 -->
+                        <div class="section">
+                            <h3 class="section-title">关于老师</h3>
+                            <p style="font-size: 14px;">是一位受教于某班级的班长的老师，老师是每位学生。英语专业八级，具有丰富的语言知识和技能。善于发现孩子的性格特点，能让孩子学习兴趣。</p>
+                        </div>
+                        
+                        <!-- 基本信息 -->
+                        <div class="section">
+                            <h3 class="section-title">基本信息</h3>
+                            <div class="info-item">
+                                <span class="info-label">性别</span>
+                                <span class="info-value">女</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">教育</span>
+                                <span class="info-value">博士学位</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">联系电话</span>
+                                <span class="info-value">1234567890</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">电子邮箱</span>
+                                <span class="info-value">info@example.com</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">联系地址</span>
+                                <span class="info-value">北京市朝阳区xxx街道xx号</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 教学数据 -->
+                        <div class="section">
+                            <h3 class="section-title">教学数据</h3>
+                            <div class="info-item">
+                                <span class="info-label">累计授课时长</span>
+                                <span class="info-value">8520 小时</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">累计获奖数量</span>
+                                <span class="info-value">800 个</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">累计好评数量</span>
+                                <span class="info-value">400 个</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 工作专长 -->
+                        <div class="section">
+                            <h3 class="section-title">工作专长</h3>
+                            <div class="expertise-list">
+                                <div class="expertise-item">
+                                    <div class="expertise-name">英语教学</div>
+                                    <div>精通度: 95%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                                <div class="expertise-item">
+                                    <div class="expertise-name">课程设计</div>
+                                    <div>精通度: 88%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 88%"></div>
+                                    </div>
+                                </div>
+                                <div class="expertise-item">
+                                    <div class="expertise-name">学生沟通</div>
+                                    <div>精通度: 92%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧内容 -->
+            <div class="right-panel">
+                <!-- 教师介绍 -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2 class="card-title">教师介绍</h2>
+                        <button class="honor-btn">荣誉墙</button>
+                    </div>
+                    <div class="teacher-intro">
+                        <p>英语专业学士、英语专业八级，包括相关英文及能力比较强、从那少儿英语教学工作多年、经验丰富、热爱少儿英语教育、善于观察孩子学习中的优点与潜力，并将自己发现的问题与家长沟通、针对学生的情绪和兴趣，做文章中一直关注着重要大工具或活动的一项支持孩子最理想的培养计划。</p>
+                        <p>长期从事于少儿英语教学工作，有丰富的授课经验、英语训练扎实、发音精湛、表达流畅、性格活泼开朗，对孩子抱负热情与爱心，善于与孩子交流，讲课思路清晰，认真负责，深受小朋友和家长的喜爱；“永远热爱我的英语”学生，永远热爱我的父母和子女。</p>
+                        <p>学生喜欢的课，是一个自然视角、充满热情、热爱生活、热爱学校、热爱教育工作的好老师。他们说：“您的热情点燃我们每一个人对生活的爱，您希望为严重、极端影响每一个人认真劳动，您在勤奋时，帮助我们每一个人去追求心灵的温暖”。在学生眼里，我是每个课堂上激情四射、知识满满，对自己的美好他们的学业评价非常出色；是一个诚实的话语源自，可以增强大家的期望和信任；是那些属于自己的同学，能够心存的心愿，他们说，在人生这样一段特殊的经历中，每一位您这样的教师，是无比幸运和幸福的。</p>
+                    </div>
+                </div>
+                
+                <!-- 技能标签 -->
+                <div class="content-card">
+                    <h2 class="card-title">技能标签</h2>
+                    <div class="tags">
+                        <span class="tag">英语教学</span>
+                        <span class="tag">课程设计</span>
+                        <span class="tag">教育心理学</span>
+                        <span class="tag">课堂管理</span>
+                        <span class="tag">个性化教学</span>
+                    </div>
+                </div>
+                
+                <!-- 语言标签 -->
+                <div class="content-card">
+                    <h2 class="card-title">语言标签</h2>
+                    <div class="tags">
+                        <span class="tag">中文</span>
+                        <span class="tag">英语</span>
+                        <span class="tag">法语</span>
+                    </div>
+                </div>
+                
+                <!-- 个人信息 -->
+                <div class="content-card">
+                    <h2 class="card-title">个人信息</h2>
+                    <div class="personal-info">
+                        <div class="info-row">
+                            <div class="info-group">
+                                <div class="info-pair">
+                                    <span class="info-label">姓名</span>
+                                    <span class="info-value">德安杰洛-塞纳</span>
+                                </div>
+                                <div class="info-pair">
+                                    <span class="info-label">中文名</span>
+                                    <span class="info-value">德安杰洛-塞纳</span>
+                                </div>
+                                <div class="info-pair">
+                                    <span class="info-label">工龄</span>
+                                    <span class="info-value">20年</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-group">
+                                <div class="info-pair">
+                                    <span class="info-label">联系方式</span>
+                                    <span class="info-value">1234567890</span>
+                                </div>
+                                <div class="info-pair">
+                                    <span class="info-label">受教方式</span>
+                                    <span class="info-value">全职</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 返回按钮功能
+        document.querySelector('.btn-back').addEventListener('click', function() {
+            history.back();
+        });
+        
+        // 荣誉墙按钮功能（模拟切换效果）
+        document.querySelector('.honor-btn').addEventListener('click', function() {
+            alert('这里将切换到荣誉墙页面');
+        });
+    </script>
+</body>
+</html>
