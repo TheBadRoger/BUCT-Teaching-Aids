@@ -1,0 +1,247 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部导航样式 */
+.top-nav {
+    background-color: #ffffff;
+    padding: 4px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top:0;
+    right: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.top-nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 90px;
+}
+
+.logo {
+    height: 40px;
+}
+
+.search-box {
+    display: flex;
+    flex: 1;
+    max-width: 600px;
+    margin: 0 40px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #165DFF;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-btn {
+    background-color: #165DFF;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd;
+}
+/* 第二层导航栏 */
+.second-nav{
+    background-color: #ffffff;
+    padding: 15px 90px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    top:60px;
+    right: 0;
+    left: 0;
+    display: flex;
+    position: fixed;
+    z-index: 999;
+    justify-content: space-between;
+}
+.second-nav-left{
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+}
+
+.second-nav-left a{
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+}
+.second-nav-right a{
+    font-size: 18px;
+    text-decoration: none;
+    color: #1b2682;
+}
+.second-nav a:hover{
+    color: #165DFF;
+}
+/* 主内容区域样式 */
+.main-content {
+    padding: 131px 90px 0 90px;
+    background-color: #f9f9f9;
+}
+
+.result-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 14px;
+}
+/* 第一层 */
+.first-container{
+    display: flex;
+    justify-content: space-between;
+}
+/* 轮播图 */
+.banner img {
+    width: 980px;
+    height: 360px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 右侧特色应用 */
+.right-apps {
+    width: 200px;
+}
+.right-apps{
+    height: 360px;
+    background:#ffffff;
+    border-radius: 10px;
+}
+.app-item {
+    margin: 0 5px 10px 5px;
+    padding: 10px 20px ;
+    height: 65px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    
+}
+.app-item:hover{
+    background: #efefef;
+}
+.app-item-tilte{
+    font-weight: bold;
+}
+.app-item-info{
+    color: #666;
+    font-size: 12px;
+    margin-top: 6px;
+}
+.more-apps {
+    display: block;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    text-decoration: none;
+}
+.more-apps:hover{
+    color: #333;
+}
+.app-item.active{
+    background-color: #ff2600;
+    color: #f0f0f0;
+}
+.app-item.app-item.active .app-item-info{
+    color: #f0f0f0;
+}
+/* 课程 */
+.course-section {
+    margin: 20px 0px;
+}
+
+.course-section h2{
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.course-section h2 span {
+    background-color: #ff2600;
+    color: white;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.course-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-img {
+    width: 100%;
+    height: 165px;
+    background-color: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 69, 0, 0.8);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.course-info {
+    padding: 12px;
+}
+
+.course-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.course-meta {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    justify-content: space-between;
+}

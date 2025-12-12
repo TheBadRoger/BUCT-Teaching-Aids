@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #fff;
+        }
+
+        /* 顶部栏样式 */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        .logo {
+            flex: 1;
+            text-align: left;
+        }
+        .search-area {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+        }
+        .search-area input {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+        }
+        .search-area button {
+            padding: 6px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .user-area img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            padding: 0 20px;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+        .nav-right {
+            margin-left: auto;
+        }
+        .nav-right button {
+            padding: 6px 10px;
+            margin-left: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 内容区样式 */
+        .content {
+            display: flex;
+            padding: 20px;
+        }
+        .sidebar {
+            width: 200px;
+            border-right: 1px solid #ccc;
+            padding-right: 20px;
+        }
+        .user-profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .user-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .user-signature {
+            font-size: 12px;
+            color: #666;
+        }
+        .menu {
+            margin-bottom: 20px;
+        }
+        .menu h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu li {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .menu li:hover {
+            background-color: #f5f7fa;
+        }
+
+        .main {
+            flex: 1;
+            padding-left: 20px;
+        }
+        .sort-area {
+            margin-bottom: 20px;
+        }
+        .sort-area select {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .course-item {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .course-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .course-info {
+            padding: 10px;
+        }
+        .course-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .course-stats {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部栏 -->
+    <div class="top-bar">
+        <div class="logo">易班logo</div>
+        <div class="search-area">
+            <input type="text" placeholder="搜索...">
+            <button>搜</button>
+        </div>
+        <div class="user-area">
+            <img src="user-avatar.jpg" alt="登录头像">
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <div class="nav-item">首页</div>
+        <div class="nav-item active">课程</div>
+        <div class="nav-item">发现</div>
+        <div class="nav-item">机构</div>
+        <div class="nav-right">
+            <button>选课</button>
+            <button>地图</button>
+            <button>记录</button>
+        </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="content">
+        <div class="sidebar">
+            <div class="user-profile">
+                <img src="user-avatar.jpg" alt="当前登录用户头像">
+                <div class="user-name">张三</div>
+                <div class="user-signature">个人签名</div>
+            </div>
+            <div class="menu">
+                <h3>我的学习记录</h3>
+                <ul>
+                    <li>还未看的</li>
+                    <li>已经看过的</li>
+                    <li>我要学的</li>
+                    <li>猜你需要</li>
+                </ul>
+            </div>
+            <div class="menu">
+                <h3>功能菜单</h3>
+                <ul>
+                    <li>成长地图</li>
+                    <li>个人详情</li>
+                    <li>好友动态</li>
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="sort-area">
+                <select>
+                    <option>按星级排序</option>
+                    <option>时间排序</option>
+                    <option>热门排序</option>
+                    <option>评分排序</option>
+                </select>
+            </div>
+            <div class="course-grid">
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <img src="pictures.jpg" alt="课程配图">
+                    <div class="course-info">
+                        <div class="course-meta">共10课时</div>
+                        <div class="course-stats">教参10/笔记10/问答5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
