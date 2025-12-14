@@ -1,0 +1,110 @@
+body {
+    background: #f4f8ff;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+.container {
+    width: 60%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 35px 45px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,.08);
+}
+.title {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 600;
+    margin: 12px 0 5px;
+    display: block;
+}
+select{
+    width: 100%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #c9c9c9;
+    font-size: 15px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+textarea {
+    width: 97.1%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #c9c9c9;
+    font-size: 15px;
+    resize: vertical;
+    margin-bottom: 10px;
+    min-height: 40px;
+}
+.upload-area {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.upload-area input {
+    display: none;
+}
+.upload-box {
+    height: 160px;
+    border: 2px dashed #5ca0ff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    cursor: pointer;
+    background: #f7fbff;
+}
+.upload-box.drag {
+    border-color: #1e8fff;
+    background: #eaf4ff;
+}
+.tip {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #999;
+}
+
+.btns {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+.reset-btn, .preview-btn, .submit-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.search-btn,.think-btn{
+    padding: 2px 8px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #333;
+} 
+.search-btn:hover,.think-btn:hover{
+    background: #f0f0f0;
+}
+.submit-btn {
+    background: #2c82ff;
+    color: white;
+    /* margin-top: 10px; */
+}
+.submit-btn:hover {
+    background: #1867e0;
+}
+
+textarea[placeholder="成绩汇总"] {                  
+  width: 97.1%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #c9c9c9;
+    font-size: 15px;
+    resize: vertical;
+    min-height: 200px;
+    height:400px;
+}

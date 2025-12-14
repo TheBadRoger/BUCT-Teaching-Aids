@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>实验报告提交</title>
+    <link rel="stylesheet" href="judgecss.css">
+</head>
+<body>
+<div class="container">
+
+    <h2 class="title" style="text-align: center;">实验报告提交</h2>
+
+    <div class="upload-area">
+       <input type="file" id="fileUpload" accept=".doc,.docx,.pdf" multiple>
+        <div class="upload-box" id="uploadBox">
+            <span>将文件拖拽到此处，或点击上传</span>
+        </div>
+        <p class="tip">只能上传 doc、docx、pdf，文件名格式为：姓名_日期_报告名称_学号，文件不能超过10M,支持批量上传</p>
+    </div>
+
+    <form id="reportForm">
+        <label>是否批改 <span style="color: red;">*</span></label>
+        <select required>
+            <option value="是">是</option>
+            <option value="否">否</option>
+        </select>
+
+        <label>学科 <span style="color: red;">*</span></label>
+        <textarea placeholder="请输入学科" required></textarea>
+
+        <label>学段 <span style="color: red;">*</span></label>
+        <select required>
+            <option>大一</option>
+            <option>大二</option>
+            <option>大三</option>
+            <option>大四</option>
+        </select>
+
+        <label>试卷分类 <span style="color: red;">*</span></label>
+        <select required>
+            <option>测试试卷</option>
+            <option>课程作业</option>
+            <option>实验报告</option>
+        </select>
+
+        <label>小题分数</label>
+        <textarea placeholder="请输入小题分数，例如：选择题20分，填空题20分，解答题60分"></textarea>
+
+        <label>学生成绩汇总</label>
+        <textarea placeholder="成绩汇总" readonly="readonly"></textarea>
+
+        <!--<div class="btns">
+            <button type="button" class="think-btn">深度思考</button>
+            <button type="button" class="search-btn">联网搜索</button>
+        </div>-->
+
+        <button type="submit" class="submit-btn">📄 一键批改</button>
+    </form>
+</div>
+
+<script src="judgescript.js"></script>
+</body>
+</html>
