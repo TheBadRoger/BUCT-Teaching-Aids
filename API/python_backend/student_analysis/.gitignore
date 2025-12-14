@@ -1,0 +1,22 @@
+# 字节码
+__pycache__/
+*.py[cod]
+*$py.class
+# 环境
+venv/
+env/
+.venv/
+.env
+.env.local
+.env.*.local
+# 依赖
+*.egg-info/
+dist/
+build/
+# 缓存/日志
+.pytest_cache/
+.coverage
+*.log
+# 编辑器
+.idea/
+.vscode/
