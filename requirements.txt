@@ -1,0 +1,14 @@
+# 数据库相关
+sqlalchemy==2.0.23
+pymysql==1.1.0
+python-dotenv==1.0.0
+
+# 检测算法相关
+ultralytics==8.12.0  # YOLO姿态检测
+opencv-python==4.8.1.78  # 图像处理
+numpy==1.26.1  # 数值计算
+pillow==10.1.0  # 图片处理辅助
+
+# （可选）如果需要独立提供API，需安装fastapi和uvicorn
+# fastapi==0.104.1
+# uvicorn==0.24.0
