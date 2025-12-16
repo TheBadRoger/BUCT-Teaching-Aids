@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="PersistenceUnitSettings">
-    <persistence-units>
-      <persistence-unit moduleName="BUCTTAAPI" name="BUCTTAAPI" framework="JPA" ormUnit="BUCTTAAPI:BUCTTAAPI" defaultDataSourceId="00e6ee9e-77ba-4c78-ad2d-88aebe654902" />
-    </persistence-units>
-  </component>
-</project>
