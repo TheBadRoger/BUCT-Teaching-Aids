@@ -5,6 +5,8 @@ import com.buctta.api.reposit.TeacherReposit;
 import com.buctta.api.service.TeacherService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,8 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
-
+@RequiredArgsConstructor
 public class IMPL_TeacherService implements TeacherService {
     @Resource
     private TeacherReposit teacherReposit;

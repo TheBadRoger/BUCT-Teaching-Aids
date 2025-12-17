@@ -37,8 +37,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         emitterMap.put(id, emitter);
 
         /* 使用 Spring 托管的线程池（自动关闭）*/
-        ThreadPoolTaskExecutor executor = ThreadPool.create(
-                8, 32, 200, "ai-gen-");
+        ThreadPoolTaskExecutor executor = ThreadPool.defaultProp();
         executor.submit(() -> doGenerate(id, emitter, texts, fileNames));
         return id;
     }
@@ -119,21 +118,22 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         JsonNode node = objectMapper.readValue(raw, JsonNode.class);
 
         String name = "Unidentified", date = "Unidentified",
-                exp = "Unidentified", id = "Unidentified";
-        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_(.+)_([^.]+)\\.\\w+")
+                exp = "Unidentified", id = "Unidentified",clazz="Unidentified";
+        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.[^.]+$")
                 .matcher(fileName);
         if (m.matches()) {
             name = m.group(1);
             date = m.group(2);
             exp  = m.group(3);
             id   = m.group(4);
+            clazz= m.group(5);
         }
         int    score  = node.get("分数").asInt();
         String basis  = node.get("评分依据").asText();
 
         return String.format(
-                "姓名：%s\n学号：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
-                name, id, date, exp, score, basis);
+                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
+                name, id, clazz, date, exp, score, basis);
     }
 
     /* ---------- 工具 ---------- */

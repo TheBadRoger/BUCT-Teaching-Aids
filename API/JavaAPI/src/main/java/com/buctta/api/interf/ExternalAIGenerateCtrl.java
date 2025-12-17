@@ -5,16 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
 
 @RestController
 @RequestMapping("/api/ai")
 @RequiredArgsConstructor
-public class OneClickGenerateController {
+public class ExternalAIGenerateCtrl {
 
     private final ExternalAIJudge aiGenerateService;
 

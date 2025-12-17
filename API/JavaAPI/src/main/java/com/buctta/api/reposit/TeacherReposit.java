@@ -1,6 +1,5 @@
 package com.buctta.api.reposit;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.buctta.api.entities.TeacherList;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

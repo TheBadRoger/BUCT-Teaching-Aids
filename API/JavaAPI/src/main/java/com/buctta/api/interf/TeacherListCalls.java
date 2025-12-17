@@ -1,6 +1,5 @@
 package com.buctta.api.interf;
 
-
 import com.buctta.api.entities.TeacherList;
 import com.buctta.api.service.TeacherService;
 import com.buctta.api.utils.ResponseContainer;

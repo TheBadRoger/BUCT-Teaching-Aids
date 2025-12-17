@@ -32,7 +32,7 @@ public final class ThreadPool {
         return create(core, max, queue, "custom-thread-");
     }
 
-    public  static ThreadPoolTaskExecutor defaultProp() {
+    public static ThreadPoolTaskExecutor defaultProp() {
         DefaultPoolProperties prop = new DefaultPoolProperties();
         return create(prop.getCoreSize(), prop.getMaxSize(),prop.getQueueCapacity(), prop.getThreadNamePrefix());
     }
