@@ -4,10 +4,13 @@ import com.buctta.api.entities.AdminUser;
 import com.buctta.api.reposit.AdminQuery;
 import com.buctta.api.service.AdminUserLogin;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
-
+@RequiredArgsConstructor
 public class IMPL_AdminUserLogin implements AdminUserLogin {
     @Resource
     private AdminQuery adminQuery;

@@ -6,7 +6,6 @@ import com.buctta.api.utils.FileContentExtractor;
 import com.buctta.api.utils.ResponseContainer;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @RestController
 public class FileExtractCall {
 
