@@ -4,20 +4,20 @@ import com.buctta.api.service.ExternalAIJudge;
 import com.buctta.api.utils.ExternalAI;
 import com.buctta.api.utils.JsonUtil;
 import com.buctta.api.utils.SSEResponseContainer;
-import com.buctta.api.utils.ThreadPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import tools.jackson.databind.node.ObjectNode;
+
 import java.io.*;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.*;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.*;
 
@@ -25,20 +25,25 @@ import java.util.regex.*;
 @Service
 @RequiredArgsConstructor
 public class IMPL_ExternalAIJudge implements ExternalAIJudge {
-    private final ExternalAI aiProps =ExternalAI.AIJudgement();
-    private final ObjectMapper objectMapper; // 由 Spring 注入单例
 
+    private final ExternalAI aiProps =new ExternalAI(
+            "https://cloudapi.polymas.com/bot/v2/completions/chat/stream",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJON0k3cFNUcm0zIiwicm5TdHIiOiJkRllocHFhWkdkQjczY3dkM215eTNqN29XSm9HdTdyYSIsInR5cGUiOiJaSFMiLCJ1c2VyTmlkIjoiTjdJN3BTVHJtMyJ9.o99-sfD3_TmewtrmT7O-ItrLjGKAIMSaEdPGFMaoU0U",
+            "(AI生成)");
+
+    private final ObjectMapper objectMapper; // 由 Spring 注入单例
+    private final ThreadPoolTaskExecutor aiExecutor;
     /* 线程安全 Map + 弱引用，防止内存泄漏 */
     private final Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
+
+
 
     public String submitTask(List<String> texts, List<String> fileNames) {
         String id = UUID.randomUUID().toString();
         SseEmitter emitter = new SseEmitter(0L);
         emitterMap.put(id, emitter);
-
-        /* 使用 Spring 托管的线程池（自动关闭）*/
-        ThreadPoolTaskExecutor executor = ThreadPool.defaultProp();
-        executor.submit(() -> doGenerate(id, emitter, texts, fileNames));
+        /* 使用 Spring 托管的线程池 */
+        aiExecutor.submit(() -> doGenerate(id, emitter, texts, fileNames));
         return id;
     }
 
@@ -47,7 +52,8 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             SseEmitter tmp = new SseEmitter(5_000L);
             try {
                 tmp.send(SseEmitter.event().name("error").data("no such id: " + k));
-            } catch (IOException ignore) {}
+            }
+            catch (IOException ignore) {}
             tmp.complete();
             return tmp;
         });
@@ -68,11 +74,13 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             }
             send(emitter, "done", "[COMPLETED]");
             emitter.complete();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("AI generate error", e);
             send(emitter, "error", "生成异常：" + e.getMessage());
             emitter.completeWithError(e);
-        } finally {
+        }
+        finally {
             emitterMap.remove(id);
         }
     }
@@ -114,12 +122,13 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     }
 
     /* ---------- 解析 AI 返回 & 拼装 ---------- */
-    private String parseAndFormat(String raw, String fileName) throws IOException {
-        JsonNode node = objectMapper.readValue(raw, JsonNode.class);
+    /*private String parseAndFormat(String raw, String fileName) throws IOException {
+        String unescaped = objectMapper.readValue(raw, String.class); // 先当字符串读出来
+        JsonNode node = objectMapper.readTree(unescaped); // 再当 JSON 解析
 
         String name = "Unidentified", date = "Unidentified",
-                exp = "Unidentified", id = "Unidentified",clazz="Unidentified";
-        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.[^.]+$")
+                exp = "Unidentified", id = "Unidentified", clazz = "Unidentified";
+        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.([^.]+)$")
                 .matcher(fileName);
         if (m.matches()) {
             name = m.group(1);
@@ -134,12 +143,41 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         return String.format(
                 "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
                 name, id, clazz, date, exp, score, basis);
+    }*/
+
+    private String parseAndFormat(String raw, String fileName) throws IOException {
+        JsonNode node;
+
+            // 如果失败，说明 raw 是 "JSON 字符串" 形式，需要再反序列化一次
+            String unescaped = objectMapper.readValue(raw, String.class);
+            node = objectMapper.readTree(unescaped);
+
+
+        String name = "Unidentified", date = "Unidentified",
+                exp = "Unidentified", id = "Unidentified", clazz = "Unidentified";
+
+        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.([^.]+)$")
+                .matcher(fileName);
+        if (m.matches()) {
+            name  = m.group(1);
+            date  = m.group(2);
+            exp   = m.group(3);
+            id    = m.group(4);
+            clazz = m.group(5);
+        }
+
+        int    score = node.get("分数").asInt();
+        String basis = node.get("评分依据").asText();
+
+        return String.format(
+                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
+                name, id, clazz, date, exp, score, basis);
     }
 
     /* ---------- 工具 ---------- */
     private HttpURLConnection buildConnection() throws IOException {
         HttpURLConnection conn =
-                (HttpURLConnection) new URL(aiProps.getEndPoint()).openConnection();
+                (HttpURLConnection) URI.create(aiProps.getEndPoint()).toURL().openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setDoInput(true);
@@ -152,12 +190,17 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     }
 
     private String buildPayload(String question) {
-        return String.format(
-                "{\"appCode\":\"ti39Ohdy6k\",\"userNid\":\"N7I7pSTrm3\"," +
-                        "\"sessionNid\":\"PNeg1BjP6x\",\"chatNid\":\"JJdylJaMSF\"," +
-                        "\"testFlag\":true,\"reasoningFlag\":false," +
-                        "\"metadata\":{\"thinkingEnabled\":0},\"question\":%s}",
-                JsonUtil.toJsonString(question));
+            // 用 ObjectNode 一次性生成，库会自动加引号、转义
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("appCode", "ti39Ohdy6k");
+            node.put("userNid", "N7I7pSTrm3");
+            node.put("sessionNid", "PNeg1BjP6x");
+            node.put("chatNid", "JJdylJaMSF");
+            node.put("testFlag", true);
+            node.put("reasoningFlag", false);
+            node.putObject("metadata").put("thinkingEnabled", 0);
+            node.put("question", question);   // 原始字符串，不要 toJsonString
+            return node.toString();
     }
 
     private void send(SseEmitter emitter, String type, Object data) {
