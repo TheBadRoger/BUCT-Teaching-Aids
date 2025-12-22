@@ -92,7 +92,6 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try (OutputStream os = conn.getOutputStream()) {
             os.write(payload.getBytes(StandardCharsets.UTF_8));
         }
-
         int st = conn.getResponseCode();
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(
@@ -122,37 +121,12 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     }
 
     /* ---------- 解析 AI 返回 & 拼装 ---------- */
-    /*private String parseAndFormat(String raw, String fileName) throws IOException {
-        String unescaped = objectMapper.readValue(raw, String.class); // 先当字符串读出来
-        JsonNode node = objectMapper.readTree(unescaped); // 再当 JSON 解析
-
-        String name = "Unidentified", date = "Unidentified",
-                exp = "Unidentified", id = "Unidentified", clazz = "Unidentified";
-        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.([^.]+)$")
-                .matcher(fileName);
-        if (m.matches()) {
-            name = m.group(1);
-            date = m.group(2);
-            exp  = m.group(3);
-            id   = m.group(4);
-            clazz= m.group(5);
-        }
-        int    score  = node.get("分数").asInt();
-        String basis  = node.get("评分依据").asText();
-
-        return String.format(
-                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
-                name, id, clazz, date, exp, score, basis);
-    }*/
 
     private String parseAndFormat(String raw, String fileName) throws IOException {
         JsonNode node;
 
-            // 如果失败，说明 raw 是 "JSON 字符串" 形式，需要再反序列化一次
-            String unescaped = objectMapper.readValue(raw, String.class);
-            node = objectMapper.readTree(unescaped);
-
-
+        raw = raw.replace("\\\"", "\"");
+        node = objectMapper.readTree(raw);
         String name = "Unidentified", date = "Unidentified",
                 exp = "Unidentified", id = "Unidentified", clazz = "Unidentified";
 
