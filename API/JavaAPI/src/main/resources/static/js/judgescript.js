@@ -142,12 +142,12 @@ function openSSE(id) {
   evt.addEventListener('error', e => { evt.close(); enableBtn(); });
 
   evt.addEventListener("fileStart", e => {
-    const { index, total } = JSON.parse(e.data);
+    const { index, total } = JSON.parse(e.data).data;
     append(`\n========== 第 ${index + 1}/${total} 个文件 ==========\n`);
   });
   evt.addEventListener("message", e => append(e.data));
   evt.addEventListener("fileEnd", e => {
-    const { index, total } = JSON.parse(e.data);
+    const { index, total } = JSON.parse(e.data).data;
     append(`\n---------- 第 ${index + 1} 个文件结束 ----------\n`);
   });
   evt.addEventListener("done", e => {
