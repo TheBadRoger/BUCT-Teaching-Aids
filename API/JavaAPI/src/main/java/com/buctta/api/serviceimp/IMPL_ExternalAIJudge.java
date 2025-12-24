@@ -144,7 +144,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         String basis = node.get("评分依据").asText();
 
         return String.format(
-                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s",
+                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s\n",
                 name, id, clazz, date, exp, score, basis);
     }
 
