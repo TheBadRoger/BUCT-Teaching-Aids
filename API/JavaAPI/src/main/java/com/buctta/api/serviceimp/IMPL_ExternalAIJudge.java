@@ -181,7 +181,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try {
             emitter.send(SseEmitter.event()
                     .name(type)
-                    .data(new SSEResponseContainer<>(type, data)));
+                    .data(data));
         } catch (IOException e) {
             log.warn("SSE send error", e);
         }
