@@ -7,7 +7,7 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/aijudegment")
 
 public class AdminUserLoginCalls {
     @Resource
@@ -17,9 +17,9 @@ public class AdminUserLoginCalls {
     public ResponseContainer<AdminUser> loginCall(@RequestParam String username, @RequestParam String password){
         AdminUser adminUser = userLogin.login(username, password);
         if(adminUser != null)
-            return new ResponseContainer<AdminUser>("0","登陆成功",adminUser);
+            return new ResponseContainer<>("0","登陆成功",adminUser);
         else
-            return new ResponseContainer<AdminUser>("-1","用户名或密码错误",adminUser);
+            return new ResponseContainer<>("-1","用户名或密码错误", null);
     }
 
     @PostMapping("/register")
@@ -27,8 +27,8 @@ public class AdminUserLoginCalls {
         AdminUser adminUser = userLogin.register(newUser);
         ResponseContainer<AdminUser> registerCallBack = new ResponseContainer<>();
         if(adminUser != null)
-            return new ResponseContainer<AdminUser>("0","注册成功",null);
+            return new ResponseContainer<>("0","注册成功",adminUser);
         else
-            return new ResponseContainer<AdminUser>("-2","用户名已被注册",null);
+            return new ResponseContainer<>("-2","用户名已被注册",null);
     }
 }

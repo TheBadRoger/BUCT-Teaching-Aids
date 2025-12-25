@@ -66,11 +66,8 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try {
             for (int index = 0; index < total; index++) {
                 send(emitter, "fileStart", Map.of("index", index, "total", total));
-
                 String result = callAi(texts.get(index), fileNames.get(index));
                 send(emitter, "message", result);
-
-                send(emitter, "fileEnd", Map.of("index", index, "total", total));
             }
             send(emitter, "done", "[COMPLETED]");
             emitter.complete();
@@ -127,31 +124,24 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
 
         raw = raw.replace("\\\"", "\"");
         node = objectMapper.readTree(raw);
-        String name = "Unidentified", date = "Unidentified",
-                exp = "Unidentified", id = "Unidentified", clazz = "Unidentified";
 
-        Matcher m = Pattern.compile("([^_]+)_(\\d{8})_([^_]+)_(\\d+)_([^_]+)\\.([^.]+)$")
-                .matcher(fileName);
-        if (m.matches()) {
-            name  = m.group(1);
-            date  = m.group(2);
-            exp   = m.group(3);
-            id    = m.group(4);
-            clazz = m.group(5);
+        String stem = fileName.replaceFirst("\\.[^.]+$", "");
+        String[] seg = stem.split("_", -1);   // -1 保证空串也保留
+        if (seg.length != 5) {
+            throw new IllegalArgumentException("文件名格式错误：" + fileName);
         }
 
         int    score = node.get("分数").asInt();
-        String basis = node.get("评分依据").asText();
+        String basis = node.get("评分依据").asString();
 
         return String.format(
-                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n分数：%d\n评判依据：\n%s\n",
-                name, id, clazz, date, exp, score, basis);
+                "姓名：%s\n学号：%s\n班级：%s\n日期：%s\n报告名称：%s\n\n分数：%d\n评判依据：%s\n\n",
+                seg[0], seg[3], seg[4], seg[1], seg[2], score, basis);
     }
 
     /* ---------- 工具 ---------- */
     private HttpURLConnection buildConnection() throws IOException {
-        HttpURLConnection conn =
-                (HttpURLConnection) URI.create(aiProps.getEndPoint()).toURL().openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(aiProps.getEndPoint()).toURL().openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setDoInput(true);
@@ -181,8 +171,9 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try {
             emitter.send(SseEmitter.event()
                     .name(type)
-                    .data(data));
-        } catch (IOException e) {
+                    .data(new SSEResponseContainer<>(type, data)));
+        }
+        catch (IOException e) {
             log.warn("SSE send error", e);
         }
     }

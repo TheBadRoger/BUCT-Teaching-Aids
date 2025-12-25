@@ -89,7 +89,7 @@ document.getElementById("uploadBox")
  *  2. 点击【一键生成】按钮：先提取（若还没提取过）再调 /generate/start
  *****************************************************************/
 document.querySelector(".submit-btn").addEventListener("click", ev => {
-  ev.preventDefault();          // 阻止表单的默认提交
+  ev.preventDefault();          // 阻止表单默认提交
   document.querySelector("#reportForm textarea[placeholder*='成绩']").value="";
   disableBtn();
   // 如果还没提取过，先补提取
@@ -143,20 +143,16 @@ function openSSE(id) {
 
   evt.addEventListener("fileStart", e => {
     const { index, total } = JSON.parse(e.data).data;
-    append(`\n========== 第 ${index + 1}/${total} 个文件 ==========\n`);
+    append(`========== 第 ${index + 1}/${total} 个文件 ==========\n`);
   });
-  evt.addEventListener("message", e => append(e.data));
-  evt.addEventListener("fileEnd", e => {
-    const { index, total } = JSON.parse(e.data).data;
-    append(`\n---------- 第 ${index + 1} 个文件结束 ----------\n`);
-  });
+  evt.addEventListener("message", e => append(JSON.parse(e.data).data));
   evt.addEventListener("done", e => {
     append("\n🎉 全部批改完成！");
     
     evt.close();
   });
   evt.addEventListener("error", e => {
-    append("\n❌ 服务器异常：" + (e.data || ""));
+    append("\n❌ 服务器异常：" + (JSON.parse(e.data).data || ""));
     evt.close();
   });
 }
