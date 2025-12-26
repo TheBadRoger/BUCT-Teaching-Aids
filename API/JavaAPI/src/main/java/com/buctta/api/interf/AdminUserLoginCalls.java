@@ -7,7 +7,7 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/aijudegment")
+@RequestMapping("/api/admin")
 
 public class AdminUserLoginCalls {
     @Resource
