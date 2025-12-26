@@ -9,7 +9,7 @@ box.addEventListener("click", () => upload.click());
 upload.addEventListener("change", () => {
     if (upload.files.length > 0) {
         let names = "";
-        for (let file of upload.files) names += `<span>${file.name}</span><br>`;
+        for (let file of upload.files) names += `<span>${file.name};</span><br>`;
         box.innerHTML = names;
         // 文件选择后立即发送到服务器
         sendFiles();
@@ -30,7 +30,7 @@ box.addEventListener("drop", e => {
     upload.files = e.dataTransfer.files;
 
     let names = "";
-    for (let file of upload.files) names += `<span>${file.name}</span><br>`;
+    for (let file of upload.files) names += `<span>${file.name};</span><br>`;
     box.innerHTML = names;
     
     // 拖拽上传后立即发送到服务器
