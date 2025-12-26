@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import tools.jackson.databind.deser.jdk.JavaUtilCalendarDeserializer;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/aijudegment")
 
 public class JudgeUserLoginCalls {
     @Resource

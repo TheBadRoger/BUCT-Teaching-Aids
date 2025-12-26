@@ -28,10 +28,12 @@ body, html {
 }
 
 .top-bar .title {
+  margin-left: 30px;
   font-size: 18px;
   font-weight: 500;
-  color: #666;
+  color: #333;
 }
+
 
 .top-bar .right a {
   text-decoration: none;
@@ -50,7 +52,7 @@ body, html {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  height: calc(100vh - 144px);
+  height: calc(100vh - 162px);
   padding-right: 100px;
 }
 
@@ -101,6 +103,15 @@ body, html {
   border-color: #2b5cff;
 }
 
+/* 错误提示样式 */
+.input-group input.input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+}
+.input-group input.input-error:focus {
+  box-shadow: 0 0 0 4px rgba(231,76,60,0.12);
+}
+
 /* 登录按钮 */
 .login-btn {
   width: 100%;
@@ -142,17 +153,35 @@ body, html {
   margin-top: 10px;
 }
 
-/* 底部导航栏 */
 .foot-bar {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   background: rgba(255,255,255,1);
   padding: 20px 40px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+.foot-bar a, .foot-bar span {
+  margin: 0 8px;
+  color: #333;
+  text-decoration: none;
+  
+}
+
+.copyright {
+  width: 100%;
+  margin-top: 15px;
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+}
+.more {
+  margin:0 auto;
+}
 .more a {
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   text-decoration: none;
 }
