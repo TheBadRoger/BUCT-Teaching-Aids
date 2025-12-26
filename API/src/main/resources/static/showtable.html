@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实验成绩分析平台</title>
+  <link rel="stylesheet" href="./css/showtable.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="content-wrapper">
+      <!-- 左侧列 -->
+      <div class="left-column">
+        <!-- 核心评分概览 -->
+        <h2 class="section-title">核心评分概览</h2>
+        <div class="section-item overview-section">
+          <div class="section-body">
+            <table class="overview-table" id="overviewTable"></table>
+          </div>
+        </div>
+
+        <!-- 成绩分布表：标题+按钮组 同行容器 -->
+        <div class="title-btn-group">
+          <h2 class="section-title inline-title">成绩分布表</h2>
+          <div class="btn-group outer-btn-group">
+            <div class="dropdown">
+              <button class="btn">数据导出</button>
+              <div class="dropdown-menu">
+                <a href="#">完整JSON数据集</a>
+                <a href="#">Excel汇总表</a>
+                <a href="#">PDF分析报告</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <button class="btn">批量操作</button>
+              <div class="dropdown-menu">
+                <a href="#">一键反馈邮件</a>
+                <a href="#">分组指导建议</a>
+                <a href="#">成绩同步教务系统</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <button class="btn">下钻分析</button>
+              <div class="dropdown-menu">
+                <a href="#">按分数段筛选</a>
+                <a href="#">按薄弱维度分组</a>
+                <a href="#">时间趋势对比</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <button class="btn">教学调整</button>
+              <div class="dropdown-menu">
+                <a href="#">标记重点讲解内容</a>
+                <a href="#">调整下次实验难度</a>
+                <a href="#">个性化作业布置</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 成绩分布表+分页 -->
+        <div class="section-item score-section">
+          <div class="section-body">
+            <table class="score-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>学号</th>
+                  <th>姓名</th>
+                  <th>总分</th>
+                  <th>等级</th>
+                  <th>最强维度</th>
+                  <th>最弱维度</th>
+                  <th>评阅耗时</th>
+                </tr>
+              </thead>
+              <tbody id="scoreTableBody"></tbody>
+            </table>
+            <!-- 分页控件：移除硬编码内容，改为动态渲染 -->
+            <div class="pagination" id="pagination">
+              <button class="page-btn" id="prevPage">上一页</button>
+              <span id="pageInfo"></span>
+              <button class="page-btn" id="nextPage">下一页</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧列 -->
+      <div class="right-column">
+        <!-- 等级分布可视化 -->
+        <h2 class="section-title">等级分布可视化</h2>
+        <div class="section-item level-section">
+          <div class="section-body">
+            <div id="levelChart" class="chart level-chart"></div>
+          </div>
+        </div>
+
+        <!-- 能力维度评分（与成绩分布表等高） -->
+        <h2 class="section-title">能力维度评分</h2>
+        <div class="section-item ability-section">
+          <div class="section-header">
+            <span id="studentName" class="student-name">请选择学生</span>
+            <span class="ability-tip">请点击左侧学生姓名查看详情</span>
+          </div>
+          <div class="section-body">
+            <div id="abilityChart" class="chart ability-chart"></div>
+            <div class="strength-weakness" id="strengthWeakness"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/showtable.js"></script>
+</body>
+</html>

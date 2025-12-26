@@ -5,31 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eec83ef2-bb37-4185-8d2a-58add4d356aa" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-12-02T223910.200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-12-02T224439.200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/57805ed8-e8f7-45d1-8c23-ba4913efa3bd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/57805ed8-e8f7-45d1-8c23-ba4913efa3bd.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Backup/ReferStyle.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Backup/White.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/ExternalAPI/AdminUserLogin.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/ExternalAPI/TeacherService.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminQuery.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminUser.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/AdminUserLogin.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/CallBackContainer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/TeacherList.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Internals/TeacherReposit.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Tutorials/HowToCodeAnAPI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/Documents/Tutorials/Structure.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/ReadmeRes/backsucceed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/ReadmeRes/frontsucceed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/AIJudge.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/judgecss.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebUI/AIJudge/judgescript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/css/enter.css" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/resources/static/css/enter.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/enter.html" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/resources/static/enter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/src/main/resources/static/js/enter.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/src/main/resources/static/js/enter.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,41 +44,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP 请求.generated-requests | #1.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.BUCTTAAPI [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.BUCTTAAPI [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.BUCTTAAPI [package].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ApiApplication.executor&quot;: &quot;Run&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP 请求.generated-requests | #1.executor": "Run",
+    "Maven.BUCTTAAPI [clean].executor": "Run",
+    "Maven.BUCTTAAPI [install].executor": "Run",
+    "Maven.BUCTTAAPI [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.ApiApplication.executor": "Run",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.ApiApplication.executor": "Run"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.buctta.api.interf" />
@@ -115,6 +103,19 @@
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.ApiApplication">
+    <configuration name="ApiApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.buctta.api.ApiApplication" />
+      <module name="BUCTTAAPI" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.buctta.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#1" runType="运行单个请求">
       <method v="2" />
     </configuration>
@@ -127,6 +128,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="应用程序.ApiApplication" />
         <item itemvalue="HTTP 请求.generated-requests | #1" />
       </list>
     </recent_temporary>
@@ -134,8 +136,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
       </set>
     </attachedChunks>
   </component>
@@ -150,6 +151,7 @@
       <workItem from="1764687304857" duration="24000" />
       <workItem from="1764854907601" duration="1310000" />
       <workItem from="1764856709138" duration="376000" />
+      <workItem from="1766314527112" duration="3959000" />
     </task>
     <servers />
   </component>

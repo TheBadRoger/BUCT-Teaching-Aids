@@ -1,0 +1,339 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.main-container {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: rgb(245, 245, 245);
+  padding: 24px 32px;
+}
+
+.content-wrapper {
+  max-width: 1800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.left-column, .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 标题与按钮同行容器 */
+.title-btn-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 20px;
+  color: #2c3e50;
+  font-weight: bold;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.inline-title {
+  margin-bottom: 0;
+}
+
+/* 框外按钮组 */
+.outer-btn-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.section-item {
+  background: #ffffff;
+  border-radius: 8px;
+  border: none;
+  box-shadow: none;
+}
+
+/* 核心评分概览 & 等级分布可视化 等高 */
+.overview-section .section-body,
+.level-section .section-body {
+  padding: 24px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 成绩分布表 & 能力维度评分 等高 */
+.score-section .section-body,
+.ability-section .section-body {
+  padding: 24px;
+  min-height: 500px; /* 固定高度，保持两者等高 */
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  padding: 18px 24px;
+  border-bottom: none;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ability-tip {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.student-name {
+  font-size: 16px;
+  color: #5e7ce2;
+  font-weight: 500;
+}
+
+.btn {
+  padding: 9px 14px;
+  background: #5e7ce2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #4a67d1;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 130px;
+  display: none;
+  z-index: 999;
+  font-size: 12px;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 12px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background: #f5f7ff;
+  color: #5e7ce2;
+}
+
+/* 成绩表格 */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.score-table th, .score-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.score-table th {
+  background: #f9fafc;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.score-table tr:hover {
+  background: #f8fafc;
+}
+
+.student-name-link {
+  color: #5e7ce2;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.student-name-link:hover {
+  color: #4a67d1;
+}
+
+/* 分页控件 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  background: #f5f7ff;
+  color: #5e7ce2;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-btn:disabled {
+  background: #f9fafc;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+#pageInfo {
+  color: #64748b;
+}
+
+/* 图表样式 */
+.chart {
+  width: 100%;
+  flex: 1;
+}
+
+.ability-chart {
+  height: 320px;
+  margin-bottom: 20px;
+}
+
+.level-chart {
+  height: 100%;
+}
+
+.strength-weakness {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1;
+  min-width: 180px;
+  background: #fff8e6;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #f0b442;
+  color: #fff;
+  border-radius: 6px;
+  margin: 0 5px 5px 0;
+  font-size: 13px;
+}
+
+.overview-table {
+  width: 100%;
+  border-collapse: collapse;
+  flex: 1;
+}
+
+.overview-table tr td {
+  padding: 12px 10px;
+  line-height: 1.6;
+  border-bottom: 1px solid #eee;
+}
+
+.overview-table tr td:first-child {
+  font-weight: bold;
+  color: #666;
+  width: 20%;
+}
+
+.overview-table tr td:nth-child(2) {
+  color: #2c3e50;
+  font-weight: 500;
+  width: 40%;
+}
+
+.overview-table tr td:nth-child(3) {
+  color: #64748b;
+  width: 40%;
+}
+
+/* 响应式适配 */
+@media (max-width: 1200px) {
+  .content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .overview-section .section-body,
+  .level-section .section-body {
+    height: 240px;
+  }
+
+  .score-section .section-body,
+  .ability-section .section-body {
+    min-height: 400px;
+  }
+
+  .strength-weakness {
+    flex-direction: column;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .ability-chart {
+    height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    padding: 16px 16px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .section-body {
+    padding: 16px;
+  }
+}

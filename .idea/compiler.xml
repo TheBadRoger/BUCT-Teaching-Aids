@@ -12,7 +12,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="API" target="21" />
-      <module name="BUCTTAAPI" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
