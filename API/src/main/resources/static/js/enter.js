@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			params.append('username', username);
 			params.append('password', password);
 
-			fetch('http://10.15.2.38:4444/api/admin/login', {
+			fetch('http://10.15.2.38:4444/api/aijudgement/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
