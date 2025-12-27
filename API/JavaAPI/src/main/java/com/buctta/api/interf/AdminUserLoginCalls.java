@@ -19,16 +19,15 @@ public class AdminUserLoginCalls {
         if(adminUser != null)
             return new ResponseContainer<>("0","登陆成功",adminUser);
         else
-            return new ResponseContainer<>("-1","用户名或密码错误", null);
+            return new ResponseContainer<>("1001","用户名或密码错误", null);
     }
 
     @PostMapping("/register")
     public ResponseContainer<AdminUser> registerCall(@RequestBody AdminUser newUser){
         AdminUser adminUser = userLogin.register(newUser);
-        ResponseContainer<AdminUser> registerCallBack = new ResponseContainer<>();
         if(adminUser != null)
             return new ResponseContainer<>("0","注册成功",adminUser);
         else
-            return new ResponseContainer<>("-2","用户名已被注册",null);
+            return new ResponseContainer<>("1002","用户名已被注册",null);
     }
 }

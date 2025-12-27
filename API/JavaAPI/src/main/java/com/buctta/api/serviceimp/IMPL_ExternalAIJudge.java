@@ -2,24 +2,27 @@ package com.buctta.api.serviceimp;
 
 import com.buctta.api.service.ExternalAIJudge;
 import com.buctta.api.utils.ExternalAI;
-import com.buctta.api.utils.JsonUtil;
 import com.buctta.api.utils.SSEResponseContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.node.ObjectNode;
 
-import java.io.*;
-import java.net.URI;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -35,8 +38,6 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     private final ThreadPoolTaskExecutor aiExecutor;
     /* 线程安全 Map + 弱引用，防止内存泄漏 */
     private final Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
-
-
 
     public String submitTask(List<String> texts, List<String> fileNames) {
         String id = UUID.randomUUID().toString();

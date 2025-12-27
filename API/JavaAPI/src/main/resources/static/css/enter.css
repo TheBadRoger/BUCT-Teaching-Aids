@@ -4,7 +4,7 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: "Microsoft YaHei", sans-serif;
-  background: url('../image/main-background.jpg') no-repeat center center/cover;
+  background: url('../images/main-background.jpg') no-repeat center center/cover;
 }
 
 /* 顶部栏 */
