@@ -1,8 +1,9 @@
-package com.buctta.api.interf;
+package com.buctta.api.controller;
 
 import com.buctta.api.utils.FileContentExtractor;
 import com.buctta.api.utils.ResponseContainer;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,12 +13,13 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-public class FileExtractCall {
+@RequestMapping("/api/fileextract")
+public class FileExtractCtrl {
 
-    @PostMapping("/api/fileextract/temp")
+    @PostMapping("/temp")
     public ResponseContainer<List<DocResult>> upload(@RequestParam("files") MultipartFile[] files) {
         if (files == null || files.length == 0) {
-            return new ResponseContainer<>("400", "文件为空", Collections.emptyList());
+            return new ResponseContainer<>(400, "文件为空", Collections.emptyList());
         }
 
         List<DocResult> list = new ArrayList<>(files.length);
@@ -46,7 +48,7 @@ public class FileExtractCall {
         }
 
         // 全部跑完再统一返回
-        return new ResponseContainer<>("200", "批量处理完成", list);
+        return new ResponseContainer<>(200, "批量处理完成", list);
     }
 
     /* 简单 DTO，用来装单个文件的结果 */

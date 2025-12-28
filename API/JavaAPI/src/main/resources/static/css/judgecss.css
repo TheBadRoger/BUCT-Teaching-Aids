@@ -72,8 +72,8 @@ textarea {
     gap: 10px;
     margin: 15px 0;
 }
-.reset-btn, .preview-btn, .submit-btn {
-    width: 100%;
+.reset-btn, .preview-btn, .submit-btn, .download-btn {
+    flex: 1;
     padding: 13px;
     font-size: 16px;
     border: none;
@@ -98,7 +98,24 @@ textarea {
     background: #1867e0;
 }
 
-textarea[placeholder="成绩汇总"] {                  
+.download-btn {
+    background: #2c82ff;
+    color: white;
+}
+.download-btn:hover {
+    background: #1867e0;
+}
+
+.download-btn:disabled {
+    background: #e8e8e8;
+    color: #999;
+    cursor: not-allowed;
+}
+.download-btn:disabled:hover {
+    background: #e8e8e8;
+}
+
+textarea[placeholder="成绩汇总"] {
   width: 97.1%;
     padding: 11px;
     border-radius: 6px;

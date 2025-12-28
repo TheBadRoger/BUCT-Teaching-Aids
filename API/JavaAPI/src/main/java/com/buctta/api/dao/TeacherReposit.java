@@ -1,4 +1,4 @@
-package com.buctta.api.reposit;
+package com.buctta.api.dao;
 
 import com.buctta.api.entities.TeacherList;
 import org.springframework.data.jpa.repository.JpaRepository;

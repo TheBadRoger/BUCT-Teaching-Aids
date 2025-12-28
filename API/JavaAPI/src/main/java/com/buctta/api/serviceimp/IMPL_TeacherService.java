@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
+import com.buctta.api.dao.TeacherReposit;
 import com.buctta.api.entities.TeacherList;
-import com.buctta.api.reposit.TeacherReposit;
 import com.buctta.api.service.TeacherService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;

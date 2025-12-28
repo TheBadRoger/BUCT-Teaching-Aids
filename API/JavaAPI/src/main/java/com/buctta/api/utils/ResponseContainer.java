@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseContainer<T> {
-    private String code;
+    private Integer code;
     private String msg;
     private T data;
 }
+

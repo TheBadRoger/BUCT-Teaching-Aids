@@ -1,4 +1,4 @@
-package com.buctta.api.interf;
+package com.buctta.api.controller;
 
 import com.buctta.api.entities.TeacherList;
 import com.buctta.api.service.TeacherService;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/findteacher")
-public class TeacherListCalls {
+public class TeacherListCtrl {
     @Resource
     private TeacherService teacherService;
 
@@ -20,9 +20,9 @@ public class TeacherListCalls {
     public ResponseContainer<TeacherList> addteacherCall(@RequestBody TeacherList newteacher) {
         TeacherList tl = teacherService.AddTeacher(newteacher);
         if (tl != null)
-            return new ResponseContainer<>("0","Success",tl);
+            return new ResponseContainer<>(0,"Success",tl);
         else
-            return new ResponseContainer<>("-1","Success",null);
+            return new ResponseContainer<>(1001,"Success",null);
     }
 
     @PostMapping("/searchteacher")
@@ -41,11 +41,11 @@ public class TeacherListCalls {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
             // 调用服务层进行搜索
             Page<TeacherList> teacherPage = teacherService.searchTeachers(name, organization, jointime, gender, education, pageable);
-            return new ResponseContainer<>("0","搜索成功",teacherPage);
+            return new ResponseContainer<>(0,"搜索成功",teacherPage);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>("-5","搜索失败",null);
+            return new ResponseContainer<>(1004,"搜索失败",null);
         }
     }
 }

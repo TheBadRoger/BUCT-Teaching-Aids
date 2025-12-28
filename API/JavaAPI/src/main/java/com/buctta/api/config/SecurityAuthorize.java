@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -39,11 +39,6 @@ public class SecurityAuthorize {
                 //异常处理：未授权时自动跳转到登录页面
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/enter.html"))
-                )
-                //Session 管理：超时时自动跳转到登录页面
-                .sessionManagement(session -> session
-                        .invalidSessionUrl("/enter.html")
-                        .sessionFixationProtection(org.springframework.security.config.http.SessionFixationProtectionStrategy.NONE)
                 )
                 //关闭 CSRF
                 .csrf(AbstractHttpConfigurer::disable);
