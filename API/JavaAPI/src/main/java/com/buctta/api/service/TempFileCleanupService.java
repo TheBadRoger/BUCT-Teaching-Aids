@@ -1,5 +1,7 @@
-package com.buctta.api.config;
+package com.buctta.api.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,8 +20,9 @@ import java.time.temporal.ChronoUnit;
  * 定期清理 temp 目录下的过期文件
  */
 
-
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class TempFileCleanupService {
 
     private static final Logger logger = LoggerFactory.getLogger(TempFileCleanupService.class);
