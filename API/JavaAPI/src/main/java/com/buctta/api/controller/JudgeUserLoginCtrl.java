@@ -1,4 +1,4 @@
-package com.buctta.api.interf;
+package com.buctta.api.controller;
 
 import com.buctta.api.entities.JudgementUser;
 import com.buctta.api.service.JudgeUserLogin;
@@ -17,8 +17,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/aijudegment")
-
-public class JudgeUserLoginCalls {
+public class JudgeUserLoginCtrl {
     @Resource
     private JudgeUserLogin userLogin;
 
@@ -41,10 +40,10 @@ public class JudgeUserLoginCalls {
             new HttpSessionSecurityContextRepository()
                     .saveContext(SecurityContextHolder.getContext(), request, response);
 
-            return new ResponseContainer<>("0", "登陆成功", judgementUser);
+            return new ResponseContainer<>(0, "登陆成功", judgementUser);
         }
         else
-            return new ResponseContainer<>("1001","用户名或密码错误",null);
+            return new ResponseContainer<>(1001,"用户名或密码错误",null);
     }
 
     @PostMapping("/register")
@@ -52,9 +51,9 @@ public class JudgeUserLoginCalls {
         JudgementUser judgementUser = userLogin.register(newUser);
         ResponseContainer<JudgementUser> registerCallBack = new ResponseContainer<>();
         if(judgementUser != null)
-            return new ResponseContainer<>("0","注册成功",null);
+            return new ResponseContainer<>(0,"注册成功",null);
         else
-            return new ResponseContainer<>("1002","用户名已被注册",null);
+            return new ResponseContainer<>(1002,"用户名已被注册",null);
     }
 
     @GetMapping("/debug")

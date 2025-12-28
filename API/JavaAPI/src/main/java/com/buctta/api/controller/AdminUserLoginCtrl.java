@@ -1,33 +1,34 @@
-package com.buctta.api.interf;
+package com.buctta.api.controller;
 
 import com.buctta.api.entities.AdminUser;
 import com.buctta.api.service.AdminUserLogin;
 import com.buctta.api.utils.ResponseContainer;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
-
-public class AdminUserLoginCalls {
+@RequiredArgsConstructor
+public class AdminUserLoginCtrl {
     @Resource
-    private AdminUserLogin userLogin;
+    private final AdminUserLogin userLogin;
 
     @PostMapping("/login")
     public ResponseContainer<AdminUser> loginCall(@RequestParam String username, @RequestParam String password){
         AdminUser adminUser = userLogin.login(username, password);
         if(adminUser != null)
-            return new ResponseContainer<>("0","登陆成功",adminUser);
+            return new ResponseContainer<>(0,"登陆成功",adminUser);
         else
-            return new ResponseContainer<>("1001","用户名或密码错误", null);
+            return new ResponseContainer<>(1001,"用户名或密码错误", null);
     }
 
     @PostMapping("/register")
     public ResponseContainer<AdminUser> registerCall(@RequestBody AdminUser newUser){
         AdminUser adminUser = userLogin.register(newUser);
         if(adminUser != null)
-            return new ResponseContainer<>("0","注册成功",adminUser);
+            return new ResponseContainer<>(0,"注册成功",adminUser);
         else
-            return new ResponseContainer<>("1002","用户名已被注册",null);
+            return new ResponseContainer<>(1002,"用户名已被注册",null);
     }
 }

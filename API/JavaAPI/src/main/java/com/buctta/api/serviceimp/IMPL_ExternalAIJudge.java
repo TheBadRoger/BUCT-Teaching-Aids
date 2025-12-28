@@ -67,7 +67,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try {
             for (int index = 0; index < total; index++) {
                 send(emitter, "fileStart", Map.of("index", index, "total", total));
-                String result = callAi(texts.get(index), fileNames.get(index));
+                String result = callAi(index, texts.get(index), fileNames.get(index));
                 send(emitter, "message", result);
             }
             send(emitter, "done", "[COMPLETED]");
@@ -84,7 +84,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     }
 
     /* ---------- 调用外部 SSE ---------- */
-    private String callAi(String text, String fileName) throws IOException {
+    private String callAi(int id, String text, String fileName) throws IOException {
         HttpURLConnection conn = buildConnection();
         String payload = buildPayload(text);
         try (OutputStream os = conn.getOutputStream()) {
@@ -109,18 +109,18 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
                                 .replaceAll("\"}$", "");
                         if (seg.contains(aiProps.getStopMark())) {
                             buf.append(seg, 0, seg.indexOf(aiProps.getStopMark()));
-                            return parseAndFormat(buf.toString(), fileName);
+                            return parseAndFormat(id, buf.toString(), fileName);
                         }
                     }
                 }
             }
-            return "AI 未返回有效内容";
+            return "AI 未返回有效内容\n";
         }
     }
 
     /* ---------- 解析 AI 返回 & 拼装 ---------- */
 
-    private String parseAndFormat(String raw, String fileName) throws IOException {
+    private String parseAndFormat(int id, String raw, String fileName) throws IOException {
         JsonNode node;
 
         raw = raw.replace("\\\"", "\"");

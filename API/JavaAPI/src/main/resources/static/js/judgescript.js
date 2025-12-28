@@ -53,7 +53,7 @@ function sendFiles() {
   const formData = new FormData();
   for (const file of upload.files) formData.append("files", file);
 
-  fetch("http://localhost:4444/api/fileextract/temp", {
+  fetch("/api/fileextract/temp", {
   method: "POST",
   body: formData
   })
@@ -90,7 +90,7 @@ document.getElementById("uploadBox")
  *****************************************************************/
 document.querySelector(".submit-btn").addEventListener("click", ev => {
   ev.preventDefault();          // 阻止表单默认提交
-  document.querySelector("#reportForm textarea[placeholder*='成绩']").value="";
+  document.querySelector("#reportForm textarea[placeholder*='成绩汇总']").value="";
   disableBtn();
   // 如果还没提取过，先补提取
   if (lastExtractedTexts.length === 0) {
@@ -109,7 +109,7 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
   lastExtractedFileName.forEach(t => params.append("fileNames", t));
 
   // POST /generate/start 拿到任务 id
-  fetch("http://localhost:4444/api/ai/generate/start", {
+  fetch("/api/ai/generate/start", {
     method: "POST",
     body: params
   })
@@ -129,8 +129,8 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
  *  3. SSE 接收流，并把 AI 返回写到「学生成绩」文本框
  *****************************************************************/
 function openSSE(id) {
-  const evt = new EventSource(`http://localhost:4444/api/ai/generate/stream/${id}`);
-  const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩']");
+  const evt = new EventSource(`/api/ai/generate/stream/${id}`);
+  const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩汇总']");
 
   /* 工具：追加文本并自动滚动 */
   const append = txt => {
@@ -160,9 +160,32 @@ function openSSE(id) {
 function disableBtn() {
   submitBtn.disabled = true;
   submitBtn.textContent = '📄 批改中…';
+  document.querySelector(".download-btn").disabled = true;
 }
 
 function enableBtn() {
   submitBtn.disabled = false;
   submitBtn.textContent = '📄 一键批改';
+  document.querySelector(".download-btn").disabled = false;
 }
+
+// 下载按钮点击事件
+document.querySelector(".download-btn").addEventListener("click", () => {
+    // 下载按钮点击事件（保持不变）
+    document.querySelector(".download-btn").addEventListener("click", () => {
+        const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩汇总']");
+        const text = scoreArea.value.trim();
+
+        if (!text) {
+            alert('请先执行【一键批改】生成成绩汇总');
+            return;
+        }
+
+        /* === 核心：一步完成生成+下载 === */
+        // 时间戳当场生成，和后端文件名保持一致
+        const timeStamp = Date.now();
+        // 直接让浏览器去下载（后端已合并接口）
+        window.location.href =
+            `/api/generate/judgereport/${timeStamp}?text=${encodeURIComponent(text)}`;
+    });
+});

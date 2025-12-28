@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
+import com.buctta.api.dao.AdminQuery;
 import com.buctta.api.entities.AdminUser;
-import com.buctta.api.reposit.AdminQuery;
 import com.buctta.api.service.AdminUserLogin;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;

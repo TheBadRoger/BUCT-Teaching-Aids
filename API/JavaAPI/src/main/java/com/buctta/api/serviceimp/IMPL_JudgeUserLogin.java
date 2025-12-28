@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
+import com.buctta.api.dao.JudgeUserQuery;
 import com.buctta.api.entities.JudgementUser;
-import com.buctta.api.reposit.JudgeUserQuery;
 import com.buctta.api.service.JudgeUserLogin;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
