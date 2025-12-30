@@ -32,7 +32,7 @@ box.addEventListener("drop", e => {
     let names = "";
     for (let file of upload.files) names += `<span>${file.name};</span><br>`;
     box.innerHTML = names;
-    
+
     // 拖拽上传后立即发送到服务器
     sendFiles();
 });
@@ -42,131 +42,151 @@ box.addEventListener("drop", e => {
  *****************************************************************/
 let lastExtractedTexts = [];   // 每一项就是单个文件的纯文本
 let lastExtractedFileName = [];
+
 /*****************************************************************
  *  1. 文件上传 / 提取（沿用你原来代码，只把结果存到全局）
  *****************************************************************/
 function sendFiles() {
-  if (upload.files.length === 0) {
-    alert("请先选择文件");
-    return;
-  }
-  const formData = new FormData();
-  for (const file of upload.files) formData.append("files", file);
+    const formData = new FormData();
+    for (const file of upload.files) formData.append("files", file);
 
-  fetch("/api/fileextract/temp", {
-  method: "POST",
-  body: formData
-  })
-  .then(r => r.ok ? r.json() : r.text().then(Promise.reject))
-  .then(container => {
-    // 1. 取数组
-    const arr = container.data;   // ← 关键
-    if (!Array.isArray(arr)) throw "返回格式错误";
+    fetch("/api/fileextract/temp", {
+        method: "POST",
+        body: formData
+    })
+        .then(r => r.ok ? r.json() : r.text().then(Promise.reject))
+        .then(container => {
+            // 1. 取数组
+            const arr = container.data;   // ← 关键
+            if (!Array.isArray(arr)) throw "返回格式错误";
 
-    // 2. 只保留成功且非空的内容（也可按需保留失败提示）
-    lastExtractedTexts = arr
-        .filter(f => f.success && f.content)
-        .map(f => f.content);
+            // 2. 只保留成功且非空的内容（也可按需保留失败提示）
+            lastExtractedTexts = arr
+                .filter(f => f.success && f.content)
+                .map(f => f.content);
 
-    lastExtractedFileName=arr
-        .filter(f => f.success && f.content)
-        .map(f => f.fileName);
-    
-    console.log("已提取", lastExtractedTexts.length, "个文件");
-  })
-  .catch(err => {
-    console.error(err);
-    alert("提取失败：" + err);
-  });
+            lastExtractedFileName = arr
+                .filter(f => f.success && f.content)
+                .map(f => f.fileName);
+
+            console.log("已提取", lastExtractedTexts.length, "个文件");
+        })
+        .catch(err => {
+            console.error(err);
+            alert("提取失败：" + err);
+        });
 }
 
 /* 选择/拖拽后自动提取 */
 upload.addEventListener("change", () => sendFiles());
 document.getElementById("uploadBox")
-        .addEventListener("drop", () => sendFiles());
+    .addEventListener("drop", () => sendFiles());
 
 /*****************************************************************
  *  2. 点击【一键生成】按钮：先提取（若还没提取过）再调 /generate/start
  *****************************************************************/
 document.querySelector(".submit-btn").addEventListener("click", ev => {
-  ev.preventDefault();          // 阻止表单默认提交
-  document.querySelector("#reportForm textarea[placeholder*='成绩汇总']").value="";
-  disableBtn();
-  // 如果还没提取过，先补提取
-  if (lastExtractedTexts.length === 0) {
-    sendFiles();
-    if (lastExtractedTexts.length === 0) return; // 提取失败就不继续
-  }
+    ev.preventDefault();
 
-  // 收集表单其他字段
-  const form = document.getElementById("reportForm");
-  const fd   = new FormData(form);
-  const params = new URLSearchParams();
-  fd.forEach((v, k) => params.append(k, v));
+    if (lastExtractedTexts.length === 0 || lastExtractedTexts.length === 0) {
+        alert("请先上传文件");
+        enableBtn();
+        return;
+    }
 
-  // 把多文件内容追加为 extractedTexts 数组
-  lastExtractedTexts.forEach(t => params.append("extractedTexts", t));
-  lastExtractedFileName.forEach(t => params.append("fileNames", t));
+    const form = document.getElementById("reportForm");
+    if (!form.reportValidity()) {   // 手动触发校验，不通过就 return
+        return;
+    }
 
-  // POST /generate/start 拿到任务 id
-  fetch("/api/ai/generate/start", {
-    method: "POST",
-    body: params
-  })
-    .then(r => r.ok ? r.json() : r.text().then(Promise.reject))
-    .then(json => {
-      const { id } = json;
-      openSSE(id);          // 建立 SSE 接收流
+    document.querySelector("#reportForm textarea[placeholder*='成绩汇总']").value = "";
+    disableBtn();
+
+    const fd = new FormData(form);
+    const params = new URLSearchParams();
+    fd.forEach((v, k) => params.append(k, v));
+
+    // 把多文件内容追加为 extractedTexts 数组
+    let warns=[];
+    for(let i = 0 ; i < lastExtractedTexts.length; i++){
+        if(lastExtractedFileName[i].split('_').length!==5){
+            warns.push(lastExtractedFileName[i]);
+        }
+        else{
+            params.append("extractedTexts", lastExtractedTexts[i]);
+            params.append("fileNames", lastExtractedFileName[i]);
+        }
+    }
+
+    if(warns.length > 0){
+        alert("以下文件命名不符合规范，已跳过："+warns.join('，'));
+    }
+
+    // POST /generate/start 拿到任务 id
+    fetch("/api/ai/generate/start", {
+        method: "POST",
+        body: params
     })
-    .catch(err => {
-      console.error(err);
-      alert("启动生成任务失败：" + err);
-      enableBtn();
-    });
+        .then(r => r.ok ? r.json() : r.text().then(Promise.reject))
+        .then(json => {
+            const {id} = json;
+            openSSE(id);          // 建立 SSE 接收流
+        })
+        .catch(err => {
+            console.error(err);
+            alert("启动生成任务失败：" + err);
+            enableBtn();
+        });
 });
 
 /*****************************************************************
  *  3. SSE 接收流，并把 AI 返回写到「学生成绩」文本框
  *****************************************************************/
 function openSSE(id) {
-  const evt = new EventSource(`/api/ai/generate/stream/${id}`);
-  const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩汇总']");
+    const evt = new EventSource(`/api/ai/generate/stream/${id}`);
+    const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩汇总']");
 
-  /* 工具：追加文本并自动滚动 */
-  const append = txt => {
-    scoreArea.value += txt;
-    scoreArea.scrollTop = scoreArea.scrollHeight;
-  };
+    /* 工具：追加文本并自动滚动 */
+    const append = txt => {
+        scoreArea.value += txt;
+        scoreArea.scrollTop = scoreArea.scrollHeight;
+    };
 
-  evt.addEventListener('done',  e => { evt.close(); enableBtn(); });
-  evt.addEventListener('error', e => { evt.close(); enableBtn(); });
+    evt.addEventListener('done', e => {
+        evt.close();
+        enableBtn();
+    });
+    evt.addEventListener('error', e => {
+        evt.close();
+        enableBtn();
+    });
 
-  evt.addEventListener("fileStart", e => {
-    const { index, total } = JSON.parse(e.data).data;
-    append(`========== 第 ${index + 1}/${total} 个文件 ==========\n`);
-  });
-  evt.addEventListener("message", e => append(JSON.parse(e.data).data));
-  evt.addEventListener("done", e => {
-    append("\n🎉 全部批改完成！");
-    
-    evt.close();
-  });
-  evt.addEventListener("error", e => {
-    append("\n❌ 服务器异常：" + (JSON.parse(e.data).data || ""));
-    evt.close();
-  });
+    evt.addEventListener("fileStart", e => {
+        const {index, total} = JSON.parse(e.data).data;
+        append(`========== 第 ${index + 1}/${total} 个文件 ==========\n`);
+    });
+    evt.addEventListener("message", e => append(JSON.parse(e.data).data));
+    evt.addEventListener("done", e => {
+        append("\n🎉 全部批改完成！");
+
+        evt.close();
+    });
+    evt.addEventListener("error", e => {
+        append("\n❌ 服务器异常：" + (JSON.parse(e.data).data || ""));
+        evt.close();
+    });
 }
 
 function disableBtn() {
-  submitBtn.disabled = true;
-  submitBtn.textContent = '📄 批改中…';
-  document.querySelector(".download-btn").disabled = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '📄 批改中…';
+    document.querySelector(".download-btn").disabled = true;
 }
 
 function enableBtn() {
-  submitBtn.disabled = false;
-  submitBtn.textContent = '📄 一键批改';
-  document.querySelector(".download-btn").disabled = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = '📄 一键批改';
+    document.querySelector(".download-btn").disabled = false;
 }
 
 // 下载按钮点击事件
@@ -181,10 +201,7 @@ document.querySelector(".download-btn").addEventListener("click", () => {
             return;
         }
 
-        /* === 核心：一步完成生成+下载 === */
-        // 时间戳当场生成，和后端文件名保持一致
         const timeStamp = Date.now();
-        // 直接让浏览器去下载（后端已合并接口）
         window.location.href =
             `/api/generate/judgereport/${timeStamp}?text=${encodeURIComponent(text)}`;
     });
