@@ -1,0 +1,1020 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+header h1 {
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.classroom-info,
+.student-info {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    color: #718096;
+}
+
+.main-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.option-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.option-card .icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.option-card h3 {
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.classroom-join {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.classroom-join input {
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.classroom-join button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+/* 教师仪表盘样式 */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dashboard-section {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h3 {
+    color: #4a5568;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.student-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px;
+    background: #f7fafc;
+}
+
+.student-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4a5568;
+}
+
+.student-metrics .metric {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    margin: 0 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #48bb78, #68d391);
+    transition: width 0.3s ease;
+}
+
+.student-emotion {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.student-emotion.focused {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.student-emotion.confused {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.student-emotion.happy {
+    background: #fefcbf;
+    color: #744210;
+}
+
+.student-emotion.neutral {
+    background: #e2e8f0;
+    color: #2d3748;
+}
+
+.metrics-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.metric-label {
+    color: #718096;
+    font-size: 14px;
+}
+
+.chart-container {
+    height: 200px;
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.interaction-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.tool-card {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.tool-card input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+}
+
+.tool-card button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 学生视图样式 */
+.student-view {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.question-section,
+.status-section,
+.feedback-section {
+    margin-bottom: 30px;
+}
+
+.question-card {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.option-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-btn:hover {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+}
+
+.status-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.status-card {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.status-label {
+    color: #718096;
+    margin-bottom: 10px;
+}
+
+.status-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.feedback-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.feedback-btn {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.feedback-btn:hover {
+    transform: scale(1.05);
+}
+
+.feedback-btn.understand {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.feedback-btn.confused {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.feedback-btn.faster {
+    background: #fefcbf;
+    color: #744210;
+}
+
+.feedback-btn.slower {
+    background: #bee3f8;
+    color: #2a4365;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics-overview,
+    .interaction-tools,
+    .status-cards,
+    .feedback-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .students-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* 在原有样式基础上添加以下内容 */
+
+/* 情感状态指示器 */
+.emotion-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.emotion-positive { background: #48bb78; }
+.emotion-neutral { background: #ecc94b; }
+.emotion-negative { background: #f56565; }
+
+/* 分析卡片样式 */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.analytics-card {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.analytics-card h4 {
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 情感分布图表 */
+.emotion-chart {
+    display: flex;
+    align-items: end;
+    height: 120px;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.emotion-bar {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    transition: height 0.3s ease;
+}
+
+.emotion-bar.positive { background: #48bb78; }
+.emotion-bar.neutral { background: #ecc94b; }
+.emotion-bar.negative { background: #f56565; }
+
+.emotion-label {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: #718096;
+}
+
+/* 详细指标样式 */
+.detailed-metrics {
+    margin-top: 15px;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.metric-label {
+    width: 120px;
+    color: #4a5568;
+}
+
+.metric-value {
+    flex: 1;
+}
+
+/* 学习状态标签 */
+.learning-state {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.state-excellent { background: #c6f6d5; color: #22543d; }
+.state-moderate { background: #fefcbf; color: #744210; }
+.state-needs_help { background: #fed7d7; color: #742a2a; }
+
+/* 时间轴样式 */
+.timeline {
+    margin-top: 15px;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.timeline-time {
+    width: 80px;
+    color: #718096;
+}
+
+.timeline-value {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .emotion-chart {
+        height: 100px;
+    }
+}
+/* 通知面板样式 */
+.notification-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+    display: none;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.notification-header h4 {
+    margin: 0;
+    color: #2d3748;
+}
+
+.notification-header button {
+    background: #718096;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.notification-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+    background: #f7fafc;
+    animation: slideIn 0.3s ease;
+}
+
+.notification-item.join {
+    border-left-color: #48bb78;
+    background: #f0fff4;
+}
+
+.notification-item.action {
+    border-left-color: #ed8936;
+    background: #fffaf0;
+}
+
+.notification-item.response {
+    border-left-color: #9f7aea;
+    background: #faf5ff;
+}
+
+.notification-item.error {
+    border-left-color: #f56565;
+    background: #fff5f5;
+}
+
+.notification-item.info {
+    border-left-color: #4299e1;
+    background: #ebf8ff;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: #718096;
+    margin-right: 10px;
+}
+
+.notification-message {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+/* 模拟控制样式 */
+.simulation-panel {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    border: 2px dashed #cbd5e0;
+}
+
+.simulation-panel h4 {
+    margin: 0 0 15px 0;
+    color: #4a5568;
+    text-align: center;
+}
+
+.sim-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.action-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    padding: 12px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.action-btn:hover {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.simulation-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.sim-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.sim-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+}
+
+/* 动画效果 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.student-card.updating {
+    animation: pulse 0.5s ease;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .sim-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .simulation-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+/* 模拟控制面板 */
+.simulation-control-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e2e8f0;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.control-header h3 {
+    margin: 0;
+    color: #2d3748;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.control-btn.primary {
+    background: #667eea;
+    color: white;
+}
+
+.control-btn.secondary {
+    background: #48bb78;
+    color: white;
+}
+
+.control-btn.warning {
+    background: #ed8936;
+    color: white;
+}
+
+.control-btn.danger {
+    background: #f56565;
+    color: white;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.simulation-status {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #718096;
+}
+
+/* AI模拟面板 */
+.ai-simulation-panel {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    border: 2px solid #cbd5e0;
+}
+
+.ai-simulation-panel h4 {
+    margin: 0 0 15px 0;
+    color: #4a5568;
+    text-align: center;
+}
+
+.ai-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.ai-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    padding: 12px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ai-btn:hover {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* 计算机视觉指标 */
+.vision-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vision-metric {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vision-metric .metric-label {
+    width: 120px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+.vision-metric .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.vision-metric .metric-value {
+    width: 50px;
+    text-align: right;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* 空状态样式 */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #718096;
+}
+
+.empty-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.empty-state h4 {
+    margin: 0 0 10px 0;
+    color: #4a5568;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* 实时指示器 */
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #48bb78;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    background: #48bb78;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* 学生卡片优化 */
+.student-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.detailed-metrics {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.detail-item {
+    background: #f7fafc;
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: #718096;
+}
+
+/* 图表占位符 */
+.chart-placeholder, .timeline-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    color: #718096;
+    font-style: italic;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .control-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .control-buttons {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .control-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .ai-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .vision-metric {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .vision-metric .metric-label {
+        width: auto;
+    }
+}
+/* 趋势图表容器优化 */
+.chart-container {
+    height: 200px;
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+}
+
+/* 时间轴样式优化 */
+.timeline {
+    margin-top: 15px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+    font-size: 12px;
+}
+
+.timeline-time {
+    color: #718096;
+    font-weight: 600;
+}
+
+.timeline-value {
+    color: #2d3748;
+    font-weight: 700;
+}
+
+.timeline-placeholder {
+    text-align: center;
+    color: #718096;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* 图表提示框样式 */
+.chartjs-tooltip {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 180px;
+        padding: 10px;
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
