@@ -20,9 +20,23 @@ public class ExternalAIGenerateCtrl {
     @PostMapping("/generate/start")
     public ResponseEntity<Map<String,String>> startJudge(
             @RequestParam List<String> extractedTexts,
-            @RequestParam List<String> fileNames) {
-        String id = aiGenerateService.submitTask(extractedTexts, fileNames);
-        return ResponseEntity.ok(Map.of("id", id, "status", "started"));
+            @RequestParam List<String> fileNames,
+            @RequestParam int counts) {
+        if(counts == 1) {
+            List<String> tmp = new java.util.ArrayList<>();
+            StringBuilder t= new StringBuilder(extractedTexts.getFirst());
+            for(int i = 1; i < extractedTexts.size(); i++) {
+                t.append(extractedTexts.get(i));
+            }
+            tmp.add(t.toString());
+
+            String id = aiGenerateService.submitTask(tmp, fileNames);
+            return ResponseEntity.ok(Map.of("id", id, "status", "started"));
+        }
+        else{
+            String id = aiGenerateService.submitTask(extractedTexts, fileNames);
+            return ResponseEntity.ok(Map.of("id", id, "status", "started"));
+        }
     }
 
     @GetMapping("/generate/stream/{id}")
