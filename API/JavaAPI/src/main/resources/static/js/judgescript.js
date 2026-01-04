@@ -1,6 +1,8 @@
 const box = document.getElementById("uploadBox");
 const upload = document.getElementById("fileUpload");
 const submitBtn = document.querySelector('.submit-btn');
+let lastExtractedTexts = [];   // 每一项就是单个文件的纯文本
+let lastExtractedFileName = [];
 
 // 点击上传
 box.addEventListener("click", () => upload.click());
@@ -40,13 +42,13 @@ box.addEventListener("drop", e => {
 /*****************************************************************
  *  0. 全局变量：保存最近一次提取到的多文件内容
  *****************************************************************/
-let lastExtractedTexts = [];   // 每一项就是单个文件的纯文本
-let lastExtractedFileName = [];
 
 /*****************************************************************
  *  1. 文件上传 / 提取（沿用你原来代码，只把结果存到全局）
  *****************************************************************/
 function sendFiles() {
+    lastExtractedFileName = [];
+    lastExtractedTexts = [];
     const formData = new FormData();
     for (const file of upload.files) formData.append("files", file);
 
@@ -118,6 +120,8 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
         }
     }
 
+    params.append("counts", lastExtractedFileName.length.toString());
+
     if(warns.length > 0){
         alert("以下文件命名不符合规范，已跳过："+warns.join('，'));
     }
@@ -136,6 +140,7 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
             console.error(err);
             alert("启动生成任务失败：" + err);
             enableBtn();
+
         });
 });
 
