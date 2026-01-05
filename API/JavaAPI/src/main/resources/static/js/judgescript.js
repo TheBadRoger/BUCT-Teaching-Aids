@@ -1,6 +1,7 @@
 const box = document.getElementById("uploadBox");
 const upload = document.getElementById("fileUpload");
 const submitBtn = document.querySelector('.submit-btn');
+const downloadBtn = document.querySelector('.download-btn');
 let lastExtractedTexts = [];   // 每一项就是单个文件的纯文本
 let lastExtractedFileName = [];
 
@@ -49,6 +50,8 @@ box.addEventListener("drop", e => {
 function sendFiles() {
     lastExtractedFileName = [];
     lastExtractedTexts = [];
+    disable2Btn();
+    submitBtn.textContent = "正在上传中…";
     const formData = new FormData();
     for (const file of upload.files) formData.append("files", file);
 
@@ -71,7 +74,8 @@ function sendFiles() {
                 .filter(f => f.success && f.content)
                 .map(f => f.fileName);
 
-            console.log("已提取", lastExtractedTexts.length, "个文件");
+            //alert("已提取 " + lastExtractedTexts.length + " 个文件");
+            enableBtn();
         })
         .catch(err => {
             console.error(err);
@@ -79,22 +83,11 @@ function sendFiles() {
         });
 }
 
-/* 选择/拖拽后自动提取 */
-upload.addEventListener("change", () => sendFiles());
-document.getElementById("uploadBox")
-    .addEventListener("drop", () => sendFiles());
-
 /*****************************************************************
  *  2. 点击【一键生成】按钮：先提取（若还没提取过）再调 /generate/start
  *****************************************************************/
 document.querySelector(".submit-btn").addEventListener("click", ev => {
     ev.preventDefault();
-
-    if (lastExtractedTexts.length === 0 || lastExtractedTexts.length === 0) {
-        alert("请先上传文件");
-        enableBtn();
-        return;
-    }
 
     const form = document.getElementById("reportForm");
     if (!form.reportValidity()) {   // 手动触发校验，不通过就 return
@@ -182,22 +175,28 @@ function openSSE(id) {
     });
 }
 
+function disable2Btn() {
+    submitBtn.disabled = true;
+    submitBtn.textContent = '📄 请先选择文件';
+    downloadBtn.disabled = true;
+}
+
 function disableBtn() {
     submitBtn.disabled = true;
     submitBtn.textContent = '📄 批改中…';
-    document.querySelector(".download-btn").disabled = true;
+    downloadBtn.disabled = true;
 }
 
 function enableBtn() {
     submitBtn.disabled = false;
     submitBtn.textContent = '📄 一键批改';
-    document.querySelector(".download-btn").disabled = false;
+    downloadBtn.disabled = false;
 }
 
 // 下载按钮点击事件
-document.querySelector(".download-btn").addEventListener("click", () => {
+downloadBtn.addEventListener("click", () => {
     // 下载按钮点击事件（保持不变）
-    document.querySelector(".download-btn").addEventListener("click", () => {
+    downloadBtn.addEventListener("click", () => {
         const scoreArea = document.querySelector("#reportForm textarea[placeholder*='成绩汇总']");
         const text = scoreArea.value.trim();
 
