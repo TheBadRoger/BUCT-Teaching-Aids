@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.entities.Student;
-import com.buctta.api.reposit.StudentRepository;
+import com.buctta.api.dao.StudentReposit;
 import com.buctta.api.service.StudentService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class IMPL_StudentService implements StudentService {
 
     @Resource
-    private StudentRepository studentRepository;
+    private StudentReposit studentRepository;
 
     @Override
     public Student addStudent(Student student) {
