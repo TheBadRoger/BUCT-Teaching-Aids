@@ -10,10 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDate;
-import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class IMPL_StudentService implements StudentService {
@@ -179,11 +176,9 @@ public class IMPL_StudentService implements StudentService {
 
     @Override
     public List<Student> getStudentsByAdmissionYear(Integer year) {
-        // 获取该年的起始和结束日期
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
 
-        // 创建Specification来查询该年份入学的学生
         Specification<Student> specification = (root, query, criteriaBuilder) -> {
             return criteriaBuilder.between(root.get("admissionDate"), startDate, endDate);
         };

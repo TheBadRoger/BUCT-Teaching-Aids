@@ -18,7 +18,7 @@ public class SecurityAuthorize {
         http
                 //授权规则
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
+                        /*.requestMatchers(
                                 "/enter.html",
                                 "/register.html",
                                 "/css/**",
@@ -26,9 +26,9 @@ public class SecurityAuthorize {
                                 "/images/**",
                                 "/api/aijudegment/login",
                                 "/api/aijudegment/register"
-                        )
+                        )*/.anyRequest()
                         .permitAll()
-                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
                 )
                 //关闭表单验证
                 .formLogin(AbstractHttpConfigurer::disable)

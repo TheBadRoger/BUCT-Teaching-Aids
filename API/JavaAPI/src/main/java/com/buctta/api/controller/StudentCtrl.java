@@ -1,7 +1,6 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.entities.Student;
-import com.buctta.api.entities.TeacherList;
 import com.buctta.api.service.StudentService;
 import com.buctta.api.utils.ResponseContainer;
 import jakarta.annotation.Resource;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 @RestController
 @RequestMapping("/api/students")
 public class StudentCtrl {
@@ -24,7 +21,6 @@ public class StudentCtrl {
     @Resource
     private StudentService studentService;
 
-    // 添加学生
     @PostMapping
     public ResponseContainer<Student> addStudent(@RequestBody Student student) {
         Student savedStudent = studentService.addStudent(student);
@@ -35,7 +31,6 @@ public class StudentCtrl {
 
     }
 
-    // 搜索学生
     @GetMapping("/search")
     public ResponseContainer<Page<Student>> searchStudents(
             @RequestParam(required = false) String name,
