@@ -26,3 +26,18 @@ CREATE TABLE teacher_list (
     UNIQUE KEY name (name)
 );
 ```
+### *student_list*
+```
+CREATE TABLE student_list (
+name VARCHAR(100),
+class_name VARCHAR(100),
+gender VARCHAR(10),
+student_number VARCHAR(50),
+telephone VARCHAR(20),
+email VARCHAR(100),
+admission_date DATE,
+id INT AUTO_INCREMENT,
+PRIMARY KEY (id),
+UNIQUE KEY student_number (student_number)
+);
+```
