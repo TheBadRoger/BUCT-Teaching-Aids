@@ -1,92 +1,255 @@
-# 北化教学辅助系统
+-- WezTerm master config (Windows) - PowerShell 风格快捷键 + One Half Dark
+local wezterm = require 'wezterm'
 
-***注意：***
+-- 背景图路径（自己换）
+local bg_img = 'C:\\Users\\' .. os.getenv('USERNAME') .. '\\Pictures\\ShellBackground1.jpg'
 
-***目标服务器IP：10.15.2.38（sjjx.buct.edu.cn)）。***
+local act = wezterm.action
 
-> 前端需要在本地测试完成后，发送消息的主机名可以改成localhost、10.42.3.1或者192.168.101.264，但切记 ***不能*** 改成10.15.2.38，这个IP不能连接到后端
+-- 复制功能：有选中则复制，无选中则发送 Ctrl+C（中断命令）
+local function copy_or_interrupt(window, pane)
+    local has_selection = window:get_selection_text_for_pane(pane) ~= ""
+    if has_selection then
+        window:perform_action(act.CopyTo('Clipboard'), pane)
+        window:perform_action(act.ClearSelection, pane)
+    else
+        window:perform_action(act.SendKey{ key = 'c', mods = 'CTRL' }, pane)
+    end
+end
 
-***数据库端口为4000，后端端口为4444（在服务器上部署时）***
+-- 粘贴功能：有选中则先删除选中再粘贴，无选中则直接粘贴
+local function smart_paste(window, pane)
+    local has_selection = window:get_selection_text_for_pane(pane) ~= ""
+    if has_selection then
+        -- 有选中文本：先发送 Delete 删除选中，再粘贴
+        window:perform_action(act.SendKey{ key = 'Delete', mods = 'NONE' }, pane)
+        window:perform_action(act.PasteFrom('Clipboard'), pane)
+    else
+        -- 无选中文本：直接粘贴
+        window:perform_action(act.PasteFrom('Clipboard'), pane)
+    end
+end
 
-***数据库名称：BUCTTA_DATABASE***
+local config = {
+    -- 1. 字体：One Half 家族 + Nerd-Font 图标回退
+    font = wezterm.font_with_fallback {
+        { family = 'FiraCode Nerd Font', weight = 'Regular' },
+    },
 
-***这些在接下来的文档中都已经默认***
+    font_size = 14.0,
+    initial_cols = 137,
+    initial_rows = 38,
+    
+    -- 2. 颜色主题
+    color_scheme = 'OneHalfDark',
 
-## 工作进度
+    -- 3. 亚克力 + 背景图
+    win32_system_backdrop = 'Acrylic',
 
-**后台管理系统：完成前后端分离**
-* 后端业务逻辑采用Java+SpringBoot框架，数据库采用MySQL
-* 完成了新增教师与搜索教师的后端功能，支持分页和模糊搜索
-* 实现AI智能批改实验报告，前后端均已实现。| ***🎊🎊🎊此功能已部署到学校服务器[[查看](http://sjjx.buct.edu.cn:4444/AIJudge.html)]***
-> 其余项目组的进度，以后就在这里加就行
+    background = {
+        {
+            source = { File = bg_img },
+            opacity = 0.2,
+            horizontal_align = 'Center',
+            vertical_align   = 'Middle',
+            repeat_x = 'NoRepeat',
+            repeat_y = 'NoRepeat',
+        },
+    },
+    window_background_opacity = 1,
 
-## 项目文件结构
-* ***/API/JavaAPI*** - Java后端项目文件夹。
-* ***/API/PythonAPI*** - Python后端项目文件夹。
-* ***/API/src/main/resources/static*** - 前端项目文件夹。 前端项目组主要维护这一部分。
-* ***/repositres*** - 资源文件夹。主要存放仓库文档相关资源
+    -- 4. 启动时默认标签
+    default_prog = { 'pwsh', '-NoLogo' },
+    launch_menu = {
+        { label = 'PowerShell 7',      args = { 'pwsh', '-NoLogo' } },
+        { label = 'Windows PowerShell',args = { 'powershell', '-NoLogo' } },
+        { label = 'WSL (Ubuntu)',      args = { 'wsl.exe', '~' } },
+    },
 
-## 后端接口指南
-后端的根路由为 ***/api***，前端发送消息时根据目标路由来发送到指定的接口
+    -- 5. 窗口装饰与行为
+    window_decorations = 'TITLE | RESIZE',
+    hide_tab_bar_if_only_one_tab = true,
+    window_close_confirmation = 'NeverPrompt',
+    adjust_window_size_when_changing_font_size = false,
 
-> [后端接口文档](./repositres/Documents/README.md)
+    window_padding = {
+        left   = 0,
+        right  = 0,
+        top    = 0,
+        bottom = 0,
+    },
 
-## 部署方法（Windows）
+    -- 6. 标题相关
+    set_environment_variables = {
+        WEZTERM_SHELL_TITLE = 'true',
+    },
 
-### **1. 安装并配置Java** 
+    -- ==================== One Half Dark 自定义微调 ====================
+    colors = {
+        -- 选中高亮：白底黑字
+        selection_bg = '#ffffff',
+        selection_fg = '#000000',
+        
+        -- 光标：竖线，白边框 + 黑色内部实现渐变效果
+        cursor_bg = '#000000',
+        cursor_fg = '#ffffff',
+        cursor_border = '#ffffff',
+        
+        tab_bar = {
+            background = '#282c34',
+            active_tab = { bg_color = '#61afef', fg_color = '#282c34' },
+            inactive_tab = { bg_color = '#3e4451', fg_color = '#abb2bf' },
+            inactive_tab_hover = { bg_color = '#4b5263', fg_color = '#dcdfe4' },
+            new_tab = { bg_color = '#282c34', fg_color = '#61afef' },
+            new_tab_hover = { bg_color = '#3e4451', fg_color = '#61afef' },
+        },
+        split = '#3e4451',
+        scrollbar_thumb = '#4b5263',
+    },
 
-选择 ***[Java 23](https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html)*** 版本并进行下载安装。安装成功后，按如下方式编辑系统环境变量：
+    -- 光标样式：闪烁竖线
+    default_cursor_style = 'BlinkingBar',
+    cursor_blink_rate = 800,
 
-* 新建：JAVA_HOME，值：[Java安装路径]
+    -- ==================== PowerShell 风格快捷键 ====================
+    keys = {
+        -- 复制：智能判断（有选中则复制，无则中断）
+        { key = 'c', mods = 'CTRL', action = wezterm.action_callback(copy_or_interrupt) },
+        
+        -- 粘贴：智能粘贴（有选中则替换，无则直接粘贴）
+        { key = 'v', mods = 'CTRL', action = wezterm.action_callback(smart_paste) },
+        { key = 'v', mods = 'CTRL|SHIFT', action = wezterm.action_callback(smart_paste) },
+        
+        -- 全选（发送给 PowerShell 处理）
+        { key = 'a', mods = 'CTRL|SHIFT', action = act.SendKey{ key = 'a', mods = 'CTRL|SHIFT' } },
+        
+        -- 新建标签页
+        { key = 't', mods = 'CTRL|SHIFT', action = act.SpawnTab('CurrentPaneDomain') },
+        
+        -- 关闭标签
+        { key = 'w', mods = 'CTRL|SHIFT', action = act.CloseCurrentTab{confirm=false} },
+        
+        -- 切换标签
+        { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
+        { key = 'Tab', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) },
+        
+        -- 直接跳转标签 Ctrl+1~9
+        { key = '1', mods = 'CTRL', action = act.ActivateTab(0) },
+        { key = '2', mods = 'CTRL', action = act.ActivateTab(1) },
+        { key = '3', mods = 'CTRL', action = act.ActivateTab(2) },
+        { key = '4', mods = 'CTRL', action = act.ActivateTab(3) },
+        { key = '5', mods = 'CTRL', action = act.ActivateTab(4) },
+        { key = '6', mods = 'CTRL', action = act.ActivateTab(5) },
+        { key = '7', mods = 'CTRL', action = act.ActivateTab(6) },
+        { key = '8', mods = 'CTRL', action = act.ActivateTab(7) },
+        { key = '9', mods = 'CTRL', action = act.ActivateTab(8) },
+        
+        -- 全屏
+        { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
+        
+        -- 字体缩放
+        { key = '=', mods = 'CTRL', action = act.IncreaseFontSize },
+        { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
+        { key = '0', mods = 'CTRL', action = act.ResetFontSize },
+        
+        -- 清屏：发送 clear 命令（像 Linux 的 clear，不清除滚动历史）
+        { key = 'l', mods = 'CTRL', action = act.SendKey{ key = 'l', mods = 'CTRL' } },
+        
+        -- 查找（Ctrl+Shift+F）
+        { key = 'f', mods = 'CTRL|SHIFT', action = act.Search{CaseInSensitiveString=''} },
+        
+        -- 窗口分割
+        { key = '%', mods = 'CTRL|SHIFT', action = act.SplitHorizontal{domain='CurrentPaneDomain'} },
+        { key = '"', mods = 'CTRL|SHIFT', action = act.SplitVertical{domain='CurrentPaneDomain'} },
+        
+        -- 切换窗格（Alt+方向键）
+        { key = 'LeftArrow', mods = 'ALT', action = act.ActivatePaneDirection('Left') },
+        { key = 'RightArrow', mods = 'ALT', action = act.ActivatePaneDirection('Right') },
+        { key = 'UpArrow', mods = 'ALT', action = act.ActivatePaneDirection('Up') },
+        { key = 'DownArrow', mods = 'ALT', action = act.ActivatePaneDirection('Down') },
+        
+        -- 调整窗格大小
+        { key = 'LeftArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize{'Left', 3} },
+        { key = 'RightArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize{'Right', 3} },
+        { key = 'UpArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize{'Up', 3} },
+        { key = 'DownArrow', mods = 'ALT|SHIFT', action = act.AdjustPaneSize{'Down', 3} },
+        
+        -- 新建窗口
+        { key = 'n', mods = 'CTRL|SHIFT', action = act.SpawnWindow },
+        
+        -- 关闭窗格
+        { key = 'w', mods = 'CTRL|ALT', action = act.CloseCurrentPane{confirm=false} },
+        
+        -- 切换全屏窗格
+        { key = 'Enter', mods = 'ALT', action = act.TogglePaneZoomState },
+        
+        -- 快速编辑配置文件
+        { key = ',', mods = 'CTRL|SHIFT', action = act.SpawnCommandInNewWindow{
+            args = {'notepad.exe', wezterm.config_file},
+        }},
+    },
 
-* 修改：Path，添加值：%JAVA_HOME%\bin,%JAVA_HOME%\jre\bin
+    -- ==================== 鼠标绑定 ====================
+    mouse_bindings = {
+        -- 右键粘贴（智能替换）
+        {
+            event = { Down = { streak = 1, button = 'Right' } },
+            mods = 'NONE',
+            action = wezterm.action_callback(smart_paste),
+        },
+        -- Shift+右键 暂时无操作
+        {
+            event = { Down = { streak = 1, button = 'Right' } },
+            mods = 'SHIFT',
+            action = act.Nop,
+        },
+        -- 选中自动复制
+        {
+            event = { Up = { streak = 1, button = 'Left' } },
+            mods = 'NONE',
+            action = act.CompleteSelection('ClipboardAndPrimarySelection'),
+        },
+        -- Ctrl+点击 打开链接
+        {
+            event = { Up = { streak = 1, button = 'Left' } },
+            mods = 'CTRL',
+            action = act.OpenLinkAtMouseCursor,
+        },
+    },
 
-* 新建：ClassPath，值：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar; 
-  
-完成后，启动命令行。输入命令```java --version```以验证是否安装成功
+    -- 滚动设置
+    scrollback_lines = 10000,
+    enable_scroll_bar = true,
 
----
-### **2. 安装并配置Maven**
-下载 ***[Maven](https://maven.apache.org/download.cgi)*** 最新版。直接解压到合适的目录下后，按如下方式配置环境变量：
+    -- 其他
+    hide_mouse_cursor_when_typing = true,
+    automatically_reload_config = true,
+}
 
-* 新建：MAVEN_HOME，值：[Maven解压路径]
+-- 默认 WSL 配置
+config.default_domain = 'WSL:Ubuntu'
+config.default_cwd = '~'
 
-* 修改：Path，添加值：%MAVEN_HOME%\bin
+-- 8. 动态标题格式化
+wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, _hover, _max_width)
+    local pane = tab.active_pane
+    local title = pane.title
 
-完成后，启动命令行。输入命令```mvn --version```以验证是否配置成功
+    local prefix
+    if pane.domain_name == 'local' and pane.foreground_process_name:find('pwsh') then
+        prefix = 'WezTerm ❯ PowerShell'
+    elseif pane.domain_name == 'local' and pane.foreground_process_name:find('wsl') then
+        prefix = 'WezTerm ❯ Ubuntu'
+    else
+        prefix = 'WezTerm'
+    end
 
----
-### **3. 安装并配置MySQL**
+    local suffix = ''
+    if title and title ~= '' and title ~= prefix then
+        suffix = ': ' .. title
+    end
 
-选择 ***[MySQL 8.0.44 Community](https://dev.mysql.com/downloads/installer/)*** 版本并进行下载安装。只需安装组件 ***MySQL Server*** 和 ***MySQL Shell***。为方便起见可以选择安装 ***MySQL Workbench***。
+    return prefix .. suffix
+end)
 
-> ***注意：安装过程中，会提示要求设置根用户密码。请务必将这个密码保存好***
-
-安装完成后，我们先[修改MySQL的服务端口为4000](https://blog.csdn.net/qq_43082279/article/details/127968082)。
-
-修改完成后启动 ***MySQL Command Line Client*** （不是 ***MySQL Shell*** ）。打开后界面会显示“Enter Password”，这是在要求你登录根用户，此时输入刚刚设置的根用户密码即可登录。
-
-输入命令```create database BUCTTA_DATABASE;```创建数据库
-
-输入命令```use BUCTTA_DATABASE;```进入数据库
-
-需要创建数据表。参考[SQL数据表](./repositres/Documents/SQLTables.md)
-
----
-### **4. 启动并测试项目**
-   
-* 启动后端：打开命令行，进入API目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保持并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。（如下图所示）
-
-![如图，出现“Spring”的LOGO，并且不显示任何ERROR错误，即表示启动成功](./repositres/ReadmeRes/backsucceed.png "后端启动成功的参考图")
-
-
-* 测试项目：使用IDE、ApiPost或Postman，向后端发送消息，查看响应
-
----
-### **5. 构建项目并部署**
-
-命令行进入API目录，输入```mvn clean package -DskipTests```
-
-完成后会在当前目录的/target下生成一个 *BUCTTAAPI-0.0.1-SNAPSHOT.jar* 文件，进入这个目录，输入```nohup java -jar *BUCTTAAPI-0.0.1-SNAPSHOT.jar*```前端和后端即可同时启动，并且无需保留控制台。之后通过4444端口访问前端即可，后端的任何日志均会输出到当前目录下的一个 *nohup.out* 文件中
-
-**注意**： 服务器部署时要将 ***/repositres/Backups*** 里的properties文件与项目里的做替换，再进行部署
+return config

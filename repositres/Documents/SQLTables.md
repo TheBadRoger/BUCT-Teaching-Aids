@@ -1,8 +1,7 @@
 # SQL数据表
 
 ### *admin_users*
-
-```
+```sql
 CREATE TABLE admin_users
 (
     id int(10) primary key NOT NULL AUTO_INCREMENT,
@@ -11,8 +10,19 @@ CREATE TABLE admin_users
     UNIQUE (username)
 );
 ```
-### *teacher_list*
+### *judge_users*
+```sql
+CREATE TABLE judge_users
+(
+    id int(10) primary key NOT NULL AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    password varchar(255) NULL,
+    UNIQUE (username)
+);
 ```
+
+### *teacher_list*
+```sql
 CREATE TABLE teacher_list (
     name VARCHAR(50),
     organization VARCHAR(50),
@@ -26,8 +36,9 @@ CREATE TABLE teacher_list (
     UNIQUE KEY name (name)
 );
 ```
+
 ### *student_list*
-```
+```sql
 CREATE TABLE student_list (
 name VARCHAR(100),
 class_name VARCHAR(100),
