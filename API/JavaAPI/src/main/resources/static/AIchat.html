@@ -1,62 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 智能助手</title>
-  <link rel="stylesheet" href="./css/AIchat.css">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>AI 智能助手</title>
+    <link href="./css/AIchat.css" rel="stylesheet">
 </head>
 <body>
 
-  <!-- 顶部导航栏 -->
-  <header class="top-bar">
+<!-- 顶部导航栏 -->
+<header class="top-bar">
     <div class="left">
-      <span >北化课堂</span>
-      <span style="font-size: small;color: rgba(255,255,255,0.8);margin-left: 10px;">AI智能助手</span>
+        <span>北化课堂</span>
+        <span style="font-size: small;color: rgba(255,255,255,0.8);margin-left: 10px;">AI智能助手</span>
     </div>
     <nav>
-      <a href="#" class="active">AI 聊天</a>
+        <a class="active" href="#">AI 聊天</a>
     </nav>
-  </header>
+</header>
 
-  <!-- 主体布局 -->
-  <main class="chat-container">
+<!-- 主体布局 -->
+<main class="chat-container">
 
     <!-- 左侧对话列表 -->
     <aside class="chat-list">
-      <div class="add-list">
-        <span class="add-icon">+</span>
-        <span class="add-title">新对话</span>
-      </div>
-      <ul id="chatList">
-        <li >
-          <span class="list-title">新的对话</span>
-          <div class="list-info">
-            <span class="list-info-left">0条对话</span>
-            <span class="list-info-right">2024/07/28 10:15</span>
-          </div>
-        </li>
-      </ul>
+        <div class="add-list">
+            <span class="add-icon">+</span>
+            <span class="add-title">新对话</span>
+        </div>
+        <ul id="chatList">
+            <li>
+                <span class="list-title">新的对话</span>
+                <div class="list-info">
+                    <span class="list-info-left">0条对话</span>
+                    <span class="list-info-right">2024/07/28 10:15</span>
+                </div>
+            </li>
+        </ul>
     </aside>
 
     <!-- 右侧聊天区域 -->
     <section class="chat-window">
-      <div class="chat-header">新的会话</div>
+        <div class="chat-header">新的会话</div>
 
-      <div class="chat-body" id="chatBody">
-        <div class="msg ai">
-          <div class="avatar">🤖</div>
-          <div class="bubble">你好，我是AI智能助手，有什么可以帮你的吗？</div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg ai">
+                <div class="avatar">🤖</div>
+                <div class="bubble">你好，我是AI智能助手，有什么可以帮你的吗？</div>
+            </div>
         </div>
-      </div>
 
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="输入消息，Ctrl + Enter 发送">
-        <button id="sendBtn">发送</button>
-      </div>
+        <div class="chat-input">
+            <input id="userInput" placeholder="输入消息，Ctrl + Enter 发送" type="text">
+            <button id="sendBtn">发送</button>
+        </div>
     </section>
 
-  </main>
-  <script src="./js/AIchat.js" defer></script>
+</main>
+<script defer src="./js/AIchat.js"></script>
 </body>
 </html>

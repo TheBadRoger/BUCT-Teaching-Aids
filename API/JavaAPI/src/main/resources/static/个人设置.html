@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>个人设置</title>
     <style>
         * {
@@ -11,21 +11,21 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         html, body {
             height: 100%;
             width: 100%;
             background-color: #fff;
             overflow-x: hidden;
         }
-        
+
         .container {
             min-height: 100vh;
             width: 100%;
             padding: 20px;
             border-left: 2px solid #ffd1dc; /* 左侧粉色边框 */
         }
-        
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -34,13 +34,13 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
-        
+
         .page-title {
             font-size: 20px;
             color: #333;
             font-weight: 600;
         }
-        
+
         .back-btn {
             background-color: #ffddee;
             border: none;
@@ -50,14 +50,14 @@
             font-size: 14px;
             color: #666;
         }
-        
+
         .section-title {
             font-size: 16px;
             color: #555;
             margin-bottom: 20px;
             font-weight: 500;
         }
-        
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -66,18 +66,18 @@
             max-width: 100%;
             width: 100%;
         }
-        
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-        
+
         .form-label {
             font-size: 14px;
             color: #666;
         }
-        
+
         .form-input, .form-select {
             padding: 8px 10px;
             border: 1px solid #ddd;
@@ -85,7 +85,7 @@
             font-size: 14px;
             width: 100%;
         }
-        
+
         .form-select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -93,18 +93,18 @@
             background-position: right 10px center;
             padding-right: 30px;
         }
-        
+
         .avatar-section {
             margin: 0 auto 40px auto;
             max-width: 100%;
         }
-        
+
         .avatar-group {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        
+
         .avatar-preview {
             width: 100px;
             height: 100px;
@@ -112,17 +112,17 @@
             object-fit: cover;
             border: 1px solid #eee;
         }
-        
+
         .avatar-upload {
             max-width: 200px;
         }
-        
+
         .avatar-info {
             font-size: 12px;
             color: #888;
             margin-top: 5px;
         }
-        
+
         .button-group {
             display: flex;
             gap: 15px;
@@ -132,7 +132,7 @@
             border-top: 1px solid #eee;
             max-width: 100%;
         }
-        
+
         .cancel-btn {
             padding: 8px 20px;
             background-color: #f0f0f0;
@@ -142,7 +142,7 @@
             font-size: 14px;
             color: #666;
         }
-        
+
         .save-btn {
             padding: 8px 20px;
             background-color: #0052cc;
@@ -152,8 +152,8 @@
             font-size: 14px;
             color: white;
         }
-        
-        
+
+
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -162,64 +162,64 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="page-title">个人设置</h1>
-            <button class="back-btn">&lt;返回</button>
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">个人设置</h1>
+        <button class="back-btn">&lt;返回</button>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">基本信息</h2>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="form-label">名字</label>
+                <input class="form-input" placeholder="用户名" type="text">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">电子邮件</label>
+                <input class="form-input" placeholder="电子邮件" type="email">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">联系电话</label>
+                <input class="form-input" placeholder="联系电话" type="tel">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">所属部门</label>
+                <select class="form-select">
+                    <option>选择所属部门</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">登录密码</label>
+                <input class="form-input" placeholder="输入系统登录密码" type="password">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">确认密码</label>
+                <input class="form-input" placeholder="输入系统登录密码" type="password">
+            </div>
         </div>
-        
-        <div class="section">
-            <h2 class="section-title">基本信息</h2>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">名字</label>
-                    <input type="text" class="form-input" placeholder="用户名">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">电子邮件</label>
-                    <input type="email" class="form-input" placeholder="电子邮件">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">联系电话</label>
-                    <input type="tel" class="form-input" placeholder="联系电话">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">所属部门</label>
-                    <select class="form-select">
-                        <option>选择所属部门</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">登录密码</label>
-                    <input type="password" class="form-input" placeholder="输入系统登录密码">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">确认密码</label>
-                    <input type="password" class="form-input" placeholder="输入系统登录密码">
-                </div>
+
+        <div class="avatar-section">
+            <div class="form-label">头像照片</div>
+            <div class="avatar-group">
+                <img alt="用户头像"
+                     class="avatar-preview" src="https://img95.699pic.com/photo/50221/6410.jpg_wh860.jpg">
+                <input class="avatar-upload form-input" type="file">
+                <p class="avatar-info">单文件大小在1M以内,仅支持JPG、JPEG、PNG格式</p>
             </div>
-            
-            <div class="avatar-section">
-                <div class="form-label">头像照片</div>
-                <div class="avatar-group">
-                    <img src="https://img95.699pic.com/photo/50221/6410.jpg_wh860.jpg" 
-                         alt="用户头像" class="avatar-preview">
-                    <input type="file" class="avatar-upload form-input">
-                    <p class="avatar-info">单文件大小在1M以内,仅支持JPG、JPEG、PNG格式</p>
-                </div>
-            </div>
-            
-            <div class="button-group">
-                <button class="cancel-btn">取消</button>
-                <button class="save-btn">保存</button>
-            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="cancel-btn">取消</button>
+            <button class="save-btn">保存</button>
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
-import com.buctta.api.entities.CourseList;
 import com.buctta.api.dao.CourseReposit;
+import com.buctta.api.entities.CourseList;
 import com.buctta.api.service.CourseService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
@@ -23,7 +23,8 @@ public class IMPL_CourseService implements CourseService {
     public CourseList addCourse(CourseList courseList) {
         if (courseReposit.findCourseListByCourseNumber(courseList.getCourseNumber()) != null) {
             return null;
-        } else {
+        }
+        else {
             CourseList newCourse = courseReposit.save(courseList);
             return newCourse;
         }

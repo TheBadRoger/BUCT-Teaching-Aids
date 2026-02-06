@@ -102,12 +102,11 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
     fd.forEach((v, k) => params.append(k, v));
 
     // 把多文件内容追加为 extractedTexts 数组
-    let warns=[];
-    for(let i = 0 ; i < lastExtractedTexts.length; i++){
-        if(lastExtractedFileName[i].split('_').length!==5){
+    let warns = [];
+    for (let i = 0; i < lastExtractedTexts.length; i++) {
+        if (lastExtractedFileName[i].split('_').length !== 5) {
             warns.push(lastExtractedFileName[i]);
-        }
-        else{
+        } else {
             params.append("extractedTexts", lastExtractedTexts[i]);
             params.append("fileNames", lastExtractedFileName[i]);
         }
@@ -115,8 +114,8 @@ document.querySelector(".submit-btn").addEventListener("click", ev => {
 
     params.append("counts", lastExtractedFileName.length.toString());
 
-    if(warns.length > 0){
-        alert("以下文件命名不符合规范，已跳过："+warns.join('，'));
+    if (warns.length > 0) {
+        alert("以下文件命名不符合规范，已跳过：" + warns.join('，'));
     }
 
     // POST /generate/start 拿到任务 id

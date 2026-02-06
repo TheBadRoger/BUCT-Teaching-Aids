@@ -1,4 +1,5 @@
 package com.buctta.api.entities;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,8 @@ public class StudentCourseId implements Serializable {
     @Column(name = "course_id")
     private Long courseId;
 
-    public StudentCourseId() {}
+    public StudentCourseId() {
+    }
 
     public StudentCourseId(Long studentId, Long courseId) {
         this.studentId = studentId;

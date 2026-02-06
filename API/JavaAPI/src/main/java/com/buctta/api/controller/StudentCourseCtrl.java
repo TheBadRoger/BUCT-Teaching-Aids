@@ -2,7 +2,8 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.StudentCourse;
 import com.buctta.api.service.StudentCourseService;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,35 +20,35 @@ public class StudentCourseCtrl {
     private StudentCourseService studentCourseService;
 
     @PostMapping("/select")
-    public ResponseContainer<StudentCourse> selectCourseCall(
+    public ApiResponse<StudentCourse> selectCourseCall(
             @RequestParam Long studentId,
             @RequestParam Long courseId) {
         try {
             StudentCourse studentCourse = studentCourseService.selectCourse(studentId, courseId);
-            return new ResponseContainer<>(0, "选课成功", studentCourse);
+            return ApiResponse.ok(studentCourse);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1001, "选课失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
 
 
     @PutMapping("/update-viewed")
-    public ResponseContainer<StudentCourse> updateViewedStatusCall(
+    public ApiResponse<StudentCourse> updateViewedStatusCall(
             @RequestParam Long studentId,
             @RequestParam Long courseId,
             @RequestParam Boolean isViewed) {
         try {
             StudentCourse studentCourse = studentCourseService.updateViewedStatus(studentId, courseId, isViewed);
-            return new ResponseContainer<>(0, "状态更新成功", studentCourse);
+            return ApiResponse.ok(studentCourse);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1002, "状态更新失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
 
     @GetMapping("/all-courses")
-    public ResponseContainer<Page<StudentCourse>> getAllCoursesCall(
+    public ApiResponse<Page<StudentCourse>> getAllCoursesCall(
             @RequestParam Long studentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -59,15 +60,15 @@ public class StudentCourseCtrl {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
             Page<StudentCourse> courses = studentCourseService.getAllCourses(studentId, pageable);
-            return new ResponseContainer<>(0, "查询成功", courses);
+            return ApiResponse.ok(courses);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1003, "查询失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
 
     @GetMapping("/viewed-courses")
-    public ResponseContainer<Page<StudentCourse>> getViewedCoursesCall(
+    public ApiResponse<Page<StudentCourse>> getViewedCoursesCall(
             @RequestParam Long studentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -79,15 +80,15 @@ public class StudentCourseCtrl {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
             Page<StudentCourse> courses = studentCourseService.getViewedCourses(studentId, pageable);
-            return new ResponseContainer<>(0, "查询成功", courses);
+            return ApiResponse.ok(courses);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1004, "查询失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
 
     @GetMapping("/not-viewed-courses")
-    public ResponseContainer<Page<StudentCourse>> getNotViewedCoursesCall(
+    public ApiResponse<Page<StudentCourse>> getNotViewedCoursesCall(
             @RequestParam Long studentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -99,22 +100,23 @@ public class StudentCourseCtrl {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
 
             Page<StudentCourse> courses = studentCourseService.getNotViewedCourses(studentId, pageable);
-            return new ResponseContainer<>(0, "查询成功", courses);
+            return ApiResponse.ok(courses);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1005, "查询失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
+
     @DeleteMapping("/drop")
-    public ResponseContainer<Void> dropCourseCall(
+    public ApiResponse<Void> dropCourseCall(
             @RequestParam Long studentId,
             @RequestParam Long courseId) {
         try {
             studentCourseService.dropCourse(studentId, courseId);
-            return new ResponseContainer<>(0, "退课成功", null);
+            return ApiResponse.ok(null);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1007, "退课失败: " + e.getMessage(), null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
         }
     }
 

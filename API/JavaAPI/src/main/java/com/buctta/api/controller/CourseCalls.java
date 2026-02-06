@@ -2,7 +2,8 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.CourseList;
 import com.buctta.api.service.CourseService;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,18 +19,18 @@ public class CourseCalls {
     private CourseService courseService;
 
     @PostMapping("/add")
-    public ResponseContainer<CourseList> addCourseCall(@RequestBody CourseList newCourse) {
+    public ApiResponse<CourseList> addCourseCall(@RequestBody CourseList newCourse) {
         CourseList course = courseService.addCourse(newCourse);
         if (course != null) {
-            return new ResponseContainer<>(0,"success",course);
-        } else {
-
-            return new ResponseContainer<>(0, "success", null);
+            return ApiResponse.ok(course);
+        }
+        else {
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS);
         }
     }
 
     @GetMapping("/search")
-    public ResponseContainer<Page<CourseList>> searchCourseCall(
+    public ApiResponse<Page<CourseList>> searchCourseCall(
             @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String courseNumber,
             @RequestParam(required = false) String teachingTeachers,
@@ -44,12 +45,12 @@ public class CourseCalls {
             Page<CourseList> coursePage = courseService.searchCourses(
                     courseName, courseNumber, teachingTeachers, courseStatus, courseTags, startDate, pageable);
 
-            return new ResponseContainer<>(0,"搜索成功",coursePage);
+            return ApiResponse.ok(coursePage);
 
         } catch (Exception e) {
             System.err.println("搜索课程时发生错误: " + e.getMessage());
             e.printStackTrace();
-            return new ResponseContainer<>(0, "搜索失败", null);
+            return ApiResponse.fail(500, "Failed");
         }
     }
 }

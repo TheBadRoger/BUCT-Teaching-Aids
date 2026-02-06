@@ -3,66 +3,67 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>注册</title>
-    <link rel="stylesheet" href="./css/register.css">
+    <link href="./css/register.css" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- 顶部导航 -->
-    <header class="header">
-        <div class="logo">
-            <img src="images/BUCT-Logo-blue.png" alt="Logo">
-            <span class="title">注册</span>
+<!-- 顶部导航 -->
+<header class="header">
+    <div class="logo">
+        <img alt="Logo" src="images/BUCT-Logo-blue.png">
+        <span class="title">注册</span>
+    </div>
+    <a class="back-link" href="enter.html">返回登录</a>
+</header>
+
+<!-- 主体 -->
+<main class="main">
+    <div class="main-container">
+        <div class="step-indicator">
+            <div class="step active">1. 身份验证</div>
+            <div class="arrow"></div>
+            <div class="step">2. 填写信息</div>
+            <div class="arrow"></div>
+            <div class="step">3. 注册成功</div>
         </div>
-        <a href="enter.html" class="back-link">返回登录</a>
-    </header>
 
-    <!-- 主体 -->
-    <main class="main">
-        <div class="main-container">
-            <div class="step-indicator">
-                <div class="step active">1. 身份验证</div>
-                <div class="arrow"></div>
-                <div class="step">2. 填写信息</div>
-                <div class="arrow"></div>
-                <div class="step">3. 注册成功</div>
-            </div>
+        <!-- 步骤1：身份验证 -->
+        <section class="step-box" id="step1">
+            <h2>身份验证</h2>
+            <form id="verifyForm">
+                <div class="input-box">姓名：<input id="name" placeholder="请输入姓名" required type="text"></div>
+                <div class="input-box">学号 ：<input id="stuId" placeholder="请输入学号" required type="text"></div>
+                <div class="input-box">证件号码：<input id="idCard" placeholder="请输入证号号码" required type="text">
+                </div>
+            </form>
+            <button class="btn" type="submit">下一步</button>
+            <p class="msg" id="verifyMsg"></p>
+        </section>
 
-            <!-- 步骤1：身份验证 -->
-            <section class="step-box" id="step1">
-                <h2>身份验证</h2>
-                <form id="verifyForm">
-                    <div class="input-box">姓名：<input type="text" id="name" placeholder="请输入姓名" required></div>
-                    <div class="input-box">学号 ：<input type="text" id="stuId" placeholder="请输入学号" required></div>
-                    <div class="input-box">证件号码：<input type="text" id="idCard" placeholder="请输入证号号码" required></div>
-                </form>
-                <button type="submit" class="btn">下一步</button>
-                <p class="msg" id="verifyMsg"></p>
-            </section>
+        <!-- 步骤2：填写注册信息 -->
+        <section class="step-box hidden" id="step2">
+            <h2>填写注册信息</h2>
+            <form id="registerForm">
+                <input id="email" placeholder="请输入邮箱" required type="email">
+                <input id="password" placeholder="设置密码（8-16位，含字母和数字）" required type="password">
+                <input id="confirmPassword" placeholder="确认密码" required type="password">
+            </form>
+            <button class="btn" type="submit">注册</button>
+            <p class="msg" id="regMsg"></p>
+        </section>
 
-            <!-- 步骤2：填写注册信息 -->
-            <section class="step-box hidden" id="step2">
-                <h2>填写注册信息</h2>
-                <form id="registerForm">
-                    <input type="email" id="email" placeholder="请输入邮箱" required>
-                    <input type="password" id="password" placeholder="设置密码（8-16位，含字母和数字）" required>
-                    <input type="password" id="confirmPassword" placeholder="确认密码" required>
-                </form>
-                <button type="submit" class="btn">注册</button>
-                <p class="msg" id="regMsg"></p>
-            </section>
+        <!-- 步骤3：注册成功 -->
+        <section class="step-box hidden" id="step3">
+            <h2>✅ 注册成功！</h2>
+            <p>您已成功注册，即将跳转至登录页面...</p>
+        </section>
+    </div>
+</main>
 
-            <!-- 步骤3：注册成功 -->
-            <section class="step-box hidden" id="step3">
-                <h2>✅ 注册成功！</h2>
-                <p>您已成功注册，即将跳转至登录页面...</p>
-            </section>
-        </div>
-    </main>
-
-    <script src="js/register.js"></script>
+<script src="js/register.js"></script>
 </body>
 
 </html>

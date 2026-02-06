@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>学习平台页面</title>
     <style>
         * {
@@ -11,9 +11,11 @@
             box-sizing: border-box;
             font-family: "微软雅黑", sans-serif;
         }
+
         body {
             padding: 10px;
         }
+
         /* 顶部logo栏 */
         .header-logo {
             border: 1px solid #ccc;
@@ -21,6 +23,7 @@
             text-align: center;
             margin-bottom: 10px;
         }
+
         /* 顶部功能栏 */
         .top-bar {
             display: flex;
@@ -29,66 +32,80 @@
             margin-bottom: 10px;
             justify-content: space-between;
         }
+
         .top-bar-left {
             display: flex;
             gap: 10px;
         }
+
         .top-bar-left span {
             border: 1px solid #ccc;
             padding: 3px 8px;
         }
+
         .top-bar-right {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .top-bar-right input {
             border: 1px solid #ccc;
             padding: 3px;
         }
+
         .top-bar-right span {
             border: 1px solid #ccc;
             padding: 3px 8px;
         }
+
         /* 主体容器 */
         .main-container {
             display: flex;
             gap: 10px;
         }
+
         /* 左侧导航栏 */
         .sidebar {
             width: 200px;
             border: 1px solid #ccc;
             padding: 10px;
         }
+
         .user-info {
             border: 1px solid #ccc;
             padding: 8px;
             margin-bottom: 10px;
         }
+
         .nav-list {
             list-style: none;
         }
+
         .nav-list li {
             border: 1px solid #ccc;
             padding: 5px;
             margin-bottom: 5px;
         }
+
         /* 右侧内容区 */
         .content {
             flex: 1;
             border: 1px solid #ccc;
             padding: 10px;
         }
+
         .content-tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
         }
+
         .content-tabs span {
             border: 1px solid #ccc;
             padding: 5px 10px;
         }
+
         /* 筛选栏 */
         .filter-bar {
             display: flex;
@@ -96,21 +113,25 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
         }
+
         .filter-item {
             display: flex;
             align-items: center;
             gap: 5px;
         }
+
         .filter-item select {
             border: 1px solid #ccc;
             padding: 3px;
         }
+
         /* 数据卡片区 */
         .card-group {
             display: flex;
             gap: 20px;
             margin-bottom: 10px;
         }
+
         .card {
             border: 1px solid #ccc;
             width: 80px;
@@ -119,6 +140,7 @@
             align-items: center;
             justify-content: center;
         }
+
         /* 折线图区域 */
         .chart-area {
             border: 1px solid #ccc;
@@ -129,19 +151,21 @@
             position: relative;
             overflow: hidden;
         }
+
         .chart-area::before {
             content: "";
             position: absolute;
             width: 100%;
             height: 100%;
             background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 5px,
-                #eee 5px,
-                #eee 10px
+                    45deg,
+                    transparent,
+                    transparent 5px,
+                    #eee 5px,
+                    #eee 10px
             );
         }
+
         .chart-area::after {
             content: "折线区";
             position: relative;
@@ -150,101 +174,101 @@
     </style>
 </head>
 <body>
-    <!-- 顶部logo -->
-    <div class="header-logo">应用logo</div>
+<!-- 顶部logo -->
+<div class="header-logo">应用logo</div>
 
-    <!-- 顶部功能栏 -->
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <span></span>
-            <span>课程</span>
-            <span></span>
-            <span>机构</span>
+<!-- 顶部功能栏 -->
+<div class="top-bar">
+    <div class="top-bar-left">
+        <span></span>
+        <span>课程</span>
+        <span></span>
+        <span>机构</span>
+    </div>
+    <div class="top-bar-right">
+        <input placeholder="搜索" type="text">
+        <span>搜</span>
+        <span>登录头像</span>
+    </div>
+</div>
+
+<!-- 主体容器 -->
+<div class="main-container">
+    <!-- 左侧导航 -->
+    <div class="sidebar">
+        <div class="user-info">
+            <p>当前登录用户头像</p>
+            <p>张三</p>
+            <p>个人签名</p>
         </div>
-        <div class="top-bar-right">
-            <input type="text" placeholder="搜索">
-            <span>搜</span>
-            <span>登录头像</span>
-        </div>
+        <ul class="nav-list">
+            <li>我的学习记录</li>
+            <li>我开的课</li>
+            <li>成长地图</li>
+            <li>个人详情</li>
+            <li>好友动态</li>
+        </ul>
     </div>
 
-    <!-- 主体容器 -->
-    <div class="main-container">
-        <!-- 左侧导航 -->
-        <div class="sidebar">
-            <div class="user-info">
-                <p>当前登录用户头像</p >
-                <p>张三</p >
-                <p>个人签名</p >
-            </div>
-            <ul class="nav-list">
-                <li>我的学习记录</li>
-                <li>我开的课</li>
-                <li>成长地图</li>
-                <li>个人详情</li>
-                <li>好友动态</li>
-            </ul>
+    <!-- 右侧内容区 -->
+    <div class="content">
+        <!-- 标签栏 -->
+        <div class="content-tabs">
+            <span>学习记录</span>
+            <span>学习分布</span>
         </div>
 
-        <!-- 右侧内容区 -->
-        <div class="content">
-            <!-- 标签栏 -->
-            <div class="content-tabs">
-                <span>学习记录</span>
-                <span>学习分布</span>
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <div class="filter-item">
+                <input id="course" type="checkbox">
+                <label for="course">我看过的课程</label>
+                <select>
+                    <option>全部</option>
+                </select>
             </div>
-
-            <!-- 筛选栏 -->
-            <div class="filter-bar">
-                <div class="filter-item">
-                    <input type="checkbox" id="course">
-                    <label for="course">我看过的课程</label>
-                    <select>
-                        <option>全部</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="note">
-                    <label for="note">我的笔记</label>
-                    <select>
-                        <option>全部</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="discuss">
-                    <label for="discuss">我参与的讨论</label>
-                    <select>
-                        <option>全部</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="material">
-                    <label for="material">我看过的教参</label>
-                    <select>
-                        <option>全部</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="test">
-                    <label for="test">我参与的测试</label>
-                    <select>
-                        <option>全部</option>
-                    </select>
-                </div>
+            <div class="filter-item">
+                <input id="note" type="checkbox">
+                <label for="note">我的笔记</label>
+                <select>
+                    <option>全部</option>
+                </select>
             </div>
-
-            <!-- 数据卡片 -->
-            <div class="card-group">
-                <div class="card">XX</div>
-                <div class="card">XX</div>
-                <div class="card">XX</div>
-                <div class="card">XX</div>
-                <div class="card">XX</div>
+            <div class="filter-item">
+                <input id="discuss" type="checkbox">
+                <label for="discuss">我参与的讨论</label>
+                <select>
+                    <option>全部</option>
+                </select>
             </div>
-
-            <!-- 折线图区域 -->
-            <div class="chart-area"></div>
+            <div class="filter-item">
+                <input id="material" type="checkbox">
+                <label for="material">我看过的教参</label>
+                <select>
+                    <option>全部</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <input id="test" type="checkbox">
+                <label for="test">我参与的测试</label>
+                <select>
+                    <option>全部</option>
+                </select>
+            </div>
         </div>
+
+        <!-- 数据卡片 -->
+        <div class="card-group">
+            <div class="card">XX</div>
+            <div class="card">XX</div>
+            <div class="card">XX</div>
+            <div class="card">XX</div>
+            <div class="card">XX</div>
+        </div>
+
+        <!-- 折线图区域 -->
+        <div class="chart-area"></div>
     </div>
+</div>
 </body>
 </html>

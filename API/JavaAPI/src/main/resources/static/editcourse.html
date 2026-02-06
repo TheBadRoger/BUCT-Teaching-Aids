@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>编辑课程</title>
     <style>
         body {
@@ -11,9 +11,11 @@
             padding: 0;
             background-color: #f0f2f5;
         }
+
         .page-wrapper {
             padding: 20px;
         }
+
         .header-bar {
             background-color: #fff;
             padding: 15px 20px;
@@ -26,6 +28,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .header-bar .back-btn {
             background-color: #ffcccc;
             color: #cc0000;
@@ -35,6 +38,7 @@
             font-size: 14px;
             cursor: pointer;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -44,6 +48,7 @@
             padding: 20px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
+
         .section-title {
             font-size: 16px;
             font-weight: 600;
@@ -52,20 +57,24 @@
             padding-bottom: 8px;
             border-bottom: 1px solid #eee;
         }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: #333;
         }
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -77,6 +86,7 @@
             box-sizing: border-box;
             background-color: #fff;
         }
+
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
@@ -84,13 +94,16 @@
             border-color: #40a9ff;
             box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
         }
+
         .form-group textarea {
             min-height: 80px;
             resize: vertical;
         }
+
         .image-upload {
             margin-top: 10px;
         }
+
         .image-upload img {
             max-width: 100px;
             height: auto;
@@ -98,6 +111,7 @@
             border: 1px solid #eee;
             border-radius: 4px;
         }
+
         .image-upload button {
             padding: 8px 16px;
             background-color: #1890ff;
@@ -107,18 +121,22 @@
             cursor: pointer;
             font-size: 14px;
         }
+
         .image-upload button:hover {
             background-color: #096dd9;
         }
+
         .image-upload p {
             font-size: 12px;
             color: #666;
             margin-top: 8px;
         }
+
         .form-actions {
             margin-top: 30px;
             text-align: center;
         }
+
         .form-actions button {
             padding: 10px 20px;
             margin: 0 5px;
@@ -128,113 +146,117 @@
             font-size: 14px;
             font-weight: 500;
         }
+
         .form-actions .cancel {
             background-color: #f0f0f0;
             color: #333;
         }
+
         .form-actions .cancel:hover {
             background-color: #e0e0e0;
         }
+
         .form-actions .save {
             background-color: #003366;
             color: #fff;
         }
+
         .form-actions .save:hover {
             background-color: #002244;
         }
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="header-bar">
-            编辑课程
-            <button class="back-btn">返回</button>
-        </div>
-        
-        <div class="container">
-            <div class="section-title">课程详情</div>
-            
-            <form>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>课程名称</label>
-                        <input type="text" placeholder="课程名称">
-                    </div>
-                    <div class="form-group">
-                        <label>课程编号</label>
-                        <input type="text" placeholder="课程编号">
-                    </div>
-                    <div class="form-group">
-                        <label>课程介绍</label>
-                        <textarea placeholder="课程介绍"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>开课日期</label>
-                        <input type="date" placeholder="选择日期">
-                    </div>
-                    <div class="form-group">
-                        <label>教学目标</label>
-                        <textarea placeholder="教学目标"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>持续时间</label>
-                        <input type="text" placeholder="持续时间">
-                    </div>
-                    <div class="form-group">
-                        <label>授课老师</label>
-                        <select>
-                            <option>选择老师</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>授课班级</label>
-                        <select>
-                            <option>选择班级</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>适用人群</label>
-                        <input type="text" placeholder="适用人群">
-                    </div>
-                    <div class="form-group">
-                        <label>上课地址</label>
-                        <input type="text" placeholder="上课地址">
-                    </div>
-                    <div class="form-group">
-                        <label>课程价格</label>
-                        <input type="text" placeholder="课程价格">
-                    </div>
-                    <div class="form-group">
-                        <label>课程状态</label>
-                        <select>
-                            <option>请选择</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>课程标签</label>
-                        <input type="text" placeholder="课程标签">
-                    </div>
-                    <div class="form-group">
-                        <label>课程大纲</label>
-                        <textarea placeholder="课程大纲"></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>课程图片</label>
-                    <div class="image-upload">
-                        < img src="picture" alt="课程图片">
-                        <button>选择图片</button>
-                        <p>单文件大小请在1M以内,仅支持JPG、JPEG、PNG格式</p >
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="cancel">取消</button>
-                    <button type="submit" class="save">保存</button>
-                </div>
-            </form>
-        </div>
+<div class="page-wrapper">
+    <div class="header-bar">
+        编辑课程
+        <button class="back-btn">返回</button>
     </div>
+
+    <div class="container">
+        <div class="section-title">课程详情</div>
+
+        <form>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>课程名称</label>
+                    <input placeholder="课程名称" type="text">
+                </div>
+                <div class="form-group">
+                    <label>课程编号</label>
+                    <input placeholder="课程编号" type="text">
+                </div>
+                <div class="form-group">
+                    <label>课程介绍</label>
+                    <textarea placeholder="课程介绍"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>开课日期</label>
+                    <input placeholder="选择日期" type="date">
+                </div>
+                <div class="form-group">
+                    <label>教学目标</label>
+                    <textarea placeholder="教学目标"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>持续时间</label>
+                    <input placeholder="持续时间" type="text">
+                </div>
+                <div class="form-group">
+                    <label>授课老师</label>
+                    <select>
+                        <option>选择老师</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>授课班级</label>
+                    <select>
+                        <option>选择班级</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>适用人群</label>
+                    <input placeholder="适用人群" type="text">
+                </div>
+                <div class="form-group">
+                    <label>上课地址</label>
+                    <input placeholder="上课地址" type="text">
+                </div>
+                <div class="form-group">
+                    <label>课程价格</label>
+                    <input placeholder="课程价格" type="text">
+                </div>
+                <div class="form-group">
+                    <label>课程状态</label>
+                    <select>
+                        <option>请选择</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>课程标签</label>
+                    <input placeholder="课程标签" type="text">
+                </div>
+                <div class="form-group">
+                    <label>课程大纲</label>
+                    <textarea placeholder="课程大纲"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>课程图片</label>
+                <div class="image-upload">
+                    < img src="picture" alt="课程图片">
+                    <button>选择图片</button>
+                    <p>单文件大小请在1M以内,仅支持JPG、JPEG、PNG格式</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="cancel" type="button">取消</button>
+                <button class="save" type="submit">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

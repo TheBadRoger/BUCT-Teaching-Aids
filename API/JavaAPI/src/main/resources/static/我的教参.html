@@ -9,10 +9,12 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: "Microsoft YaHei", sans-serif;
             background-color: #fff;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -20,22 +22,26 @@
             padding: 10px 20px;
             border-bottom: 1px solid #ccc;
         }
+
         .logo-area {
             width: 40%;
             border: 1px solid #000;
             text-align: center;
             padding: 10px 0;
         }
+
         .search-area {
             display: flex;
             align-items: center;
         }
+
         .search-input {
             width: 200px;
             height: 30px;
             border: 1px solid #ccc;
             margin-right: 10px;
         }
+
         .search-btn {
             width: 60px;
             height: 30px;
@@ -43,6 +49,7 @@
             border: 1px solid #ccc;
             cursor: pointer;
         }
+
         .avatar-area {
             width: 80px;
             height: 80px;
@@ -50,11 +57,13 @@
             text-align: center;
             line-height: 80px;
         }
+
         .nav {
             display: flex;
             border: 1px solid #ccc;
             margin-top: 10px;
         }
+
         .nav-top {
             flex: 1;
             text-align: center;
@@ -65,30 +74,36 @@
             font-size: 16px;
             display: block;
         }
+
         .nav .extra-nav {
             flex-grow: 2;
             text-align: right;
             padding: 15px 20px;
             border-right: none;
         }
+
         .nav .extra-nav a {
             text-decoration: none;
             color: #00f;
             font-size: 16px;
             margin-left: 15px;
         }
+
         .main {
             display: flex;
             margin-top: 10px;
         }
+
         .sidebar {
             width: 200px;
             border: 1px solid #ccc;
             padding: 10px;
         }
+
         .user-info {
             margin-bottom: 20px;
         }
+
         .nav-left {
             display: block;
             width: 80px;
@@ -100,37 +115,45 @@
             text-decoration: none;
             color: #000;
         }
+
         .user-name {
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
         }
+
         .user-sign {
             font-size: 14px;
             color: #666;
         }
+
         .sidebar-menu {
             margin-top: 20px;
         }
+
         .menu-item {
             margin-bottom: 10px;
         }
+
         .menu-item a {
             text-decoration: none;
             color: #000;
             font-size: 14px;
         }
+
         .content {
             flex: 1;
             border: 1px solid #ccc;
             margin-left: 10px;
             padding: 10px;
         }
+
         .tab-nav {
             display: flex;
             border-bottom: 1px solid #ccc;
             margin-bottom: 20px;
         }
+
         .nav-personal {
             padding: 10px 20px;
             border: 1px solid #ccc;
@@ -141,127 +164,132 @@
             font-size: 16px;
             display: block;
         }
+
         .bread-crumb {
             font-size: 14px;
             color: #666;
             margin-bottom: 20px;
         }
+
         .filter-area {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 20px;
         }
+
         .filter-select {
             height: 30px;
             border: 1px solid #ccc;
             margin-left: 10px;
         }
+
         .list-item {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
             border-bottom: 1px solid #ccc;
         }
+
         .list-item:last-child {
             border-bottom: none;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo-area">易班logo</div>
-        <div class="search-area">
-            <input type="text" class="search-input">
-            <button class="search-btn">搜索</button>
+<div class="header">
+    <div class="logo-area">易班logo</div>
+    <div class="search-area">
+        <input class="search-input" type="text">
+        <button class="search-btn">搜索</button>
+    </div>
+</div>
+<div class="nav">
+    <a class="nav-top" href="#">首页</a>
+    <a class="nav-top" href="#">课程大厅</a>
+    <a class="nav-top" href="#">名师</a>
+    <a class="nav-top" href="#">机构专区</a>
+    <div class="extra-nav">
+        <a href="#">选课</a>
+        <a href="#">地图</a>
+        <a href="#">记录</a>
+    </div>
+</div>
+<div class="main">
+    <div class="sidebar">
+        <div class="user-info">
+            <a class="nav-left" href="#">登录</a>
+            <a class="nav-left" href="#">头像</a>
+            <div class="user-name">张三</div>
+            <div class="user-sign">个人签名</div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item"><a href="#">我的学习记录</a></div>
+            <div class="menu-item"><a href="#">还未看的课</a></div>
+            <div class="menu-item"><a href="#">已经看过的课</a></div>
+            <div class="menu-item"><a href="#">我要关注</a></div>
+            <div class="menu-item"><a href="#">猜你需要</a></div>
+            <div class="menu-item"><a href="#">成长地图</a></div>
+            <div class="menu-item"><a href="#">个人详情</a></div>
+            <div class="menu-item"><a href="#">好友动态</a></div>
         </div>
     </div>
-    <div class="nav">
-        <a href="#" class="nav-top">首页</a>
-        <a href="#" class="nav-top">课程大厅</a>
-        <a href="#" class="nav-top">名师</a>
-        <a href="#" class="nav-top">机构专区</a>
-        <div class="extra-nav">
-            <a href="#">选课</a>
-            <a href="#">地图</a>
-            <a href="#">记录</a>
+    <div class="content">
+        <div class="tab-nav">
+            <a class="nav-personal" href="https://www.buct.edu.cn/main.htm">我的笔记</a>
+            <a class="nav-personal" href="#">我的教参</a>
+            <a class="nav-personal" href="#">我的提问</a>
+            <a class="nav-personal" href="#">我的测试</a>
         </div>
-    </div>
-    <div class="main">
-        <div class="sidebar">
-            <div class="user-info">
-                <a href="#" class="nav-left">登录</a>
-                <a href="#" class="nav-left">头像</a>
-                <div class="user-name">张三</div>
-                <div class="user-sign">个人签名</div>
-            </div>
-            <div class="sidebar-menu">
-                <div class="menu-item"><a href="#">我的学习记录</a></div>
-                <div class="menu-item"><a href="#">还未看的课</a></div>
-                <div class="menu-item"><a href="#">已经看过的课</a></div>
-                <div class="menu-item"><a href="#">我要关注</a></div>
-                <div class="menu-item"><a href="#">猜你需要</a></div>
-                <div class="menu-item"><a href="#">成长地图</a></div>
-                <div class="menu-item"><a href="#">个人详情</a></div>
-                <div class="menu-item"><a href="#">好友动态</a></div>
-            </div>
+        <div class="bread-crumb">教你写出优秀简历 > 我的教参</div>
+        <div class="filter-area">
+            我的教参 (10) |
+            <select class="filter-select">
+                <option>发表时间</option>
+            </select>
         </div>
-        <div class="content">
-            <div class="tab-nav">
-                <a href="https://www.buct.edu.cn/main.htm" class="nav-personal">我的笔记</a>
-                <a href="#" class="nav-personal">我的教参</a>
-                <a href="#" class="nav-personal">我的提问</a>
-                <a href="#" class="nav-personal">我的测试</a>
+        <div class="list">
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
             </div>
-            <div class="bread-crumb">教你写出优秀简历 > 我的教参</div>
-            <div class="filter-area">
-                我的教参 (10) | 
-                <select class="filter-select">
-                    <option>发表时间</option>
-                </select>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
             </div>
-            <div class="list">
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
-                <div class="list-item">
-                    <div>小学语文诗歌《将进酒》</div>
-                    <div>2013-09-23</div>
-                </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
+            </div>
+            <div class="list-item">
+                <div>小学语文诗歌《将进酒》</div>
+                <div>2013-09-23</div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

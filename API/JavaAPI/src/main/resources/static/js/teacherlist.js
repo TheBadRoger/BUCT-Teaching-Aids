@@ -115,7 +115,7 @@ function renderTeacherTable(data) {
 }
 
 // 全选功能
-document.getElementById("selectAll").addEventListener("change", function() {
+document.getElementById("selectAll").addEventListener("change", function () {
     const checkboxes = document.querySelectorAll(".row-checkbox");
     checkboxes.forEach(checkbox => {
         checkbox.checked = this.checked;
@@ -123,17 +123,17 @@ document.getElementById("selectAll").addEventListener("change", function() {
 });
 
 // 页面加载时渲染初始数据
-window.onload = function() {
+window.onload = function () {
     renderTeacherTable(teacherData);
 };
 
 // 按钮事件（可根据需求扩展逻辑）
-document.getElementById("queryBtn").addEventListener("click", function() {
+document.getElementById("queryBtn").addEventListener("click", function () {
     alert("查询功能触发");
     // 实际开发中可在这里写筛选逻辑
 });
 
-document.getElementById("resetBtn").addEventListener("click", function() {
+document.getElementById("resetBtn").addEventListener("click", function () {
     document.getElementById("teacherName").value = "";
     document.getElementById("institution").value = "";
     document.getElementById("startDate").value = "";
@@ -142,14 +142,14 @@ document.getElementById("resetBtn").addEventListener("click", function() {
     document.getElementById("education").value = "";
 });
 
-document.getElementById("addBtn").addEventListener("click", function() {
+document.getElementById("addBtn").addEventListener("click", function () {
     alert("新增教师功能触发");
 });
 
-document.getElementById("deleteBtn").addEventListener("click", function() {
+document.getElementById("deleteBtn").addEventListener("click", function () {
     alert("删除功能触发");
 });
 
-document.getElementById("exportBtn").addEventListener("click", function() {
+document.getElementById("exportBtn").addEventListener("click", function () {
     alert("导出功能触发");
 });

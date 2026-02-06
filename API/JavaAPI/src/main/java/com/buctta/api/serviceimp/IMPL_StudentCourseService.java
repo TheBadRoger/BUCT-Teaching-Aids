@@ -1,10 +1,10 @@
 package com.buctta.api.serviceimp;
 
+import com.buctta.api.dao.CourseReposit;
 import com.buctta.api.dao.StudentCourseReposit;
 import com.buctta.api.dao.StudentReposit;
-import com.buctta.api.dao.CourseReposit;
-import com.buctta.api.entities.Student;
 import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Student;
 import com.buctta.api.entities.StudentCourse;
 import com.buctta.api.entities.StudentCourseId;
 import com.buctta.api.service.StudentCourseService;
@@ -129,6 +129,7 @@ public class IMPL_StudentCourseService implements StudentCourseService {
         } catch (Exception ignored) {
         }
     }
+
     @Override
     public Page<StudentCourse> searchStudentCourses(String studentName, String courseName,
                                                     Boolean isViewed, Long studentId, Pageable pageable) {

@@ -2,12 +2,9 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.Student;
 import com.buctta.api.service.StudentService;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,17 +19,17 @@ public class StudentCtrl {
     private StudentService studentService;
 
     @PostMapping
-    public ResponseContainer<Student> addStudent(@RequestBody Student student) {
+    public ApiResponse<Student> addStudent(@RequestBody Student student) {
         Student savedStudent = studentService.addStudent(student);
         if (savedStudent != null)
-            return new ResponseContainer<>(0,"Success",savedStudent);
+            return ApiResponse.ok(savedStudent);
         else
-            return new ResponseContainer<>(1001,"Success",null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
 
     }
 
     @GetMapping("/search")
-    public ResponseContainer<Page<Student>> searchStudents(
+    public ApiResponse<Page<Student>> searchStudents(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String studentNumber,
             @RequestParam(required = false) String className,
@@ -44,12 +41,12 @@ public class StudentCtrl {
             @RequestParam(defaultValue = "id") String sort) {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-            Page<Student> studentPage= studentService.searchStudents(name, studentNumber, className, gender, telephone,email, pageable);
-            return new ResponseContainer<>(0,"搜索成功",studentPage);
+            Page<Student> studentPage = studentService.searchStudents(name, studentNumber, className, gender, telephone, email, pageable);
+            return ApiResponse.ok(studentPage);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1004,"搜索失败",null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
     }
 }

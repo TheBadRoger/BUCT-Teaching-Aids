@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>学生智慧前台-课程页</title>
     <style>
         * {
@@ -11,6 +11,7 @@
             box-sizing: border-box;
             font-family: "Microsoft YaHei", sans-serif;
         }
+
         body {
             background-color: #f5f7fa;
         }
@@ -31,34 +32,41 @@
             padding: 15px;
             margin-right: 20px;
         }
+
         .sidebar .user-info {
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px dashed #e1e5eb;
         }
+
         .sidebar .user-info .avatar {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             margin-bottom: 8px;
         }
+
         .sidebar .user-info .name {
             font-weight: bold;
             font-size: 14px;
         }
+
         .sidebar .menu-group {
             margin-bottom: 20px;
         }
+
         .sidebar .menu-group h4 {
             font-size: 13px;
             color: #666;
             margin-bottom: 10px;
             padding-left: 5px;
         }
+
         .sidebar .menu-group ul {
             list-style: none;
         }
+
         .sidebar .menu-group li {
             font-size: 13px;
             padding: 8px 10px;
@@ -68,9 +76,11 @@
             display: flex;
             align-items: center;
         }
+
         .sidebar .menu-group li:hover {
             background-color: #f5f7fa;
         }
+
         .sidebar .menu-group li .icon {
             width: 16px;
             height: 16px;
@@ -87,6 +97,7 @@
             border-radius: 4px;
             padding: 20px;
         }
+
         .main-content .top-bar {
             display: flex;
             align-items: center;
@@ -94,10 +105,12 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #e1e5eb;
         }
+
         .main-content .top-bar .search {
             flex: 1;
             display: flex;
         }
+
         .main-content .top-bar .search input {
             flex: 1;
             height: 32px;
@@ -105,6 +118,7 @@
             border: 1px solid #e1e5eb;
             border-radius: 3px 0 0 3px;
         }
+
         .main-content .top-bar .search button {
             height: 32px;
             padding: 0 12px;
@@ -114,11 +128,13 @@
             border-radius: 0 3px 3px 0;
             cursor: pointer;
         }
+
         .main-content .top-bar .btn-group {
             display: flex;
             gap: 8px;
             margin-left: 20px;
         }
+
         .main-content .top-bar .btn-group button {
             height: 32px;
             padding: 0 12px;
@@ -135,16 +151,19 @@
             font-size: 13px;
             color: #666;
         }
+
         .course-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
+
         .course-card {
             border: 1px solid #e1e5eb;
             border-radius: 4px;
             overflow: hidden;
         }
+
         .course-card .cover {
             height: 120px;
             background-color: #f5f7fa; /* 实际项目替换为课程封面图 */
@@ -154,14 +173,17 @@
             font-size: 12px;
             color: #999;
         }
+
         .course-card .info {
             padding: 12px;
             font-size: 13px;
         }
+
         .course-card .info .title {
             font-weight: bold;
             margin-bottom: 5px;
         }
+
         .course-card .info .meta {
             color: #666;
             font-size: 12px;
@@ -169,103 +191,124 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 左侧侧边栏 -->
-        <div class="sidebar">
-            <div class="user-info">
-                <div class="icon">用户头像</div>
-                <div class="name">张三</div>
-                <div style="font-size:12px; color:#999;">个人签名</div>
-            </div>
+<div class="container">
+    <!-- 左侧侧边栏 -->
+    <div class="sidebar">
+        <div class="user-info">
+            <div class="icon">用户头像</div>
+            <div class="name">张三</div>
+            <div style="font-size:12px; color:#999;">个人签名</div>
+        </div>
 
-            <div class="menu-group">
-                <h4>我的学习记录</h4>
-                <ul>
-                    <li><div class="icon"></div>还未看的</li>
-                    <li><div class="icon"></div>已经看过的</li>
-                    <li><div class="icon"></div>我要学</li>
-                    <li><div class="icon"></div>猜你需</li>
-                </ul>
-            </div>
+        <div class="menu-group">
+            <h4>我的学习记录</h4>
+            <ul>
+                <li>
+                    <div class="icon"></div>
+                    还未看的
+                </li>
+                <li>
+                    <div class="icon"></div>
+                    已经看过的
+                </li>
+                <li>
+                    <div class="icon"></div>
+                    我要学
+                </li>
+                <li>
+                    <div class="icon"></div>
+                    猜你需
+                </li>
+            </ul>
+        </div>
 
-            <div class="menu-group">
-                <h4>功能菜单</h4>
-                <ul>
-                    <li><div class="icon"></div>成长地图</li>
-                    <li><div class="icon"></div>个人详情</li>
-                    <li><div class="icon"></div>好友动态</li>
-                </ul>
+        <div class="menu-group">
+            <h4>功能菜单</h4>
+            <ul>
+                <li>
+                    <div class="icon"></div>
+                    成长地图
+                </li>
+                <li>
+                    <div class="icon"></div>
+                    个人详情
+                </li>
+                <li>
+                    <div class="icon"></div>
+                    好友动态
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 右侧主内容区 -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="search">
+                <input placeholder="搜索课程..." type="text">
+                <button>搜索</button>
+            </div>
+            <div class="btn-group">
+                <button>刷新</button>
+                <button>更多</button>
             </div>
         </div>
 
-        <!-- 右侧主内容区 -->
-        <div class="main-content">
-            <div class="top-bar">
-                <div class="search">
-                    <input type="text" placeholder="搜索课程...">
-                    <button>搜索</button>
-                </div>
-                <div class="btn-group">
-                    <button>刷新</button>
-                    <button>更多</button>
+        <div class="course-filter">
+            按星级排序：一级分类 > 二级分类 > 三级目录
+        </div>
+
+        <div class="course-grid">
+            <!-- 课程卡片1 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称1</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
                 </div>
             </div>
-
-            <div class="course-filter">
-                按星级排序：一级分类 > 二级分类 > 三级目录
+            <!-- 课程卡片2 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称2</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
+                </div>
             </div>
-
-            <div class="course-grid">
-                <!-- 课程卡片1 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称1</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
+            <!-- 课程卡片3 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称3</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
                 </div>
-                <!-- 课程卡片2 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称2</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
+            </div>
+            <!-- 课程卡片4 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称4</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
                 </div>
-                <!-- 课程卡片3 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称3</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
+            </div>
+            <!-- 课程卡片5 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称5</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
                 </div>
-                <!-- 课程卡片4 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称4</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
-                </div>
-                <!-- 课程卡片5 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称5</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
-                </div>
-                <!-- 课程卡片6 -->
-                <div class="course-card">
-                    <div class="cover">课程封面图</div>
-                    <div class="info">
-                        <div class="title">课程名称6</div>
-                        <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
-                    </div>
+            </div>
+            <!-- 课程卡片6 -->
+            <div class="course-card">
+                <div class="cover">课程封面图</div>
+                <div class="info">
+                    <div class="title">课程名称6</div>
+                    <div class="meta">共10课时 | 教参10/笔记10/问答5</div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

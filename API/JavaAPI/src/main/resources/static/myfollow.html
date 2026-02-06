@@ -2,95 +2,95 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>我的关注</title>
-    <link rel="stylesheet" href="./css/myfollow.css">
+    <link href="./css/myfollow.css" rel="stylesheet">
 </head>
 <body>
-    <!-- 顶部栏 -->
-    <div class="top-bar">
-        <img class="logo" src="images/BUCT-Logo-blue.png" alt="logo">
-        <div class="top-bar-right">
-            <div class="search-area">
-                <input type="text" placeholder="搜索...">
-                <button>搜索</button>
-            </div>
-            <div class="user-area">
-                <img src="images/default.png" alt="登录头像">
-            </div>
+<!-- 顶部栏 -->
+<div class="top-bar">
+    <img alt="logo" class="logo" src="images/BUCT-Logo-blue.png">
+    <div class="top-bar-right">
+        <div class="search-area">
+            <input placeholder="搜索..." type="text">
+            <button>搜索</button>
+        </div>
+        <div class="user-area">
+            <img alt="登录头像" src="images/default.png">
         </div>
     </div>
+</div>
 
-    <!-- 导航栏 -->
-    <div class="nav-bar">
-        <a href="index.html" class="nav-item">首页</a>
-        <div class="nav-item active">课程</div>
-        <a href="#" class="nav-item">发现</a>
-        <div class="nav-right">
-            <button>选课</button>
-            <button>地图</button>
-            <button>记录</button>
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <a class="nav-item" href="index.html">首页</a>
+    <div class="nav-item active">课程</div>
+    <a class="nav-item" href="#">发现</a>
+    <div class="nav-right">
+        <button>选课</button>
+        <button>地图</button>
+        <button>记录</button>
+    </div>
+</div>
+
+<!-- 内容区 -->
+<div class="content">
+    <div class="sidebar">
+        <div class="user-profile">
+            <img alt="当前登录用户头像" src="images/default.png">
+            <div class="user-name">张三</div>
+            <div class="user-signature">个人签名</div>
+        </div>
+        <div class="menu">
+            <h3>我的学习记录</h3>
+            <ul>
+                <li>还未看的</li>
+                <li>已经看过的</li>
+                <li>我要学的</li>
+                <li>猜你需要</li>
+            </ul>
+        </div>
+        <div class="menu">
+            <h3>功能菜单</h3>
+            <ul>
+                <li>成长地图</li>
+                <li>个人详情</li>
+                <li>好友动态</li>
+            </ul>
         </div>
     </div>
-
-    <!-- 内容区 -->
-    <div class="content">
-        <div class="sidebar">
-            <div class="user-profile">
-                <img src="images/default.png" alt="当前登录用户头像">
-                <div class="user-name">张三</div>
-                <div class="user-signature">个人签名</div>
-            </div>
-            <div class="menu">
-                <h3>我的学习记录</h3>
-                <ul>
-                    <li>还未看的</li>
-                    <li>已经看过的</li>
-                    <li>我要学的</li>
-                    <li>猜你需要</li>
-                </ul>
-            </div>
-            <div class="menu">
-                <h3>功能菜单</h3>
-                <ul>
-                    <li>成长地图</li>
-                    <li>个人详情</li>
-                    <li>好友动态</li>
-                </ul>
-            </div>
+    <div class="main">
+        <p>定制您感兴趣的课程分类栏目和<a href="#">关注的老师</a>，为您推送个性课程到<a href="#">“猜你需要”</a>中。</p>
+        <div class="select-area">
+            <select id="level1" name="level1">
+                <option value="">一级分类</option>
+            </select>
+            <select id="level2" name="level2">
+                <option value="">二级分类</option>
+            </select>
+            <select id="level3" name="level3">
+                <option value="">三级分类</option>
+            </select>
+            <button class="add">添加</button>
         </div>
-        <div class="main">
-            <p>定制您感兴趣的课程分类栏目和<a href="#">关注的老师</a>，为您推送个性课程到<a href="#">“猜你需要”</a>中。</p>
-            <div class="select-area">
-                <select name="level1" id="level1">
-                    <option value="">一级分类</option>
-                </select>
-                <select name="level2" id="level2">
-                    <option value="">二级分类</option>
-                </select>
-                <select name="level3" id="level3">
-                    <option value="">三级分类</option>
-                </select>
-                <button class="add">添加</button>
-            </div>
-            <div class="attention-area">
-                <h3>我已关注</h3>
-                <div class="category-grid">
-                    <div class="category-item">
-                        <span>三级分类</span>
-                        <span class="close">×</span>
-                    </div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
-                    <div class="category-item">三级分类</div>
+        <div class="attention-area">
+            <h3>我已关注</h3>
+            <div class="category-grid">
+                <div class="category-item">
+                    <span>三级分类</span>
+                    <span class="close">×</span>
                 </div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
+                <div class="category-item">三级分类</div>
             </div>
+        </div>
     </div>
     <script src="./js/myfollow.js"></script>
 </body>

@@ -2,7 +2,8 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.AdminUser;
 import com.buctta.api.service.AdminUserLogin;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,20 +16,23 @@ public class AdminUserLoginCtrl {
     private final AdminUserLogin userLogin;
 
     @PostMapping("/login")
-    public ResponseContainer<AdminUser> loginCall(@RequestParam String username, @RequestParam String password){
+    public ApiResponse<AdminUser> loginCall(@RequestParam String username, @RequestParam String password) {
         AdminUser adminUser = userLogin.login(username, password);
-        if(adminUser != null)
-            return new ResponseContainer<>(0,"登陆成功",adminUser);
-        else
-            return new ResponseContainer<>(1001,"用户名或密码错误", null);
+        if (adminUser != null)
+            return ApiResponse.ok(adminUser);
+        else {
+            return ApiResponse.fail(BusinessStatus.ACCOUNT_PASSWORD_ERROR);
+        }
     }
 
     @PostMapping("/register")
-    public ResponseContainer<AdminUser> registerCall(@RequestBody AdminUser newUser){
+    public ApiResponse<AdminUser> registerCall(@RequestBody AdminUser newUser) {
         AdminUser adminUser = userLogin.register(newUser);
-        if(adminUser != null)
-            return new ResponseContainer<>(0,"注册成功",adminUser);
+        if (adminUser != null) {
+            adminUser.setPassword("***************");
+            return ApiResponse.ok(adminUser);
+        }
         else
-            return new ResponseContainer<>(1002,"用户名已被注册",null);
+            return ApiResponse.fail(BusinessStatus.USERNAME_EXISTS);
     }
 }

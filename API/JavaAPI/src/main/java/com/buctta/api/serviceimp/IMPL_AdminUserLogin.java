@@ -25,9 +25,9 @@ public class IMPL_AdminUserLogin implements AdminUserLogin {
 
     @Override
     public AdminUser register(AdminUser RequestUser) {
-        if(adminQuery.findAdminUserByUsername(RequestUser.getUsername()) != null)
+        if (adminQuery.findAdminUserByUsername(RequestUser.getUsername()) != null)
             return null;
-        else{
+        else {
             AdminUser newUser = adminQuery.save(RequestUser);
             newUser.setPassword(null);
             return newUser;

@@ -2,7 +2,8 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.TeacherList;
 import com.buctta.api.service.TeacherService;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,16 +18,16 @@ public class TeacherListCtrl {
     private TeacherService teacherService;
 
     @PostMapping("/addteacher")
-    public ResponseContainer<TeacherList> addteacherCall(@RequestBody TeacherList newteacher) {
+    public ApiResponse<TeacherList> addteacherCall(@RequestBody TeacherList newteacher) {
         TeacherList tl = teacherService.AddTeacher(newteacher);
         if (tl != null)
-            return new ResponseContainer<>(0,"Success",tl);
+            return ApiResponse.ok(tl);
         else
-            return new ResponseContainer<>(1001,"Success",null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
     }
 
     @PostMapping("/searchteacher")
-    public ResponseContainer<Page<TeacherList>> SearchTeacherCall(
+    public ApiResponse<Page<TeacherList>> SearchTeacherCall(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String organization,
             @RequestParam(required = false) String jointime,
@@ -41,11 +42,11 @@ public class TeacherListCtrl {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
             // 调用服务层进行搜索
             Page<TeacherList> teacherPage = teacherService.searchTeachers(name, organization, jointime, gender, education, pageable);
-            return new ResponseContainer<>(0,"搜索成功",teacherPage);
+            return ApiResponse.ok(teacherPage);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseContainer<>(1004,"搜索失败",null);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
     }
 }

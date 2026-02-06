@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
     public static String[] spiltByLine(String text, String sign) {
-        Pattern SEP = Pattern.compile(sign,Pattern.MULTILINE);
+        Pattern SEP = Pattern.compile(sign, Pattern.MULTILINE);
         if (text == null || text.isEmpty()) {
             return new String[0];
         }
@@ -17,7 +17,8 @@ public class TextUtils {
                 .filter(s -> !s.trim().isEmpty())
                 .toArray(String[]::new);
     }
-    public static String[] ExtractInfo(String text,String rgx){
+
+    public static String[] ExtractInfo(String text, String rgx) {
         Pattern P = Pattern.compile(rgx, Pattern.MULTILINE);
 
         if (text == null) return new String[0];

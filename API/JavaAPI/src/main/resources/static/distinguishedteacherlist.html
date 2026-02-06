@@ -2,58 +2,58 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>名师列表</title>
-    <link rel="stylesheet" href="./css/distinguishedteacherlist.css">
+    <link href="./css/distinguishedteacherlist.css" rel="stylesheet">
 </head>
 <body>
-    <!-- 顶部栏 -->
-    <div class="top-bar">
-        <img class="logo" src="images/BUCT-Logo-blue.png" alt="logo">
-        <div class="top-bar-right">
-            <div class="search-area">
-                <input type="text" placeholder="搜索...">
-                <button>搜索</button>
-            </div>
-            <div class="user-area">
-                <img src="images/default.png" alt="登录头像">
-            </div>
+<!-- 顶部栏 -->
+<div class="top-bar">
+    <img alt="logo" class="logo" src="images/BUCT-Logo-blue.png">
+    <div class="top-bar-right">
+        <div class="search-area">
+            <input placeholder="搜索..." type="text">
+            <button>搜索</button>
+        </div>
+        <div class="user-area">
+            <img alt="登录头像" src="images/default.png">
         </div>
     </div>
+</div>
 
-    <!-- 导航栏 -->
-    <div class="nav-bar">
-        <a href="index.html" class="nav-item">首页</a>
-        <div class="nav-item active">课程</div>
-        <a href="#" class="nav-item">发现</a>
-        <div class="nav-right">
-            <button>选课</button>
-            <button>地图</button>
-            <button>记录</button>
-        </div>
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <a class="nav-item" href="index.html">首页</a>
+    <div class="nav-item active">课程</div>
+    <a class="nav-item" href="#">发现</a>
+    <div class="nav-right">
+        <button>选课</button>
+        <button>地图</button>
+        <button>记录</button>
     </div>
+</div>
 
-     <!-- 内容区 -->
-    <div class="content">
-        <!-- 左栏 -->
-        <aside class="sidebar">
-            <div id="teacher-card-container"></div>
-            <div id="teacher-follow-container"></div>
-            <div id="teacher-visit-container"></div>
-        </aside>
+<!-- 内容区 -->
+<div class="content">
+    <!-- 左栏 -->
+    <aside class="sidebar">
+        <div id="teacher-card-container"></div>
+        <div id="teacher-follow-container"></div>
+        <div id="teacher-visit-container"></div>
+    </aside>
 
-        <!-- 中间主区域 -->
-        <main class="main">
-            <section id="teacher-header-container"></section>
-            <section class="courses" id="courses-container"></section>
-        </main>
+    <!-- 中间主区域 -->
+    <main class="main">
+        <section id="teacher-header-container"></section>
+        <section class="courses" id="courses-container"></section>
+    </main>
 
-        <!-- 右侧 -->
-        <aside class="right-panel">
-            <div id="hot-courses-container"></div>
-            <div id="recommend-teachers-container"></div>
-        </aside>
-    </div>
-    <script src="./js/distinguishedteacherlist.js"></script>
+    <!-- 右侧 -->
+    <aside class="right-panel">
+        <div id="hot-courses-container"></div>
+        <div id="recommend-teachers-container"></div>
+    </aside>
+</div>
+<script src="./js/distinguishedteacherlist.js"></script>
 </body>
 </html>

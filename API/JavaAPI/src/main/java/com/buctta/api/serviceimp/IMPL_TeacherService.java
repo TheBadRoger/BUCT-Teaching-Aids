@@ -23,15 +23,12 @@ public class IMPL_TeacherService implements TeacherService {
     private TeacherReposit teacherReposit;
 
     @Override
-    public TeacherList AddTeacher(TeacherList teacherList)
-    {
-        if (teacherReposit.findTeacherListByName(teacherList.getName())!=null)
-        {
+    public TeacherList AddTeacher(TeacherList teacherList) {
+        if (teacherReposit.findTeacherListByName(teacherList.getName()) != null) {
             return null;
         }
-        else
-        {
-            TeacherList newTeacher=teacherReposit.save(teacherList);
+        else {
+            TeacherList newTeacher = teacherReposit.save(teacherList);
             return newTeacher;
         }
     }

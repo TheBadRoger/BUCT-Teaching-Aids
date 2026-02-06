@@ -1,9 +1,9 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.service.ExternalAIJudge;
+import com.buctta.api.utils.ApiResponse;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -18,24 +18,24 @@ public class ExternalAIGenerateCtrl {
     private final ExternalAIJudge aiGenerateService;
 
     @PostMapping("/generate/start")
-    public ResponseEntity<Map<String,String>> startJudge(
+    public ApiResponse<Map<String, String>> startJudge(
             @RequestParam List<String> extractedTexts,
             @RequestParam List<String> fileNames,
             @RequestParam int counts) {
-        if(counts == 1) {
+        if (counts == 1) {
             List<String> tmp = new java.util.ArrayList<>();
-            StringBuilder t= new StringBuilder(extractedTexts.getFirst());
-            for(int i = 1; i < extractedTexts.size(); i++) {
+            StringBuilder t = new StringBuilder(extractedTexts.getFirst());
+            for (int i = 1; i < extractedTexts.size(); i++) {
                 t.append(extractedTexts.get(i));
             }
             tmp.add(t.toString());
 
             String id = aiGenerateService.submitTask(tmp, fileNames);
-            return ResponseEntity.ok(Map.of("id", id, "status", "started"));
+            return ApiResponse.ok(Map.of("id", id, "status", "started"));
         }
-        else{
+        else {
             String id = aiGenerateService.submitTask(extractedTexts, fileNames);
-            return ResponseEntity.ok(Map.of("id", id, "status", "started"));
+            return ApiResponse.ok(Map.of("id", id, "status", "started"));
         }
     }
 

@@ -9,9 +9,9 @@
 .top-nav {
     background-color: #ffffff;
     padding: 4px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: fixed;
-    top:0;
+    top: 0;
     right: 0;
     left: 0;
     z-index: 999;
@@ -61,12 +61,13 @@
     border-radius: 50%;
     background-color: #ddd;
 }
+
 /* 第二层导航栏 */
-.second-nav{
+.second-nav {
     background-color: #ffffff;
     padding: 15px 90px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    top:60px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    top: 60px;
     right: 0;
     left: 0;
     display: flex;
@@ -74,25 +75,29 @@
     z-index: 999;
     justify-content: space-between;
 }
-.second-nav-left{
+
+.second-nav-left {
     display: flex;
     justify-content: flex-start;
     gap: 40px;
 }
 
-.second-nav-left a{
+.second-nav-left a {
     font-size: 18px;
     text-decoration: none;
     color: #333;
 }
-.second-nav-right a{
+
+.second-nav-right a {
     font-size: 18px;
     text-decoration: none;
     color: #1b2682;
 }
-.second-nav a:hover{
+
+.second-nav a:hover {
     color: #165DFF;
 }
+
 /* 主内容区域样式 */
 .main-content {
     padding: 131px 90px 0 90px;
@@ -106,48 +111,56 @@
     color: #666;
     font-size: 14px;
 }
+
 /* 第一层 */
-.first-container{
+.first-container {
     display: flex;
     justify-content: space-between;
 }
+
 /* 轮播图 */
 .banner img {
     width: 980px;
     height: 360px;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 右侧特色应用 */
 .right-apps {
     width: 200px;
 }
-.right-apps{
+
+.right-apps {
     height: 360px;
-    background:#ffffff;
+    background: #ffffff;
     border-radius: 10px;
 }
+
 .app-item {
     margin: 0 5px 10px 5px;
-    padding: 10px 20px ;
+    padding: 10px 20px;
     height: 65px;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
-    
+
 }
-.app-item:hover{
+
+.app-item:hover {
     background: #efefef;
 }
-.app-item-tilte{
+
+.app-item-tilte {
     font-weight: bold;
 }
-.app-item-info{
+
+.app-item-info {
     color: #666;
     font-size: 12px;
     margin-top: 6px;
 }
+
 .more-apps {
     display: block;
     text-align: center;
@@ -155,22 +168,26 @@
     font-size: 14px;
     text-decoration: none;
 }
-.more-apps:hover{
+
+.more-apps:hover {
     color: #333;
 }
-.app-item.active{
+
+.app-item.active {
     background-color: #ff2600;
     color: #f0f0f0;
 }
-.app-item.app-item.active .app-item-info{
+
+.app-item.app-item.active .app-item-info {
     color: #f0f0f0;
 }
+
 /* 课程 */
 .course-section {
     margin: 20px 0px;
 }
 
-.course-section h2{
+.course-section h2 {
     font-size: 22px;
     margin-bottom: 10px;
 }
@@ -194,7 +211,7 @@
 .course-card {
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
 }
 
