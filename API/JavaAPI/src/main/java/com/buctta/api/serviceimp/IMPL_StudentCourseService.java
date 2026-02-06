@@ -55,7 +55,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
             studentCourse.setIsViewed(false);
 
             return studentCourseRepository.save(studentCourse);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return null;
         }
     }
@@ -73,7 +74,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
         try {
             studentCourse.setIsViewed(isViewed);
             return studentCourseRepository.save(studentCourse);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return null;
         }
     }
@@ -86,7 +88,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
 
         try {
             return studentCourseRepository.findByStudentId(studentId, pageable);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return Page.empty(pageable);
         }
     }
@@ -99,7 +102,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
 
         try {
             return studentCourseRepository.findByStudentIdAndIsViewed(studentId, true, pageable);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return Page.empty(pageable);
         }
     }
@@ -112,7 +116,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
 
         try {
             return studentCourseRepository.findByStudentIdAndIsViewed(studentId, false, pageable);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return Page.empty(pageable);
         }
     }
@@ -126,7 +131,8 @@ public class IMPL_StudentCourseService implements StudentCourseService {
 
         try {
             studentCourseRepository.deleteById(id);
-        } catch (Exception ignored) {
+        }
+        catch (Exception ignored) {
         }
     }
 
@@ -152,3 +158,4 @@ public class IMPL_StudentCourseService implements StudentCourseService {
         return studentCourseRepository.findAll(specification, pageable);
     }
 }
+

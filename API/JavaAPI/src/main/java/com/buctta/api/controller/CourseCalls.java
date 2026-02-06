@@ -5,11 +5,14 @@ import com.buctta.api.service.CourseService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+
+@Slf4j
 
 @RestController
 @RequestMapping("/api/course")
@@ -47,10 +50,10 @@ public class CourseCalls {
 
             return ApiResponse.ok(coursePage);
 
-        } catch (Exception e) {
-            System.err.println("搜索课程时发生错误: " + e.getMessage());
-            e.printStackTrace();
-            return ApiResponse.fail(500, "Failed");
+        }
+        catch (Exception e) {
+            log.error("搜索课程时发生错误: {}", e.getMessage(), e);
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
     }
 }

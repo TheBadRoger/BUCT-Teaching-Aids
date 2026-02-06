@@ -37,4 +37,9 @@ public class CourseList {
     private String courseOutline;
     private String courseImage;
 
+    // ...existing code...
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount = 0L;
+
 }
+

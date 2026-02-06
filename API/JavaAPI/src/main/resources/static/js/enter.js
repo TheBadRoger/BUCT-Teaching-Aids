@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data && data.code === 0) {
+                    if (data && data.code === 2000) {
                         window.location.href = 'AIJudge.html';
                     } else {
                         showError((data && data.msg) || '登录失败：用户名或密码错误');

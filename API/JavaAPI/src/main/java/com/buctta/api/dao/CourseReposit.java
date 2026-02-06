@@ -11,5 +11,6 @@ public interface CourseReposit extends JpaRepository<CourseList, Long>, JpaSpeci
     CourseList findCourseListByCourseNumber(String courseNumber);
 
     //CourseList findCourseListByCourseName(String courseName);
-    Optional<CourseList> findById(Long id);
+    Optional<CourseList> findCourseListById(Long id);
 }
+
