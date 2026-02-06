@@ -1,18 +1,19 @@
 // 模拟课程数据
 const courseData = {
     "大学": [
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
-        { title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
+        {title: "大学计算机", teacher: "张教授", students: "1243人学习", tag: "必修", img: "./image/test-img.jpg"},
     ]
 };
+
 function renderCourses(keyword) {
     const courseGrid = document.querySelector('.course-grid');
     courseGrid.innerHTML = ''; // 清空容器

@@ -2,11 +2,11 @@ package com.buctta.api.controller;
 
 import com.buctta.api.entities.JudgementUser;
 import com.buctta.api.service.JudgeUserLogin;
-import com.buctta.api.utils.ResponseContainer;
+import com.buctta.api.utils.ApiResponse;
+import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,14 +22,14 @@ public class JudgeUserLoginCtrl {
     private JudgeUserLogin userLogin;
 
     @PostMapping("/login")
-    public ResponseContainer<JudgementUser> loginCall(
+    public ApiResponse<JudgementUser> loginCall(
             @RequestParam String username,
             @RequestParam String password,
             HttpServletRequest request,
             HttpServletResponse response
-    ){
+    ) {
         JudgementUser judgementUser = userLogin.login(username, password);
-        if(judgementUser != null) {
+        if (judgementUser != null) {
 
             //手动写入认证信息
             SecurityContextHolder.getContext().setAuthentication(
@@ -40,25 +40,28 @@ public class JudgeUserLoginCtrl {
             new HttpSessionSecurityContextRepository()
                     .saveContext(SecurityContextHolder.getContext(), request, response);
 
-            return new ResponseContainer<>(0, "登陆成功", judgementUser);
+            return ApiResponse.ok(judgementUser);
         }
         else
-            return new ResponseContainer<>(1001,"用户名或密码错误",null);
+            return ApiResponse.fail(BusinessStatus.ACCOUNT_PASSWORD_ERROR);
     }
 
     @PostMapping("/register")
-    public ResponseContainer<JudgementUser> registerCall(@RequestBody JudgementUser newUser){
+    public ApiResponse<JudgementUser> registerCall(@RequestBody JudgementUser newUser) {
         JudgementUser judgementUser = userLogin.register(newUser);
-        ResponseContainer<JudgementUser> registerCallBack = new ResponseContainer<>();
-        if(judgementUser != null)
-            return new ResponseContainer<>(0,"注册成功",null);
+        ApiResponse<JudgementUser> registerCallBack = new ApiResponse<>();
+        if (judgementUser != null) {
+            judgementUser.setPassword("****************");
+            return ApiResponse.ok(judgementUser);
+        }
         else
-            return new ResponseContainer<>(1002,"用户名已被注册",null);
+            return ApiResponse.fail(BusinessStatus.USERNAME_EXISTS);
     }
-
+    /*
     @GetMapping("/debug")
     public String debug(HttpSession session) {
         return "SessionId=" + session.getId() + "\n" +
                 "Auth=" + SecurityContextHolder.getContext().getAuthentication();
     }
+    */
 }

@@ -2,62 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/enter.css">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="./css/enter.css" rel="stylesheet">
     <title>北化教育管理系统</title>
 </head>
 <body>
 
-  <!-- 顶部导航栏 -->
-  <header class="top-bar">
+<!-- 顶部导航栏 -->
+<header class="top-bar">
     <div class="left">
-      <img src="images/BUCT-Logo-blue.png" alt="BUCT" class="logo">
-      <span class="title">“评析灵析”——嵌入式实验报告评阅智能体</span>
+        <img alt="BUCT" class="logo" src="images/BUCT-Logo-blue.png">
+        <span class="title">“评析灵析”——嵌入式实验报告评阅智能体</span>
     </div>
     <div class="right">
-      <a href="#">中文</a> | <a href="#">English</a>
-      <span class="time" id="time"></span>
+        <a href="#">中文</a> | <a href="#">English</a>
+        <span class="time" id="time"></span>
     </div>
-  </header>
+</header>
 
-  <!-- 背景主区 -->
-  <main class="main">
+<!-- 背景主区 -->
+<main class="main">
     <div class="login-box">
-      <h2>密码登录</h2>
-      <form id="loginForm">
-        <div class="input-group">
-          <i class="fa-solid fa-user"></i>
-          <input type="text" id="username" placeholder="学号/工号" required>
-        </div>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input type="password" id="password" placeholder="密码" required>
-        </div>
-        <button type="submit" class="login-btn">登录</button>
-        <div class="links">
-          <a href="#">忘记/修改密码</a>
-          <a href="register.html">注册</a>
-        </div>
-      </form>
-      <p id="errorMsg" class="error"></p>
+        <h2>密码登录</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input id="username" placeholder="学号/工号" required type="text">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input id="password" placeholder="密码" required type="password">
+            </div>
+            <button class="login-btn" type="submit">登录</button>
+            <div class="links">
+                <a href="#">忘记/修改密码</a>
+                <a href="register.html">注册</a>
+            </div>
+        </form>
+        <p class="error" id="errorMsg"></p>
     </div>
-  </main>
+</main>
 
-  <!-- 底部导航栏 -->
-  <footer class="foot-bar">
+<!-- 底部导航栏 -->
+<footer class="foot-bar">
     <div class="more">
-      <a href="#">关于平台</a>
-      |
-      <a href="#">服务协议</a>
-      |
-      <a href="#">联系邮箱</a>
-      |
-      <a href="#">侵权投诉</a>
+        <a href="#">关于平台</a>
+        |
+        <a href="#">服务协议</a>
+        |
+        <a href="#">联系邮箱</a>
+        |
+        <a href="#">侵权投诉</a>
     </div>
     <div class="copyright">
-      2025-2026北京化工大学信息学院计算机专业实践教学团队. All Rights Reserved.
-  </div>
-  </footer>
-  <script src="./js/enter.js"></script>
+        2025-2026北京化工大学信息学院计算机专业实践教学团队. All Rights Reserved.
+    </div>
+</footer>
+<script src="./js/enter.js"></script>
 </body>
 </html>

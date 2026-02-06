@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>评价管理/评价列表</title>
     <style>
         body {
@@ -11,9 +11,11 @@
             padding: 0;
             background-color: #f0f2f5;
         }
+
         .page-wrapper {
             padding: 20px;
         }
+
         .header-bar {
             background-color: #fff;
             padding: 15px 20px;
@@ -26,10 +28,12 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .header-bar .breadcrumb {
             color: #666;
             font-size: 14px;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -39,21 +43,25 @@
             padding: 20px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
+
         .search-form {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: #333;
         }
+
         .form-group input,
         .form-group select {
             width: 100%;
@@ -64,17 +72,20 @@
             box-sizing: border-box;
             background-color: #fff;
         }
+
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: #40a9ff;
             box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
         }
+
         .action-buttons {
             display: flex;
             gap: 10px;
             margin-top: 20px;
         }
+
         .action-buttons button {
             padding: 10px 20px;
             border: none;
@@ -83,51 +94,63 @@
             font-size: 14px;
             font-weight: 500;
         }
+
         .action-buttons .search {
             background-color: #2f5496;
             color: #fff;
         }
+
         .action-buttons .reset {
             background-color: #1890ff;
             color: #fff;
         }
+
         .action-buttons .add {
             background-color: #2f5496;
             color: #fff;
         }
+
         .action-buttons .delete {
             background-color: #2f5496;
             color: #fff;
         }
+
         .action-buttons .export {
             background-color: #f0f0f0;
             color: #333;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         table th, table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
+
         table th {
             background-color: #f8f9fa;
             font-weight: 600;
         }
+
         table td a {
             color: #1890ff;
             text-decoration: none;
             margin-right: 10px;
         }
+
         .pagination {
             margin-top: 20px;
             text-align: right;
         }
+
         .pagination a {
             padding: 5px 10px;
             margin: 0 2px;
@@ -136,14 +159,17 @@
             text-decoration: none;
             color: #333;
         }
+
         .pagination a.active {
             background-color: #1890ff;
             color: #fff;
             border-color: #1890ff;
         }
+
         .pagination a:hover:not(.active) {
             background-color: #f0f0f0;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -156,6 +182,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fff;
             padding: 20px;
@@ -163,6 +190,7 @@
             max-width: 500px;
             width: 100%;
         }
+
         .modal-header {
             font-size: 18px;
             font-weight: 600;
@@ -170,14 +198,17 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
+
         .modal-body {
             margin-bottom: 20px;
         }
+
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
+
         .modal-footer button {
             padding: 8px 16px;
             border: none;
@@ -185,10 +216,12 @@
             cursor: pointer;
             font-size: 14px;
         }
+
         .modal-footer .confirm {
             background-color: #1890ff;
             color: #fff;
         }
+
         .modal-footer .cancel {
             background-color: #f0f0f0;
             color: #333;
@@ -196,146 +229,166 @@
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="header-bar">
-            评价管理/评价列表
-            <div class="breadcrumb">首页 > 消息列表</div>
-        </div>
-        
-        <div class="container">
-            <form class="search-form">
-                <div class="form-group">
-                    <label>课程名称</label>
-                    <input type="text" placeholder="请输入课程名称">
+<div class="page-wrapper">
+    <div class="header-bar">
+        评价管理/评价列表
+        <div class="breadcrumb">首页 > 消息列表</div>
+    </div>
+
+    <div class="container">
+        <form class="search-form">
+            <div class="form-group">
+                <label>课程名称</label>
+                <input placeholder="请输入课程名称" type="text">
+            </div>
+            <div class="form-group">
+                <label>课程老师</label>
+                <input placeholder="请输入课程老师" type="text">
+            </div>
+            <div class="form-group">
+                <label>发布时间</label>
+                <div style="display: flex; gap: 5px;">
+                    <input placeholder="开始日期" type="date">
+                    <span>至</span>
+                    <input placeholder="结束日期" type="date">
                 </div>
-                <div class="form-group">
-                    <label>课程老师</label>
-                    <input type="text" placeholder="请输入课程老师">
+            </div>
+            <div class="form-group">
+                <label>审核状态</label>
+                <select>
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select>
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>报名截至时间</label>
+                <div style="display: flex; gap: 5px;">
+                    <input placeholder="开始日期" type="date">
+                    <span>至</span>
+                    <input placeholder="结束日期" type="date">
                 </div>
-                <div class="form-group">
-                    <label>发布时间</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="date" placeholder="开始日期">
-                        <span>至</span>
-                        <input type="date" placeholder="结束日期">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>审核状态</label>
-                    <select>
-                        <option>请选择</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>状态</label>
-                    <select>
-                        <option>请选择</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>报名截至时间</label>
-                    <div style="display: flex; gap: 5px;">
-                        <input type="date" placeholder="开始日期">
-                        <span>至</span>
-                        <input type="date" placeholder="结束日期">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>发布人员</label>
-                    <input type="text" placeholder="请输入发布人员">
-                </div>
-                <div class="action-buttons">
-                    <button type="button" class="search">查询</button>
-                    <button type="button" class="reset">重置</button>
-                    <button type="button" class="add">新增教师</button>
-                    <button type="button" class="delete">删除</button>
-                    <button type="button" class="export">导出</button>
-                </div>
-            </form>
-            
-            <div class="table-container">
-                <div style="margin-bottom: 10px;">
-                    <input type="checkbox" id="select-all">
-                    <label for="select-all">全选</label>
-                    <span style="margin-left: 10px;">共查询到XX条数据</span>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <<th>课程名称</</th>
-                            <<th>课程老师</</th>
-                            <<th>报名截至时间</</th>
-                            <<th>课程时长</</th>
-                            <<th>招生状态</</th>
-                            <<th>发布时间</</th>
-                            <<th>发布人员</</th>
-                            <<th>阅读情况</</th>
-                            <<th>审核状态</</th>
-                            <<th>操作</</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>为什么早期教育是必要的？</td>
-                            <td>杰克·罗南</td>
-                            <td>2020-12-09</td>
-                            <td>1周</td>
-                            <td>杰克·罗南</td>
-                            <td>2020-12-09</td>
-                            <td>杰克·罗南</td>
-                            <td>10000人</td>
-                            <td>10000人</td>
-                            <td>
-                                <a href=" ">查看</a >
-                                <a href="#">编辑</a >
-                            </td>
-                        </tr>
-                        <!-- 重复的表格行可以根据需要添加 -->
-                    </tbody>
-                </table>
-                
-                <div class="pagination">
-                    <a href="#">上一页</a >
-                    <a href="#" class="active">1</a >
-                    <a href="#">2</a >
-                    <a href="#">3</a >
-                    <a href="#">下一页</a >
-                </div>
+            </div>
+            <div class="form-group">
+                <label>发布人员</label>
+                <input placeholder="请输入发布人员" type="text">
+            </div>
+            <div class="action-buttons">
+                <button class="search" type="button">查询</button>
+                <button class="reset" type="button">重置</button>
+                <button class="add" type="button">新增教师</button>
+                <button class="delete" type="button">删除</button>
+                <button class="export" type="button">导出</button>
+            </div>
+        </form>
+
+        <div class="table-container">
+            <div style="margin-bottom: 10px;">
+                <input id="select-all" type="checkbox">
+                <label for="select-all">全选</label>
+                <span style="margin-left: 10px;">共查询到XX条数据</span>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <
+                    <th>课程名称</
+                    </th>
+                    <
+                    <th>课程老师</
+                    </th>
+                    <
+                    <th>报名截至时间</
+                    </th>
+                    <
+                    <th>课程时长</
+                    </th>
+                    <
+                    <th>招生状态</
+                    </th>
+                    <
+                    <th>发布时间</
+                    </th>
+                    <
+                    <th>发布人员</
+                    </th>
+                    <
+                    <th>阅读情况</
+                    </th>
+                    <
+                    <th>审核状态</
+                    </th>
+                    <
+                    <th>操作</
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>为什么早期教育是必要的？</td>
+                    <td>杰克·罗南</td>
+                    <td>2020-12-09</td>
+                    <td>1周</td>
+                    <td>杰克·罗南</td>
+                    <td>2020-12-09</td>
+                    <td>杰克·罗南</td>
+                    <td>10000人</td>
+                    <td>10000人</td>
+                    <td>
+                        <a href=" ">查看</a>
+                        <a href="#">编辑</a>
+                    </td>
+                </tr>
+                <!-- 重复的表格行可以根据需要添加 -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <a href="#">上一页</a>
+                <a class="active" href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">下一页</a>
             </div>
         </div>
     </div>
-    
-    <!-- 导出确认弹窗 -->
-    <div id="export-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">导出确认</div>
-            <div class="modal-body">
-                <p>共查询到XX条数据，您确定要导出吗？</p >
-            </div>
-            <div class="modal-footer">
-                <button class="cancel">取消</button>
-                <button class="confirm">确定</button>
-            </div>
+</div>
+
+<!-- 导出确认弹窗 -->
+<div class="modal" id="export-modal">
+    <div class="modal-content">
+        <div class="modal-header">导出确认</div>
+        <div class="modal-body">
+            <p>共查询到XX条数据，您确定要导出吗？</p>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel">取消</button>
+            <button class="confirm">确定</button>
         </div>
     </div>
-    
-    <script>
-        // 导出按钮点击事件
-        document.querySelector('.export').addEventListener('click', function() {
-            document.getElementById('export-modal').style.display = 'flex';
-        });
-        
-        // 弹窗取消按钮
-        document.querySelector('#export-modal .cancel').addEventListener('click', function() {
-            document.getElementById('export-modal').style.display = 'none';
-        });
-        
-        // 弹窗确认按钮
-        document.querySelector('#export-modal .confirm').addEventListener('click', function() {
-            alert('导出功能已触发，实际项目中可以在这里添加导出逻辑');
-            document.getElementById('export-modal').style.display = 'none';
-        });
-    </script>
+</div>
+
+<script>
+    // 导出按钮点击事件
+    document.querySelector('.export').addEventListener('click', function () {
+        document.getElementById('export-modal').style.display = 'flex';
+    });
+
+    // 弹窗取消按钮
+    document.querySelector('#export-modal .cancel').addEventListener('click', function () {
+        document.getElementById('export-modal').style.display = 'none';
+    });
+
+    // 弹窗确认按钮
+    document.querySelector('#export-modal .confirm').addEventListener('click', function () {
+        alert('导出功能已触发，实际项目中可以在这里添加导出逻辑');
+        document.getElementById('export-modal').style.display = 'none';
+    });
+</script>
 </body>
 </html>

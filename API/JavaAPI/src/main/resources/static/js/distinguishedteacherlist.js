@@ -4,27 +4,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const teacherInfo = {
         name: "张三",
         avatar: "./image/default.png",
-        stats: { classes: 10, messages: 20, fans: 20 },
+        stats: {classes: 10, messages: 20, fans: 20},
         brief: "擅长前端、交互设计与教学方法论。",
         field: "HTML/CSS/JS / 小程序",
         score: 8.5,
     };
 
-    const teacherFollows = Array(9).fill({ avatar: "./image/default.png" });
-    const recentVisitors = Array(6).fill({ avatar: "./image/default.png" });
+    const teacherFollows = Array(9).fill({avatar: "./image/default.png"});
+    const recentVisitors = Array(6).fill({avatar: "./image/default.png"});
 
     const courses = [
-        { name: "HTML 与语义化", hours: 12, target: "零基础", desc: "掌握基础语义化标签与页面结构。" },
-        { name: "CSS 布局实战", hours: 14, target: "有基础", desc: "深入掌握 Flex、Grid 与响应式布局。" },
-        { name: "JavaScript 入门与实践", hours: 20, target: "入门/进阶", desc: "从基础语法到 DOM 操作与异步编程。" }
+        {name: "HTML 与语义化", hours: 12, target: "零基础", desc: "掌握基础语义化标签与页面结构。"},
+        {name: "CSS 布局实战", hours: 14, target: "有基础", desc: "深入掌握 Flex、Grid 与响应式布局。"},
+        {name: "JavaScript 入门与实践", hours: 20, target: "入门/进阶", desc: "从基础语法到 DOM 操作与异步编程。"}
     ];
 
-    const hotCourses = ["课程1","课程2","课程3","课程4","课程5","课程6","课程7","课程8","课程9"];
+    const hotCourses = ["课程1", "课程2", "课程3", "课程4", "课程5", "课程6", "课程7", "课程8", "课程9"];
 
     const recommendTeachers = [
-        { name:"李四", avatar:"./image/default.png" },
-        { name:"王五", avatar:"./image/default.png" },
-        { name:"赵六", avatar:"./image/default.png" }
+        {name: "李四", avatar: "./image/default.png"},
+        {name: "王五", avatar: "./image/default.png"},
+        {name: "赵六", avatar: "./image/default.png"}
     ];
 
     // ========== 渲染部分 ==========
@@ -142,31 +142,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 评分显示
-const starsEl = document.querySelector('.stars');
-if (starsEl) {
-    const score = parseFloat(starsEl.getAttribute('data-score') || '0'); 
-    const pct = Math.max(0, Math.min(100, (score / 10) * 100));
-    starsEl.style.setProperty('--star-fill', `${pct}%`);
-    starsEl.style.width = "100px";
+    const starsEl = document.querySelector('.stars');
+    if (starsEl) {
+        const score = parseFloat(starsEl.getAttribute('data-score') || '0');
+        const pct = Math.max(0, Math.min(100, (score / 10) * 100));
+        starsEl.style.setProperty('--star-fill', `${pct}%`);
+        starsEl.style.width = "100px";
 
-    starsEl.style.position = "relative";
-    starsEl.style.display = "inline-block";
-    starsEl.style.color = "#e5e5e5";
-    starsEl.style.fontFamily = "Arial, sans-serif";
-    starsEl.style.fontSize = "20px";
+        starsEl.style.position = "relative";
+        starsEl.style.display = "inline-block";
+        starsEl.style.color = "#e5e5e5";
+        starsEl.style.fontFamily = "Arial, sans-serif";
+        starsEl.style.fontSize = "20px";
 
-    const fillLayer = document.createElement('span');
-    fillLayer.style.position = "absolute";
-    fillLayer.style.left = 0;
-    fillLayer.style.top = 0;
-    fillLayer.style.width = pct + "%";
-    fillLayer.style.overflow = "hidden";
-    fillLayer.style.whiteSpace = "nowrap";
-    fillLayer.style.color = "#ff8a00";
-    fillLayer.style.pointerEvents = "none";
-    fillLayer.textContent = "★★★★★";
-    starsEl.textContent = "★★★★★";
-    starsEl.appendChild(fillLayer);
-}
+        const fillLayer = document.createElement('span');
+        fillLayer.style.position = "absolute";
+        fillLayer.style.left = 0;
+        fillLayer.style.top = 0;
+        fillLayer.style.width = pct + "%";
+        fillLayer.style.overflow = "hidden";
+        fillLayer.style.whiteSpace = "nowrap";
+        fillLayer.style.color = "#ff8a00";
+        fillLayer.style.pointerEvents = "none";
+        fillLayer.textContent = "★★★★★";
+        starsEl.textContent = "★★★★★";
+        starsEl.appendChild(fillLayer);
+    }
 
 });

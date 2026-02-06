@@ -70,7 +70,8 @@ public class TempFileCleanupService {
                             if (deleted) {
                                 logger.info("已删除过期文件: {}", file.getName());
                                 deletedCount++;
-                            } else {
+                            }
+                            else {
                                 logger.warn("删除失败: {}", file.getName());
                             }
                         }

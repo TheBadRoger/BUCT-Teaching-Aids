@@ -1,152 +1,156 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #f4f6f8;
-  font-family: "Microsoft YaHei", sans-serif;
-  color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #f4f6f8;
+    font-family: "Microsoft YaHei", sans-serif;
+    color: #333;
 }
 
 /* 顶部栏 */
 .header {
-  background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 40px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
 }
 
 .header .logo {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .header .logo img {
-  height: 60px;
-  margin-right: 10px;
+    height: 60px;
+    margin-right: 10px;
 }
-.header .logo span{
-  font-size: 18px;
-  font-weight: 500;
-  color: #666;
+
+.header .logo span {
+    font-size: 18px;
+    font-weight: 500;
+    color: #666;
 }
 
 .header .back-link {
-  color: #2b5cff;
-  text-decoration: none;
+    color: #2b5cff;
+    text-decoration: none;
 }
 
 /* 步骤条 */
 .step-indicator {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
 }
 
 .step {
-  padding: 10px 20px;
-  background: #e0e6f7;
-  border-radius: 5px;
-  color: #555;
-  font-weight: 500;
+    padding: 10px 20px;
+    background: #e0e6f7;
+    border-radius: 5px;
+    color: #555;
+    font-weight: 500;
 }
 
 .step.active {
-  background: #1b2682;
-  color: #fff;
+    background: #1b2682;
+    color: #fff;
 }
 
 .arrow {
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 15px solid #ccc;
-  margin: 0 15px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid #ccc;
+    margin: 0 15px;
 }
 
 /* 表单盒 */
 .main {
-  display: flex;
-  justify-content:center;
-  align-items: center;
-  height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
 }
+
 .main-container {
-  width: 580px;
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  
+    width: 580px;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
 }
-.step-box{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-self: center;
+
+.step-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
 }
+
 .step-box h2 {
-  font-size: 20px;
-  text-align: center;
+    font-size: 20px;
+    text-align: center;
 }
 
 .step-box form {
-  display: flex;
-  flex-direction: column;
-  justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
 }
 
 .input-box {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .step-box input {
-  padding: 10px;
-  width: 278px;
-  margin: 10px ;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 15px;
+    padding: 10px;
+    width: 278px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
 }
 
 .step-box input:focus {
-  border-color: #2b5cff;
+    border-color: #2b5cff;
 }
 
 .btn {
     margin-top: 20px;
-  display: flex;
-  background: #1b2682;
-  width: 120px;
-  height: 34px;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 16px;
+    display: flex;
+    background: #1b2682;
+    width: 120px;
+    height: 34px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
 .btn:hover {
-  background: #505899;
+    background: #505899;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 .msg {
-  text-align: center;
-  color: red;
-  font-size: 14px;
+    text-align: center;
+    color: red;
+    font-size: 14px;
 }

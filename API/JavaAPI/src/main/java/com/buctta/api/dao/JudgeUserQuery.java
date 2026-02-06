@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 public interface JudgeUserQuery extends JpaRepository<JudgementUser, Integer> {
     JudgementUser findJudgementUserByUsername(String username);
+
     JudgementUser findJudgementUserByUsernameAndPassword(String username, String password);
 }

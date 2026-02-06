@@ -30,7 +30,8 @@ public class StudentCourse {
     )
     private Boolean isViewed = false;
 
-    public StudentCourse() {}
+    public StudentCourse() {
+    }
 
     public StudentCourse(Student student, CourseList course) {
         this.student = student;

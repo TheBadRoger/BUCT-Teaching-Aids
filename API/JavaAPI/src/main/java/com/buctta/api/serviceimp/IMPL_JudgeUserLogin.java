@@ -25,9 +25,9 @@ public class IMPL_JudgeUserLogin implements JudgeUserLogin {
 
     @Override
     public JudgementUser register(JudgementUser RequestUser) {
-        if(judgeUserQuery.findJudgementUserByUsername(RequestUser.getUsername()) != null)
+        if (judgeUserQuery.findJudgementUserByUsername(RequestUser.getUsername()) != null)
             return null;
-        else{
+        else {
             JudgementUser newUser = judgeUserQuery.save(RequestUser);
             newUser.setPassword(null);
             return newUser;

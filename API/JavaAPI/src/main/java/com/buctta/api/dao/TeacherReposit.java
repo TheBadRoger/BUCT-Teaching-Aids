@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 
-public interface TeacherReposit extends JpaRepository<TeacherList,Long>, JpaSpecificationExecutor<TeacherList> {
+public interface TeacherReposit extends JpaRepository<TeacherList, Long>, JpaSpecificationExecutor<TeacherList> {
     TeacherList findTeacherListById(long Id);
+
     TeacherList findTeacherListByName(String name);
+
     TeacherList findTeacherListByEmail(String email);
+
     TeacherList findTeacherListByTelephone(String telephone);
     //TeacherList findTeacherListByAddress(String address);
 }

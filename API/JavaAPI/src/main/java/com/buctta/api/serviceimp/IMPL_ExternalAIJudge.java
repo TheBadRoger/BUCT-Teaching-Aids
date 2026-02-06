@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class IMPL_ExternalAIJudge implements ExternalAIJudge {
 
-    private final ExternalAI aiProps =new ExternalAI(
+    private final ExternalAI aiProps = new ExternalAI(
             "https://cloudapi.polymas.com/bot/v2/completions/chat/stream",
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJON0k3cFNUcm0zIiwicm5TdHIiOiJkRllocHFhWkdkQjczY3dkM215eTNqN29XSm9HdTdyYSIsInR5cGUiOiJaSFMiLCJ1c2VyTmlkIjoiTjdJN3BTVHJtMyJ9.o99-sfD3_TmewtrmT7O-ItrLjGKAIMSaEdPGFMaoU0U",
             "(AI生成)");
@@ -52,9 +52,9 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         return emitterMap.computeIfAbsent(id, k -> {
             SseEmitter tmp = new SseEmitter(5_000L);
             try {
-                tmp.send(SseEmitter.event().name("error").data("no such id: " + k));
+                tmp.send(SseEmitter.event().name("fail").data("no such id: " + k));
+            } catch (IOException ignore) {
             }
-            catch (IOException ignore) {}
             tmp.complete();
             return tmp;
         });
@@ -62,7 +62,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
 
     /* ---------- 真正生成逻辑 ---------- */
     private void doGenerate(String id, SseEmitter emitter,
-                           List<String> texts, List<String> fileNames) {
+                            List<String> texts, List<String> fileNames) {
         int total = texts.size();
         try {
             for (int index = 0; index < total; index++) {
@@ -72,13 +72,11 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             }
             send(emitter, "done", "[COMPLETED]");
             emitter.complete();
-        }
-        catch (Exception e) {
-            log.error("AI generate error", e);
-            send(emitter, "error", "生成异常：" + e.getMessage());
+        } catch (Exception e) {
+            log.error("AI generate fail", e);
+            send(emitter, "fail", "生成异常：" + e.getMessage());
             emitter.completeWithError(e);
-        }
-        finally {
+        } finally {
             emitterMap.remove(id);
         }
     }
@@ -132,7 +130,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             throw new IllegalArgumentException("文件名格式错误：" + fileName);
         }
 
-        int    score = node.get("分数").asInt();
+        int score = node.get("分数").asInt();
         String basis = node.get("评分依据").asString();
 
         return String.format(
@@ -155,17 +153,17 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
     }
 
     private String buildPayload(String question) {
-            // 用 ObjectNode 一次性生成，库会自动加引号、转义
-            ObjectNode node = objectMapper.createObjectNode();
-            node.put("appCode", "ti39Ohdy6k");
-            node.put("userNid", "N7I7pSTrm3");
-            node.put("sessionNid", "PNeg1BjP6x");
-            node.put("chatNid", "JJdylJaMSF");
-            node.put("testFlag", true);
-            node.put("reasoningFlag", false);
-            node.putObject("metadata").put("thinkingEnabled", 0);
-            node.put("question", question);   // 原始字符串，不要 toJsonString
-            return node.toString();
+        // 用 ObjectNode 一次性生成，库会自动加引号、转义
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("appCode", "ti39Ohdy6k");
+        node.put("userNid", "N7I7pSTrm3");
+        node.put("sessionNid", "PNeg1BjP6x");
+        node.put("chatNid", "JJdylJaMSF");
+        node.put("testFlag", true);
+        node.put("reasoningFlag", false);
+        node.putObject("metadata").put("thinkingEnabled", 0);
+        node.put("question", question);   // 原始字符串，不要 toJsonString
+        return node.toString();
     }
 
     private void send(SseEmitter emitter, String type, Object data) {
@@ -173,9 +171,8 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             emitter.send(SseEmitter.event()
                     .name(type)
                     .data(new SSEResponseContainer<>(type, data)));
-        }
-        catch (IOException e) {
-            log.warn("SSE send error", e);
+        } catch (IOException e) {
+            log.warn("SSE send fail", e);
         }
     }
 }

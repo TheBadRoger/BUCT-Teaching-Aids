@@ -6,5 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface TeacherService {
     TeacherList AddTeacher(TeacherList teacherList);
+
     Page<TeacherList> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable);
 }

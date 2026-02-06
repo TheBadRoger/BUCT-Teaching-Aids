@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>实验报告提交</title>
-    <link rel="stylesheet" href="./css/judgecss.css">
+    <link href="./css/judgecss.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -11,7 +11,7 @@
     <h2 class="title" style="text-align: center;">实验报告提交</h2>
 
     <div class="upload-area">
-       <input type="file" id="fileUpload" accept=".doc,.docx,.pdf" multiple>
+        <input accept=".doc,.docx,.pdf" id="fileUpload" multiple type="file">
         <div class="upload-box" id="uploadBox">
             <span>将文件拖拽到此处，或点击上传</span>
         </div>
@@ -59,8 +59,8 @@
         -->
 
         <div class="btns">
-            <button type="submit" class="submit-btn" disabled>📄 一键批改</button>
-            <button type="button" class="download-btn" disabled>📥 下载表格汇总</button>
+            <button class="submit-btn" disabled type="submit">📄 一键批改</button>
+            <button class="download-btn" disabled type="button">📥 下载表格汇总</button>
         </div>
     </form>
 </div>
