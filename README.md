@@ -7,7 +7,7 @@
 ## 开发框架简介
 * 前端：经典HTML+js+css
 
-* 后端：Java SpringBoot + Python
+* 后端：Java SpringBoot + Python Flask
 
 * 数据库：MySQL - 持久化，Redis - 高并发情况下的中间缓存
 
@@ -19,7 +19,7 @@
 2、在自己的MySQL中执行如下代码：
 
 ```sql
-CREATE USER 'java_springboot_buctta'@'localhost' INDENTIFIED BY '~springboot1794Zz!';
+CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '~springboot1794Zz!';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW 
     ON BUCTTA_DATABASE.* 
     TO 'java_springboot_buctta'@'localhost';
