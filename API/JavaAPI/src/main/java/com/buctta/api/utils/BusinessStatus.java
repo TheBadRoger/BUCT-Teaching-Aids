@@ -41,7 +41,7 @@ public enum BusinessStatus {
     REDIS_ERROR(5002, "Cache error."),
     EXTERNAL_API_ERROR(5003, "External API error.");
 
-    private final int code;         // 业务码
+    private final int code;
     private final String template;
 
     public String format(Object... args) {

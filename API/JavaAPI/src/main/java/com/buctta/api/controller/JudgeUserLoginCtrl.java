@@ -49,7 +49,6 @@ public class JudgeUserLoginCtrl {
     @PostMapping("/register")
     public ApiResponse<JudgementUser> registerCall(@RequestBody JudgementUser newUser) {
         JudgementUser judgementUser = userLogin.register(newUser);
-        ApiResponse<JudgementUser> registerCallBack = new ApiResponse<>();
         if (judgementUser != null) {
             judgementUser.setPassword("****************");
             return ApiResponse.ok(judgementUser);
@@ -57,11 +56,4 @@ public class JudgeUserLoginCtrl {
         else
             return ApiResponse.fail(BusinessStatus.USERNAME_EXISTS);
     }
-    /*
-    @GetMapping("/debug")
-    public String debug(HttpSession session) {
-        return "SessionId=" + session.getId() + "\n" +
-                "Auth=" + SecurityContextHolder.getContext().getAuthentication();
-    }
-    */
 }

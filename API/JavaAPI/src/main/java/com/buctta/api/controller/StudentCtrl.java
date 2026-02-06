@@ -5,12 +5,14 @@ import com.buctta.api.service.StudentService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/students")
 public class StudentCtrl {
@@ -44,8 +46,9 @@ public class StudentCtrl {
             Page<Student> studentPage = studentService.searchStudents(name, studentNumber, className, gender, telephone, email, pageable);
             return ApiResponse.ok(studentPage);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e) {
+            log.error("搜索学生时发生错误: {}", e.getMessage(), e);
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
     }

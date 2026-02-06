@@ -17,7 +17,12 @@ public class IMPL_JudgeUserLogin implements JudgeUserLogin {
 
     @Override
     public JudgementUser login(String username, String password) {
-        JudgementUser JudgementUser = judgeUserQuery.findJudgementUserByUsernameAndPassword(username, password);
+        JudgementUser JudgementUser;
+        if (password == null)
+            JudgementUser = judgeUserQuery.findJudgementUserByUsername(username);
+        else
+            JudgementUser = judgeUserQuery.findJudgementUserByUsernameAndPassword(username, password);
+
         if (JudgementUser != null)
             JudgementUser.setPassword(null);
         return JudgementUser;

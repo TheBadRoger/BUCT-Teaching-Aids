@@ -25,8 +25,7 @@ public class IMPL_CourseService implements CourseService {
             return null;
         }
         else {
-            CourseList newCourse = courseReposit.save(courseList);
-            return newCourse;
+            return courseReposit.save(courseList);
         }
     }
 
@@ -148,7 +147,8 @@ public class IMPL_CourseService implements CourseService {
                 return true;
             }
             return false;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("删除课程失败: " + e.getMessage());
         }
     }

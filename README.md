@@ -1,6 +1,6 @@
 # 北化教学辅助系统
 
-***生产环境主机***：10.15.2.38（sjjx.buct.edu.cn)）
+***生产环境主机***：10.15.2.38 (sjjx.buct.edu.cn)
 
 ***数据库名称：*** BUCTTA_DATABASE
 
@@ -85,7 +85,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 
 输入命令```use BUCTTA_DATABASE;```进入数据库
 
-需要创建数据表。参考[SQL数据表](./repositres/Documents/SQLTables.md)
+现在已经不需要创建数据表。Java项目采用Flyway组件来自动更新数据表，这样便于迁移。
 
 ---
 ### **4. 启动并测试项目**

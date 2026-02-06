@@ -75,7 +75,8 @@ public class TempFileCleanupService {
                                 logger.warn("删除失败: {}", file.getName());
                             }
                         }
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         logger.error("处理文件时出错: {}", file.getName(), e);
                     }
                 }
@@ -83,7 +84,8 @@ public class TempFileCleanupService {
 
             logger.info("清理完成，共删除 {} 个文件", deletedCount);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error("清理临时文件时出错", e);
         }
     }

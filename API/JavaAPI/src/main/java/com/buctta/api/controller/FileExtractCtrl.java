@@ -40,7 +40,8 @@ public class FileExtractCtrl {
                         ? FileContentExtractor.parseDocxByIS(file.getInputStream())
                         : FileContentExtractor.parsePdfByIS(file.getInputStream());
                 list.add(new DocResult(original, true, "解析成功", content));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 // 单文件解析异常，记一条失败记录，继续
                 list.add(new DocResult(original, false, "解析失败：" + e.getMessage(), null));
             }

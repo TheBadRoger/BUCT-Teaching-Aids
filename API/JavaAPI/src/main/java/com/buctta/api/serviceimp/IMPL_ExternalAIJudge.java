@@ -53,7 +53,8 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             SseEmitter tmp = new SseEmitter(5_000L);
             try {
                 tmp.send(SseEmitter.event().name("fail").data("no such id: " + k));
-            } catch (IOException ignore) {
+            }
+            catch (IOException ignore) {
             }
             tmp.complete();
             return tmp;
@@ -67,22 +68,24 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
         try {
             for (int index = 0; index < total; index++) {
                 send(emitter, "fileStart", Map.of("index", index, "total", total));
-                String result = callAi(index, texts.get(index), fileNames.get(index));
+                String result = callAi(texts.get(index), fileNames.get(index));
                 send(emitter, "message", result);
             }
             send(emitter, "done", "[COMPLETED]");
             emitter.complete();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("AI generate fail", e);
             send(emitter, "fail", "生成异常：" + e.getMessage());
             emitter.completeWithError(e);
-        } finally {
+        }
+        finally {
             emitterMap.remove(id);
         }
     }
 
     /* ---------- 调用外部 SSE ---------- */
-    private String callAi(int id, String text, String fileName) throws IOException {
+    private String callAi(String text, String fileName) throws IOException {
         HttpURLConnection conn = buildConnection();
         String payload = buildPayload(text);
         try (OutputStream os = conn.getOutputStream()) {
@@ -107,7 +110,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
                                 .replaceAll("\"}$", "");
                         if (seg.contains(aiProps.getStopMark())) {
                             buf.append(seg, 0, seg.indexOf(aiProps.getStopMark()));
-                            return parseAndFormat(id, buf.toString(), fileName);
+                            return parseAndFormat(buf.toString(), fileName);
                         }
                     }
                 }
@@ -118,7 +121,7 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
 
     /* ---------- 解析 AI 返回 & 拼装 ---------- */
 
-    private String parseAndFormat(int id, String raw, String fileName) throws IOException {
+    private String parseAndFormat(String raw, String fileName) {
         JsonNode node;
 
         raw = raw.replace("\\\"", "\"");
@@ -171,7 +174,8 @@ public class IMPL_ExternalAIJudge implements ExternalAIJudge {
             emitter.send(SseEmitter.event()
                     .name(type)
                     .data(new SSEResponseContainer<>(type, data)));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             log.warn("SSE send fail", e);
         }
     }
