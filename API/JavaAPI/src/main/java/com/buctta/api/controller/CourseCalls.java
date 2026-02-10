@@ -1,6 +1,6 @@
 package com.buctta.api.controller;
 
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
@@ -22,8 +22,8 @@ public class CourseCalls {
     private CourseService courseService;
 
     @PostMapping("/add")
-    public ApiResponse<CourseList> addCourseCall(@RequestBody CourseList newCourse) {
-        CourseList course = courseService.addCourse(newCourse);
+    public ApiResponse<Course> addCourseCall(@RequestBody Course newCourse) {
+        Course course = courseService.addCourse(newCourse);
         if (course != null) {
             return ApiResponse.ok(course);
         }
@@ -33,7 +33,7 @@ public class CourseCalls {
     }
 
     @GetMapping("/search")
-    public ApiResponse<Page<CourseList>> searchCourseCall(
+    public ApiResponse<Page<Course>> searchCourseCall(
             @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String courseNumber,
             @RequestParam(required = false) String teachingTeachers,
@@ -45,7 +45,7 @@ public class CourseCalls {
             @RequestParam(defaultValue = "id") String sort) {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-            Page<CourseList> coursePage = courseService.searchCourses(
+            Page<Course> coursePage = courseService.searchCourses(
                     courseName, courseNumber, teachingTeachers, courseStatus, courseTags, startDate, pageable);
 
             return ApiResponse.ok(coursePage);

@@ -20,7 +20,7 @@ public class StudentCtrl {
     @Resource
     private StudentService studentService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ApiResponse<Student> addStudent(@RequestBody Student student) {
         Student savedStudent = studentService.addStudent(student);
         if (savedStudent != null)

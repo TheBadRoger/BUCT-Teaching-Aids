@@ -1,6 +1,6 @@
 package com.buctta.api.controller;
 
-import com.buctta.api.entities.TeacherList;
+import com.buctta.api.entities.Teacher;
 import com.buctta.api.service.TeacherService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 
 @RestController
-@RequestMapping("/api/findteacher")
+@RequestMapping("/api/teacher")
 public class TeacherListCtrl {
     @Resource
     private TeacherService teacherService;
 
-    @PostMapping("/addteacher")
-    public ApiResponse<TeacherList> addteacherCall(@RequestBody TeacherList newteacher) {
-        TeacherList tl = teacherService.AddTeacher(newteacher);
+    @PostMapping("/add")
+    public ApiResponse<Teacher> addteacherCall(@RequestBody Teacher newteacher) {
+        Teacher tl = teacherService.AddTeacher(newteacher);
         if (tl != null)
             return ApiResponse.ok(tl);
         else
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
     }
 
-    @PostMapping("/searchteacher")
-    public ApiResponse<Page<TeacherList>> SearchTeacherCall(
+    @PostMapping("/search")
+    public ApiResponse<Page<Teacher>> SearchTeacherCall(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String organization,
             @RequestParam(required = false) String jointime,
@@ -44,7 +44,7 @@ public class TeacherListCtrl {
             // 创建分页请求
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
             // 调用服务层进行搜索
-            Page<TeacherList> teacherPage = teacherService.searchTeachers(name, organization, jointime, gender, education, pageable);
+            Page<Teacher> teacherPage = teacherService.searchTeachers(name, organization, jointime, gender, education, pageable);
             return ApiResponse.ok(teacherPage);
 
         }
