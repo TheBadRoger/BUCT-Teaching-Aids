@@ -3,7 +3,7 @@ package com.buctta.api.serviceimp;
 import com.buctta.api.dao.CourseReposit;
 import com.buctta.api.dao.StudentCourseReposit;
 import com.buctta.api.dao.StudentReposit;
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.entities.Student;
 import com.buctta.api.entities.StudentCourse;
 import com.buctta.api.entities.StudentCourseId;
@@ -40,7 +40,7 @@ public class IMPL_StudentCourseService implements StudentCourseService {
             return null;
         }
 
-        CourseList course = courseListRepository.findById(courseId)
+        Course course = courseListRepository.findById(courseId)
                 .orElse(null);
         if (course == null) {
             return null;

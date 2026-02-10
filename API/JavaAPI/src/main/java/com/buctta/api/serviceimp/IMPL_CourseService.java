@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.CourseReposit;
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
@@ -20,20 +20,20 @@ public class IMPL_CourseService implements CourseService {
     private CourseReposit courseReposit;
 
     @Override
-    public CourseList addCourse(CourseList courseList) {
-        if (courseReposit.findCourseListByCourseNumber(courseList.getCourseNumber()) != null) {
+    public Course addCourse(Course course) {
+        if (courseReposit.findCourseListByCourseNumber(course.getCourseNumber()) != null) {
             return null;
         }
         else {
-            return courseReposit.save(courseList);
+            return courseReposit.save(course);
         }
     }
 
     @Override
-    public Page<CourseList> searchCourses(String courseName, String courseNumber,
-                                          String teachingTeachers, String courseStatus,
-                                          String courseTags, String startDate, Pageable pageable) {
-        Specification<CourseList> specification = (root, query, criteriaBuilder) -> {
+    public Page<Course> searchCourses(String courseName, String courseNumber,
+                                      String teachingTeachers, String courseStatus,
+                                      String courseTags, String startDate, Pageable pageable) {
+        Specification<Course> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             // 课程名称模糊查询
@@ -73,12 +73,12 @@ public class IMPL_CourseService implements CourseService {
     }
 
     @Override
-    public CourseList updateCourse(Long id, CourseList courseDetails) {
-        CourseList existingCourse = courseReposit.findById(id)
+    public Course updateCourse(Long id, Course courseDetails) {
+        Course existingCourse = courseReposit.findById(id)
                 .orElseThrow(() -> new RuntimeException("课程不存在，ID: " + id));
 
         // 检查课程编号是否重复（排除自己）
-        CourseList courseWithSameNumber = courseReposit.findCourseListByCourseNumber(courseDetails.getCourseNumber());
+        Course courseWithSameNumber = courseReposit.findCourseListByCourseNumber(courseDetails.getCourseNumber());
         if (courseWithSameNumber != null && courseWithSameNumber.getId() != id) {
             throw new RuntimeException("课程编号已存在: " + courseDetails.getCourseNumber());
         }
@@ -134,7 +134,7 @@ public class IMPL_CourseService implements CourseService {
     }
 
     @Override
-    public CourseList getCourseById(Long id) {
+    public Course getCourseById(Long id) {
         return courseReposit.findById(id)
                 .orElseThrow(() -> new RuntimeException("课程不存在，ID: " + id));
     }
