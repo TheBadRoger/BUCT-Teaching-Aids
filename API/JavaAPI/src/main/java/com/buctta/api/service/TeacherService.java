@@ -1,11 +1,11 @@
 package com.buctta.api.service;
 
-import com.buctta.api.entities.TeacherList;
+import com.buctta.api.entities.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface TeacherService {
-    TeacherList AddTeacher(TeacherList teacherList);
+    Teacher AddTeacher(Teacher teacher);
 
-    Page<TeacherList> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable);
+    Page<Teacher> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable);
 }

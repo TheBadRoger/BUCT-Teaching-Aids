@@ -21,7 +21,7 @@ public class StudentCourse {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("courseId")
     @JoinColumn(name = "course_id")
-    private CourseList course;
+    private Course course;
 
     @Column(
             name = "is_viewed",
@@ -33,7 +33,7 @@ public class StudentCourse {
     public StudentCourse() {
     }
 
-    public StudentCourse(Student student, CourseList course) {
+    public StudentCourse(Student student, Course course) {
         this.student = student;
         this.course = course;
         this.id = new StudentCourseId(student.getId(), course.getId());

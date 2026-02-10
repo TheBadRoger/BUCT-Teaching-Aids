@@ -7,7 +7,7 @@
 
 ### *private long **id***
 * 数据库原型： ***teacher_list:id***
-    * 属性：***AUTO_INCREAMENT***，***PRIMARY***
+    * 属性：***AUTO_INCREAMENT***，***PRIMARY***_(无需填写，自动生成)_
 
 ### *private String **name***
 * 数据库原型： ***teacher_list:id***

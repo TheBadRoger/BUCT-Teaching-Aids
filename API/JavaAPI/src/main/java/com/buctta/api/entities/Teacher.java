@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class TeacherList {
+public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
