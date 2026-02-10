@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.TeacherReposit;
-import com.buctta.api.entities.TeacherList;
+import com.buctta.api.entities.Teacher;
 import com.buctta.api.service.TeacherService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
@@ -23,19 +23,18 @@ public class IMPL_TeacherService implements TeacherService {
     private TeacherReposit teacherReposit;
 
     @Override
-    public TeacherList AddTeacher(TeacherList teacherList) {
-        if (teacherReposit.findTeacherListByName(teacherList.getName()) != null) {
+    public Teacher AddTeacher(Teacher teacher) {
+        if (teacherReposit.findTeacherListByName(teacher.getName()) != null) {
             return null;
         }
         else {
-            TeacherList newTeacher = teacherReposit.save(teacherList);
-            return newTeacher;
+            return teacherReposit.save(teacher);
         }
     }
 
     @Override
-    public Page<TeacherList> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable) {
-        Specification<TeacherList> specification = (root, query, criteriaBuilder) -> {
+    public Page<Teacher> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable) {
+        Specification<Teacher> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (name != null && !name.trim().isEmpty()) {
