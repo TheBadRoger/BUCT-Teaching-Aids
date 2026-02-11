@@ -22,12 +22,13 @@ public class StudentCtrl {
 
     @PostMapping("/add")
     public ApiResponse<Student> addStudent(@RequestBody Student student) {
-        Student savedStudent = studentService.addStudent(student);
-        if (savedStudent != null)
-            return ApiResponse.ok(savedStudent);
-        else
-            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
-
+        StudentService.StudentResult result = studentService.addStudent(student);
+        if (result.success()) {
+            return ApiResponse.ok(result.student());
+        }
+        else {
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
+        }
     }
 
     @GetMapping("/search")
@@ -45,7 +46,6 @@ public class StudentCtrl {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
             Page<Student> studentPage = studentService.searchStudents(name, studentNumber, className, gender, telephone, email, pageable);
             return ApiResponse.ok(studentPage);
-
         }
         catch (Exception e) {
             log.error("搜索学生时发生错误: {}", e.getMessage(), e);

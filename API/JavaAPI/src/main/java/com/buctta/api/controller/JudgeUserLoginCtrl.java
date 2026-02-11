@@ -1,7 +1,7 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.entities.JudgementUser;
-import com.buctta.api.service.JudgeUserLogin;
+import com.buctta.api.service.JudgeUserLoginService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.Collections;
 @RequestMapping("/api/aijudegment")
 public class JudgeUserLoginCtrl {
     @Resource
-    private JudgeUserLogin userLogin;
+    private JudgeUserLoginService userLogin;
 
     @PostMapping("/login")
     public ApiResponse<JudgementUser> loginCall(
@@ -28,8 +28,9 @@ public class JudgeUserLoginCtrl {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        JudgementUser judgementUser = userLogin.login(username, password);
-        if (judgementUser != null) {
+        JudgeUserLoginService.LoginResult result = userLogin.login(username, password);
+        if (result.success()) {
+            JudgementUser judgementUser = result.user();
 
             //手动写入认证信息
             SecurityContextHolder.getContext().setAuthentication(
@@ -42,18 +43,21 @@ public class JudgeUserLoginCtrl {
 
             return ApiResponse.ok(judgementUser);
         }
-        else
-            return ApiResponse.fail(BusinessStatus.ACCOUNT_PASSWORD_ERROR);
+        else {
+            return ApiResponse.fail(BusinessStatus.ACCOUNT_PASSWORD_ERROR, result.message());
+        }
     }
 
     @PostMapping("/register")
     public ApiResponse<JudgementUser> registerCall(@RequestBody JudgementUser newUser) {
-        JudgementUser judgementUser = userLogin.register(newUser);
-        if (judgementUser != null) {
+        JudgeUserLoginService.RegisterResult result = userLogin.register(newUser);
+        if (result.success()) {
+            JudgementUser judgementUser = result.user();
             judgementUser.setPassword("****************");
             return ApiResponse.ok(judgementUser);
         }
-        else
-            return ApiResponse.fail(BusinessStatus.USERNAME_EXISTS);
+        else {
+            return ApiResponse.fail(BusinessStatus.USERNAME_EXISTS, result.message());
+        }
     }
 }

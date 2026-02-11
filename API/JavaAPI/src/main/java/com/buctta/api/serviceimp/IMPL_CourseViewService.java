@@ -1,7 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.CourseReposit;
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseViewService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class IMPL_CourseViewService implements CourseViewService {
      * 直接从Redis读取，性能最优
      */
     @Override
-    public List<CourseList> getPopularCourses(int limit) {
+    public List<Course> getPopularCourses(int limit) {
         try {
             if (limit <= 0) {
                 limit = 10;
@@ -79,7 +79,7 @@ public class IMPL_CourseViewService implements CourseViewService {
                 return new ArrayList<>();
             }
 
-            List<CourseList> popularCourses = new ArrayList<>();
+            List<Course> popularCourses = new ArrayList<>();
 
             // 遍历courseId，从数据库获取完整的课程信息
             for (ZSetOperations.TypedTuple<String> tuple : topCourseIds) {
@@ -93,10 +93,10 @@ public class IMPL_CourseViewService implements CourseViewService {
 
                 try {
                     Long courseId = Long.parseLong(courseIdStr);
-                    Optional<CourseList> course = courseReposit.findCourseListById(courseId);
+                    Optional<Course> course = courseReposit.findCourseById(courseId);
 
                     if (course.isPresent()) {
-                        CourseList courseEntity = course.get();
+                        Course courseEntity = course.get();
                         // 更新实体中的访问量（从Redis中获取最新值）
                         courseEntity.setViewCount(score != null ? score.longValue() : 0L);
                         popularCourses.add(courseEntity);
@@ -183,9 +183,9 @@ public class IMPL_CourseViewService implements CourseViewService {
                     Long courseId = Long.parseLong(courseIdStr);
                     Long viewCount = score != null ? score.longValue() : 0L;
 
-                    Optional<CourseList> courseOptional = courseReposit.findCourseListById(courseId);
+                    Optional<Course> courseOptional = courseReposit.findCourseById(courseId);
                     if (courseOptional.isPresent()) {
-                        CourseList course = courseOptional.get();
+                        Course course = courseOptional.get();
                         // 更新访问量到数据库
                         course.setViewCount(viewCount);
                         courseReposit.save(course);
@@ -248,10 +248,10 @@ public class IMPL_CourseViewService implements CourseViewService {
             stringRedisTemplate.delete(POPULAR_COURSES_KEY);
 
             // 从数据库获取所有课程
-            List<CourseList> allCourses = courseReposit.findAll();
+            List<Course> allCourses = courseReposit.findAll();
 
             int successCount = 0;
-            for (CourseList course : allCourses) {
+            for (Course course : allCourses) {
                 try {
                     long viewCount = course.getViewCount() != null ? course.getViewCount() : 0L;
                     // 加载到Redis Sorted Set

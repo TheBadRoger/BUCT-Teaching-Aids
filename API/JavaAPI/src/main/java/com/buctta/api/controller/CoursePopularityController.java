@@ -1,6 +1,6 @@
 package com.buctta.api.controller;
 
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseViewService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
@@ -42,7 +42,7 @@ public class CoursePopularityController {
                 return ApiResponse.fail(BusinessStatus.PARAM_FORMAT_ERROR);
             }
 
-            List<CourseList> popularCourses = courseViewService.getPopularCourses(limit);
+            List<Course> popularCourses = courseViewService.getPopularCourses(limit);
 
             // 构建响应对象
             CoursePopularityResponse response = new CoursePopularityResponse();
@@ -52,7 +52,7 @@ public class CoursePopularityController {
             long totalViews = 0;
             long maxViews = 0;
 
-            for (CourseList course : popularCourses) {
+            for (Course course : popularCourses) {
                 long viewCount = course.getViewCount() != null ? course.getViewCount() : 0L;
 
                 CoursePopularityResponse.CoursePopularityItem item = new CoursePopularityResponse.CoursePopularityItem();
@@ -106,11 +106,11 @@ public class CoursePopularityController {
     @GetMapping("/top10-simple")
     public ApiResponse<List<CoursePopularityResponse.CoursePopularityItem>> getTop10PopularCoursesSimple() {
         try {
-            List<CourseList> popularCourses = courseViewService.getPopularCourses(10);
+            List<Course> popularCourses = courseViewService.getPopularCourses(10);
             List<CoursePopularityResponse.CoursePopularityItem> items = new ArrayList<>();
 
             int ranking = 1;
-            for (CourseList course : popularCourses) {
+            for (Course course : popularCourses) {
                 Long viewCount = course.getViewCount() != null ? course.getViewCount() : 0L;
 
                 CoursePopularityResponse.CoursePopularityItem item = new CoursePopularityResponse.CoursePopularityItem();
@@ -148,12 +148,12 @@ public class CoursePopularityController {
                 return ApiResponse.fail(BusinessStatus.PARAM_FORMAT_ERROR);
             }
 
-            List<CourseList> popularCourses = courseViewService.getPopularCourses(end);
+            List<Course> popularCourses = courseViewService.getPopularCourses(end);
 
             List<CoursePopularityResponse.CoursePopularityItem> items = new ArrayList<>();
             int currentRanking = 1;
 
-            for (CourseList course : popularCourses) {
+            for (Course course : popularCourses) {
                 if (currentRanking >= start && currentRanking <= end) {
                     Long viewCount = course.getViewCount() != null ? course.getViewCount() : 0L;
 
@@ -194,7 +194,7 @@ public class CoursePopularityController {
                 return ApiResponse.fail(BusinessStatus.PARAM_FORMAT_ERROR);
             }
 
-            List<CourseList> popularCourses = courseViewService.getPopularCourses(limit);
+            List<Course> popularCourses = courseViewService.getPopularCourses(limit);
             boolean isPopular = popularCourses.stream()
                     .anyMatch(course -> course.getId() == courseId);
 
@@ -220,7 +220,7 @@ public class CoursePopularityController {
             }
 
             // 获取所有课程并找出排名
-            List<CourseList> allPopularCourses = courseViewService.getPopularCourses(Integer.MAX_VALUE);
+            List<Course> allPopularCourses = courseViewService.getPopularCourses(Integer.MAX_VALUE);
 
             for (int i = 0; i < allPopularCourses.size(); i++) {
                 if (allPopularCourses.get(i).getId() == courseId) {

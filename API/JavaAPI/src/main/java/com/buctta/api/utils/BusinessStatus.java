@@ -20,6 +20,8 @@ public enum BusinessStatus {
     ACCOUNT_PASSWORD_ERROR(4011, "Incorrect password or name."),
     TOKEN_EXPIRED(4012, "Login expired."),
     TOKEN_INVALID(4013, "Invalid token."),
+    VERIFICATION_CODE_ERROR(4014, "Invalid or expired verification code."),
+    SEND_CODE_FAILED(4015, "Failed to send verification code."),
 
     // 403x 权限错误
     NO_PERMISSION(4031, "No permission."),
@@ -34,6 +36,13 @@ public enum BusinessStatus {
     USERNAME_EXISTS(4092, "Username already exists."),
     EMAIL_EXISTS(4093, "Email already exists."),
     PHONE_EXISTS(4094, "Phone already exists."),
+    ALREADY_BOUND(4095, "User already bound to an identity."),
+    IDENTITY_ALREADY_BOUND(4096, "This identity is already bound to another user."),
+    NOT_BOUND(4097, "User has not bound any identity."),
+    BINDING_CONFLICT(4098, "Cannot bind this identity type, user already has another identity type bound."),
+
+    // 410x 身份验证错误
+    IDENTITY_VERIFY_FAILED(4101, "Identity verification failed: {0}."),
 
     // 5xxx 服务器错误
     INTERNAL_ERROR(5000, "Internal system error."),

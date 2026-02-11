@@ -1,6 +1,6 @@
 package com.buctta.api.service;
 
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface CourseViewService {
      * @param limit 返回的课程数量，默认10
      * @return 按访问量降序排列的课程列表
      */
-    List<CourseList> getPopularCourses(int limit);
+    List<Course> getPopularCourses(int limit);
 
     /**
      * 获取指定课程的访问量

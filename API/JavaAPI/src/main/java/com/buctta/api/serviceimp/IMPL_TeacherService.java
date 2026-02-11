@@ -23,12 +23,16 @@ public class IMPL_TeacherService implements TeacherService {
     private TeacherReposit teacherReposit;
 
     @Override
-    public Teacher AddTeacher(Teacher teacher) {
+    public TeacherResult addTeacher(Teacher teacher) {
         if (teacherReposit.findTeacherListByName(teacher.getName()) != null) {
-            return null;
+            return TeacherResult.fail("TEACHER_EXISTS", "教师已存在: " + teacher.getName());
         }
-        else {
-            return teacherReposit.save(teacher);
+        try {
+            Teacher savedTeacher = teacherReposit.save(teacher);
+            return TeacherResult.success(savedTeacher, "教师添加成功");
+        }
+        catch (Exception e) {
+            return TeacherResult.fail("SAVE_FAILED", "保存教师失败: " + e.getMessage());
         }
     }
 

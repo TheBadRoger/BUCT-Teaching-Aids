@@ -22,60 +22,34 @@ public class IMPL_StudentService implements StudentService {
     private StudentReposit studentRepository;
 
     @Override
-    public Student addStudent(Student student) {
+    public StudentResult addStudent(Student student) {
         // 检查学号是否已存在
         if (studentRepository.existsByStudentNumber(student.getStudentNumber())) {
-            throw new RuntimeException("学号已存在: " + student.getStudentNumber());
+            return StudentResult.fail("STUDENT_NUMBER_EXISTS", "学号已存在: " + student.getStudentNumber());
         }
 
-        // 检查邮箱是否已存在
-        if (student.getEmail() != null && !student.getEmail().trim().isEmpty()) {
-            Optional<Student> studentWithSameEmail = studentRepository.findByEmail(student.getEmail());
-            if (studentWithSameEmail.isPresent()) {
-                throw new RuntimeException("邮箱已存在: " + student.getEmail());
-            }
+        try {
+            Student savedStudent = studentRepository.save(student);
+            return StudentResult.success(savedStudent, "学生添加成功");
         }
-
-        // 检查电话号码是否已存在
-        if (student.getTelephone() != null && !student.getTelephone().trim().isEmpty()) {
-            Optional<Student> studentWithSamePhone = studentRepository.findByTelephone(student.getTelephone());
-            if (studentWithSamePhone.isPresent()) {
-                throw new RuntimeException("电话号码已存在: " + student.getTelephone());
-            }
+        catch (Exception e) {
+            return StudentResult.fail("SAVE_FAILED", "保存学生失败: " + e.getMessage());
         }
-
-        return studentRepository.save(student);
     }
 
     @Override
-    public Student updateStudent(Long id, Student studentDetails) {
-        Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("学生不存在，ID: " + id));
+    public StudentResult updateStudent(Long id, Student studentDetails) {
+        Student existingStudent = studentRepository.findById(id).orElse(null);
+        if (existingStudent == null) {
+            return StudentResult.fail("STUDENT_NOT_FOUND", "学生不存在，ID: " + id);
+        }
 
         // 检查学号是否重复（排除自己）
         if (studentDetails.getStudentNumber() != null &&
                 !studentDetails.getStudentNumber().equals(existingStudent.getStudentNumber())) {
             Optional<Student> studentWithSameNumber = studentRepository.findByStudentNumber(studentDetails.getStudentNumber());
             if (studentWithSameNumber.isPresent() && !studentWithSameNumber.get().getId().equals(id)) {
-                throw new RuntimeException("学号已存在: " + studentDetails.getStudentNumber());
-            }
-        }
-
-        // 检查邮箱是否重复（排除自己）
-        if (studentDetails.getEmail() != null &&
-                !studentDetails.getEmail().equals(existingStudent.getEmail())) {
-            Optional<Student> studentWithSameEmail = studentRepository.findByEmail(studentDetails.getEmail());
-            if (studentWithSameEmail.isPresent() && !studentWithSameEmail.get().getId().equals(id)) {
-                throw new RuntimeException("邮箱已存在: " + studentDetails.getEmail());
-            }
-        }
-
-        // 检查电话号码是否重复（排除自己）
-        if (studentDetails.getTelephone() != null &&
-                !studentDetails.getTelephone().equals(existingStudent.getTelephone())) {
-            Optional<Student> studentWithSamePhone = studentRepository.findByTelephone(studentDetails.getTelephone());
-            if (studentWithSamePhone.isPresent() && !studentWithSamePhone.get().getId().equals(id)) {
-                throw new RuntimeException("电话号码已存在: " + studentDetails.getTelephone());
+                return StudentResult.fail("STUDENT_NUMBER_EXISTS", "学号已存在: " + studentDetails.getStudentNumber());
             }
         }
 
@@ -92,17 +66,17 @@ public class IMPL_StudentService implements StudentService {
         if (studentDetails.getGender() != null) {
             existingStudent.setGender(studentDetails.getGender());
         }
-        if (studentDetails.getTelephone() != null) {
-            existingStudent.setTelephone(studentDetails.getTelephone());
-        }
-        if (studentDetails.getEmail() != null) {
-            existingStudent.setEmail(studentDetails.getEmail());
-        }
         if (studentDetails.getAdmissionDate() != null) {
             existingStudent.setAdmissionDate(studentDetails.getAdmissionDate());
         }
 
-        return studentRepository.save(existingStudent);
+        try {
+            Student updatedStudent = studentRepository.save(existingStudent);
+            return StudentResult.success(updatedStudent, "学生信息更新成功");
+        }
+        catch (Exception e) {
+            return StudentResult.fail("UPDATE_FAILED", "更新学生失败: " + e.getMessage());
+        }
     }
 
     @Override
@@ -118,11 +92,17 @@ public class IMPL_StudentService implements StudentService {
     }
 
     @Override
-    public void deleteStudent(Long id) {
+    public StudentResult deleteStudent(Long id) {
         if (!studentRepository.existsById(id)) {
-            throw new RuntimeException("学生不存在，ID: " + id);
+            return StudentResult.fail("STUDENT_NOT_FOUND", "学生不存在，ID: " + id);
         }
-        studentRepository.deleteById(id);
+        try {
+            studentRepository.deleteById(id);
+            return StudentResult.success(null, "学生删除成功");
+        }
+        catch (Exception e) {
+            return StudentResult.fail("DELETE_FAILED", "删除学生失败: " + e.getMessage());
+        }
     }
 
     @Override
@@ -182,9 +162,8 @@ public class IMPL_StudentService implements StudentService {
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
 
-        Specification<Student> specification = (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.between(root.get("admissionDate"), startDate, endDate);
-        };
+        Specification<Student> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.between(root.get("admissionDate"), startDate, endDate);
 
         return studentRepository.findAll(specification);
     }

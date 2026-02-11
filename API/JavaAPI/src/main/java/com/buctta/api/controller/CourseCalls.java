@@ -23,12 +23,12 @@ public class CourseCalls {
 
     @PostMapping("/add")
     public ApiResponse<Course> addCourseCall(@RequestBody Course newCourse) {
-        Course course = courseService.addCourse(newCourse);
-        if (course != null) {
-            return ApiResponse.ok(course);
+        CourseService.CourseResult result = courseService.addCourse(newCourse);
+        if (result.success()) {
+            return ApiResponse.ok(result.course());
         }
         else {
-            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS);
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
         }
     }
 

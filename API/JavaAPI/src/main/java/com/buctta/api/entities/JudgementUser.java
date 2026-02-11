@@ -1,7 +1,9 @@
 package com.buctta.api.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "judge_users")
@@ -9,6 +11,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class JudgementUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

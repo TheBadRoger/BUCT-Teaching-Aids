@@ -20,12 +20,16 @@ public class IMPL_CourseService implements CourseService {
     private CourseReposit courseReposit;
 
     @Override
-    public Course addCourse(Course course) {
-        if (courseReposit.findCourseListByCourseNumber(course.getCourseNumber()) != null) {
-            return null;
+    public CourseResult addCourse(Course course) {
+        if (courseReposit.findCourseByCourseNumber(course.getCourseNumber()) != null) {
+            return CourseResult.fail("COURSE_NUMBER_EXISTS", "课程编号已存在: " + course.getCourseNumber());
         }
-        else {
-            return courseReposit.save(course);
+        try {
+            Course savedCourse = courseReposit.save(course);
+            return CourseResult.success(savedCourse, "课程添加成功");
+        }
+        catch (Exception e) {
+            return CourseResult.fail("SAVE_FAILED", "保存课程失败: " + e.getMessage());
         }
     }
 
@@ -73,14 +77,16 @@ public class IMPL_CourseService implements CourseService {
     }
 
     @Override
-    public Course updateCourse(Long id, Course courseDetails) {
-        Course existingCourse = courseReposit.findById(id)
-                .orElseThrow(() -> new RuntimeException("课程不存在，ID: " + id));
+    public CourseResult updateCourse(Long id, Course courseDetails) {
+        Course existingCourse = courseReposit.findById(id).orElse(null);
+        if (existingCourse == null) {
+            return CourseResult.fail("COURSE_NOT_FOUND", "课程不存在，ID: " + id);
+        }
 
         // 检查课程编号是否重复（排除自己）
-        Course courseWithSameNumber = courseReposit.findCourseListByCourseNumber(courseDetails.getCourseNumber());
+        Course courseWithSameNumber = courseReposit.findCourseByCourseNumber(courseDetails.getCourseNumber());
         if (courseWithSameNumber != null && courseWithSameNumber.getId() != id) {
-            throw new RuntimeException("课程编号已存在: " + courseDetails.getCourseNumber());
+            return CourseResult.fail("COURSE_NUMBER_EXISTS", "课程编号已存在: " + courseDetails.getCourseNumber());
         }
 
         // 更新字段
@@ -130,7 +136,13 @@ public class IMPL_CourseService implements CourseService {
             existingCourse.setCourseImage(courseDetails.getCourseImage());
         }
 
-        return courseReposit.save(existingCourse);
+        try {
+            Course updatedCourse = courseReposit.save(existingCourse);
+            return CourseResult.success(updatedCourse, "课程更新成功");
+        }
+        catch (Exception e) {
+            return CourseResult.fail("UPDATE_FAILED", "更新课程失败: " + e.getMessage());
+        }
     }
 
     @Override
@@ -140,16 +152,16 @@ public class IMPL_CourseService implements CourseService {
     }
 
     @Override
-    public boolean deleteCourse(Long id) {
+    public CourseResult deleteCourse(Long id) {
         try {
-            if (courseReposit.existsById(id)) {
-                courseReposit.deleteById(id);
-                return true;
+            if (!courseReposit.existsById(id)) {
+                return CourseResult.fail("COURSE_NOT_FOUND", "课程不存在，ID: " + id);
             }
-            return false;
+            courseReposit.deleteById(id);
+            return CourseResult.success(null, "课程删除成功");
         }
         catch (Exception e) {
-            throw new RuntimeException("删除课程失败: " + e.getMessage());
+            return CourseResult.fail("DELETE_FAILED", "删除课程失败: " + e.getMessage());
         }
     }
 }

@@ -21,8 +21,6 @@ CREATE TABLE IF NOT EXISTS teacher_list
     organization VARCHAR(50),
     gender       VARCHAR(5),
     education    VARCHAR(50),
-    telephone    VARCHAR(50),
-    email        VARCHAR(50),
     jointime     VARCHAR(30),
     id           INT AUTO_INCREMENT,
     PRIMARY KEY (id),
@@ -35,8 +33,6 @@ CREATE TABLE IF NOT EXISTS student_list
     class_name     VARCHAR(100),
     gender         VARCHAR(10),
     student_number VARCHAR(50),
-    telephone      VARCHAR(20),
-    email          VARCHAR(100),
     admission_date DATE,
     id             INT AUTO_INCREMENT,
     PRIMARY KEY (id),
@@ -45,7 +41,7 @@ CREATE TABLE IF NOT EXISTS student_list
 
 CREATE TABLE IF NOT EXISTS course_list
 (
-    id                  bigint AUTO_INCREMENT PRIMARY KEY,
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
     course_number       VARCHAR(50) UNIQUE NOT NULL,
     course_name         VARCHAR(200)       NOT NULL,
     course_introduction TEXT,
@@ -61,5 +57,39 @@ CREATE TABLE IF NOT EXISTS course_list
     teaching_objectives text,
     course_outline      longtext,
     course_image        VARCHAR(500),
-    view_count          BIGINT             NOT NULL DEFAULT 0
+    view_count          INT                NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS user_list
+(
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    username   VARCHAR(50)  NOT NULL UNIQUE,
+    telephone  VARCHAR(20),
+    email      VARCHAR(100),
+    password   VARCHAR(255) NOT NULL,
+    user_type  VARCHAR(20)  NOT NULL,
+    teacher_id INT UNIQUE,
+    student_id INT UNIQUE,
+    CONSTRAINT fk_user_teacher FOREIGN KEY (teacher_id) REFERENCES teacher_list (id),
+    CONSTRAINT fk_user_student FOREIGN KEY (student_id) REFERENCES student_list (id)
+);
+
+CREATE TABLE IF NOT EXISTS student_course
+(
+    student_id INT     NOT NULL,
+    course_id  INT     NOT NULL,
+    is_viewed  BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (student_id, course_id),
+    CONSTRAINT fk_student_course_student
+        FOREIGN KEY (student_id) REFERENCES student_list (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_student_course_course
+        FOREIGN KEY (course_id) REFERENCES course_list (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_student_course_student_id ON student_course (student_id);
+CREATE INDEX idx_student_course_course_id ON student_course (course_id);
+

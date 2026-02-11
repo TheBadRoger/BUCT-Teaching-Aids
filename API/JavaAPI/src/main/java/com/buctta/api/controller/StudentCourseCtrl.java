@@ -25,13 +25,12 @@ public class StudentCourseCtrl {
     public ApiResponse<StudentCourse> selectCourseCall(
             @RequestParam Long studentId,
             @RequestParam Long courseId) {
-        try {
-            StudentCourse studentCourse = studentCourseService.selectCourse(studentId, courseId);
-            return ApiResponse.ok(studentCourse);
+        StudentCourseService.CourseOperationResult result = studentCourseService.selectCourse(studentId, courseId);
+        if (result.success()) {
+            return ApiResponse.ok(result.studentCourse());
         }
-        catch (Exception e) {
-            log.error("选课时发生错误: {}", e.getMessage(), e);
-            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
+        else {
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), result.message());
         }
     }
 
@@ -40,13 +39,12 @@ public class StudentCourseCtrl {
             @RequestParam Long studentId,
             @RequestParam Long courseId,
             @RequestParam Boolean isViewed) {
-        try {
-            StudentCourse studentCourse = studentCourseService.updateViewedStatus(studentId, courseId, isViewed);
-            return ApiResponse.ok(studentCourse);
+        StudentCourseService.CourseOperationResult result = studentCourseService.updateViewedStatus(studentId, courseId, isViewed);
+        if (result.success()) {
+            return ApiResponse.ok(result.studentCourse());
         }
-        catch (Exception e) {
-            log.error("更新课程查看状态时发生错误: {}", e.getMessage(), e);
-            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
+        else {
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), result.message());
         }
     }
 
@@ -117,13 +115,12 @@ public class StudentCourseCtrl {
     public ApiResponse<Void> dropCourseCall(
             @RequestParam Long studentId,
             @RequestParam Long courseId) {
-        try {
-            studentCourseService.dropCourse(studentId, courseId);
+        StudentCourseService.CourseOperationResult result = studentCourseService.dropCourse(studentId, courseId);
+        if (result.success()) {
             return ApiResponse.ok(null);
         }
-        catch (Exception e) {
-            log.error("删除课程时发生错误: {}", e.getMessage(), e);
-            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), "Failed: " + e.getMessage());
+        else {
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR.getCode(), result.message());
         }
     }
 

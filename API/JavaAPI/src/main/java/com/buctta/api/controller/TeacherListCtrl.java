@@ -22,11 +22,13 @@ public class TeacherListCtrl {
 
     @PostMapping("/add")
     public ApiResponse<Teacher> addteacherCall(@RequestBody Teacher newteacher) {
-        Teacher tl = teacherService.AddTeacher(newteacher);
-        if (tl != null)
-            return ApiResponse.ok(tl);
-        else
-            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
+        TeacherService.TeacherResult result = teacherService.addTeacher(newteacher);
+        if (result.success()) {
+            return ApiResponse.ok(result.teacher());
+        }
+        else {
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
+        }
     }
 
     @PostMapping("/search")
