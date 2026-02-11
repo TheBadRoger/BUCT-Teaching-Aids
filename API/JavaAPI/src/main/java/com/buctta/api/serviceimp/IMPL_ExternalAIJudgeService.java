@@ -1,6 +1,6 @@
 package com.buctta.api.serviceimp;
 
-import com.buctta.api.service.ExternalAIJudge;
+import com.buctta.api.service.ExternalAIJudgeService;
 import com.buctta.api.utils.ExternalAI;
 import com.buctta.api.utils.SSEResponseContainer;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class IMPL_ExternalAIJudge implements ExternalAIJudge {
+public class IMPL_ExternalAIJudgeService implements ExternalAIJudgeService {
 
     private final ExternalAI aiProps = new ExternalAI(
             "https://cloudapi.polymas.com/bot/v2/completions/chat/stream",

@@ -4,7 +4,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
-public interface ExternalAIJudge {
+public interface ExternalAIJudgeService {
     String submitTask(List<String> texts, List<String> fileNames);
 
     SseEmitter getEmitter(String id);

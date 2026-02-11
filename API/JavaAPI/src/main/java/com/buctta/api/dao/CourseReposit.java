@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface CourseReposit extends JpaRepository<Course, Long>, JpaSpecificationExecutor<Course> {
-    //Course findCourseListById(long id);
-    Course findCourseListByCourseNumber(String courseNumber);
+    //Course findCourseById(long id);
+    Course findCourseByCourseNumber(String courseNumber);
 
     //Course findCourseListByCourseName(String courseName);
-    Optional<Course> findCourseListById(Long id);
+    Optional<Course> findCourseById(Long id);
 }
 

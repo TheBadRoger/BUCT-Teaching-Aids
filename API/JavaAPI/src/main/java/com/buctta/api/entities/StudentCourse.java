@@ -2,13 +2,17 @@ package com.buctta.api.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "student_course")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentCourse {
     @EmbeddedId
     private StudentCourseId id;
@@ -29,9 +33,6 @@ public class StudentCourse {
             columnDefinition = "BOOLEAN DEFAULT false"
     )
     private Boolean isViewed = false;
-
-    public StudentCourse() {
-    }
 
     public StudentCourse(Student student, Course course) {
         this.student = student;

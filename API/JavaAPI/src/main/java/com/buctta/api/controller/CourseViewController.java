@@ -1,6 +1,6 @@
 package com.buctta.api.controller;
 
-import com.buctta.api.entities.CourseList;
+import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseViewService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
@@ -29,14 +29,14 @@ public class CourseViewController {
      * @return 按访问量降序排列的课程列表
      */
     @GetMapping("/popular")
-    public ApiResponse<List<CourseList>> getPopularCourses(
+    public ApiResponse<List<Course>> getPopularCourses(
             @RequestParam(defaultValue = "10") int limit) {
         try {
             if (limit <= 0 || limit > 100) {
                 return ApiResponse.fail(BusinessStatus.PARAM_FORMAT_ERROR);
             }
 
-            List<CourseList> popularCourses = courseViewService.getPopularCourses(limit);
+            List<Course> popularCourses = courseViewService.getPopularCourses(limit);
             return ApiResponse.ok(popularCourses);
 
         }
@@ -99,9 +99,9 @@ public class CourseViewController {
      * @return 前10热门课程
      */
     @GetMapping("/top10")
-    public ApiResponse<List<CourseList>> getTop10PopularCourses() {
+    public ApiResponse<List<Course>> getTop10PopularCourses() {
         try {
-            List<CourseList> topCourses = courseViewService.getPopularCourses(10);
+            List<Course> topCourses = courseViewService.getPopularCourses(10);
             return ApiResponse.ok(topCourses);
 
         }

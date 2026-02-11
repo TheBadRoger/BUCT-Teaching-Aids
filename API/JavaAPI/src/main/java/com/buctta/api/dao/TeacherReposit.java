@@ -12,8 +12,5 @@ public interface TeacherReposit extends JpaRepository<Teacher, Long>, JpaSpecifi
 
     Teacher findTeacherListByName(String name);
 
-    Teacher findTeacherListByEmail(String email);
-
-    Teacher findTeacherListByTelephone(String telephone);
     //Teacher findTeacherListByAddress(String address);
 }

@@ -33,50 +33,49 @@ public class IMPL_StudentCourseService implements StudentCourseService {
     private CourseReposit courseListRepository;
 
     @Override
-    public StudentCourse selectCourse(Long studentId, Long courseId) {
-        Student student = studentRepository.findById(studentId)
-                .orElse(null);
+    public CourseOperationResult selectCourse(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
         if (student == null) {
-            return null;
+            return CourseOperationResult.fail("STUDENT_NOT_FOUND", "学生不存在，ID: " + studentId);
         }
 
-        Course course = courseListRepository.findById(courseId)
-                .orElse(null);
+        Course course = courseListRepository.findById(courseId).orElse(null);
         if (course == null) {
-            return null;
+            return CourseOperationResult.fail("COURSE_NOT_FOUND", "课程不存在，ID: " + courseId);
         }
 
         if (studentCourseRepository.existsByStudentIdAndCourseId(studentId, courseId)) {
-            return null;
+            return CourseOperationResult.fail("ALREADY_SELECTED", "已选择该课程");
         }
 
         try {
             StudentCourse studentCourse = new StudentCourse(student, course);
             studentCourse.setIsViewed(false);
-
-            return studentCourseRepository.save(studentCourse);
+            StudentCourse savedCourse = studentCourseRepository.save(studentCourse);
+            return CourseOperationResult.success(savedCourse, "选课成功");
         }
         catch (Exception e) {
-            return null;
+            return CourseOperationResult.fail("SELECT_FAILED", "选课失败: " + e.getMessage());
         }
     }
 
     @Override
-    public StudentCourse updateViewedStatus(Long studentId, Long courseId, Boolean isViewed) {
+    public CourseOperationResult updateViewedStatus(Long studentId, Long courseId, Boolean isViewed) {
         StudentCourse studentCourse = studentCourseRepository
                 .findByStudentIdAndCourseId(studentId, courseId)
                 .orElse(null);
 
         if (studentCourse == null) {
-            return null;
+            return CourseOperationResult.fail("NOT_FOUND", "未找到选课记录");
         }
 
         try {
             studentCourse.setIsViewed(isViewed);
-            return studentCourseRepository.save(studentCourse);
+            StudentCourse updatedCourse = studentCourseRepository.save(studentCourse);
+            return CourseOperationResult.success(updatedCourse, "状态更新成功");
         }
         catch (Exception e) {
-            return null;
+            return CourseOperationResult.fail("UPDATE_FAILED", "更新失败: " + e.getMessage());
         }
     }
 
@@ -123,16 +122,18 @@ public class IMPL_StudentCourseService implements StudentCourseService {
     }
 
     @Override
-    public void dropCourse(Long studentId, Long courseId) {
+    public CourseOperationResult dropCourse(Long studentId, Long courseId) {
         StudentCourseId id = new StudentCourseId(studentId, courseId);
         if (!studentCourseRepository.existsById(id)) {
-            return;
+            return CourseOperationResult.fail("NOT_FOUND", "未找到选课记录");
         }
 
         try {
             studentCourseRepository.deleteById(id);
+            return CourseOperationResult.success(null, "退课成功");
         }
-        catch (Exception ignored) {
+        catch (Exception e) {
+            return CourseOperationResult.fail("DROP_FAILED", "退课失败: " + e.getMessage());
         }
     }
 

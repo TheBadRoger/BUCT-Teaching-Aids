@@ -1,6 +1,6 @@
 package com.buctta.api.controller;
 
-import com.buctta.api.service.ExternalAIJudge;
+import com.buctta.api.service.ExternalAIJudgeService;
 import com.buctta.api.utils.ApiResponse;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExternalAIGenerateCtrl {
     @Resource
-    private final ExternalAIJudge aiGenerateService;
+    private final ExternalAIJudgeService aiGenerateService;
 
     @PostMapping("/generate/start")
     public ApiResponse<Map<String, String>> startJudge(

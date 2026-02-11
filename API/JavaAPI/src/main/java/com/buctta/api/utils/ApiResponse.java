@@ -22,11 +22,11 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> fail(int code, String msg) {
-        return new ApiResponse<T>(code, msg, System.currentTimeMillis(), null);
+        return new ApiResponse<>(code, msg, System.currentTimeMillis(), null);
     }
 
     public static <T> ApiResponse<T> fail(BusinessStatus status) {
-        return new ApiResponse<T>(status.getCode(), status.getTemplate(), System.currentTimeMillis(), null);
+        return new ApiResponse<>(status.getCode(), status.getTemplate(), System.currentTimeMillis(), null);
     }
 
     public static <T> ApiResponse<T> fail(BusinessStatus status, Object... args) {

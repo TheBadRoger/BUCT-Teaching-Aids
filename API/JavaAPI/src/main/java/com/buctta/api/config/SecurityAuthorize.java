@@ -14,7 +14,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 public class SecurityAuthorize {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
                 //授权规则
                 .authorizeHttpRequests(auth -> auth
@@ -25,7 +25,10 @@ public class SecurityAuthorize {
                                 "/js/**",
                                 "/images/**",
                                 "/api/aijudegment/login",
-                                "/api/aijudegment/register"
+                                "/api/aijudegment/register",
+                                "/api/user/auth/login",
+                                "/api/user/auth/register",
+                                "/api/user/auth/send-code"
                         )
                         .permitAll()
                         .anyRequest().authenticated()

@@ -19,11 +19,4 @@ public interface StudentReposit extends JpaRepository<Student, Long>, JpaSpecifi
     List<Student> findByGender(String gender);
 
     boolean existsByStudentNumber(String studentNumber);
-
-    Optional<Student> findByEmail(String email);
-
-    Optional<Student> findByTelephone(String telephone);
-
-    Optional<Student> findById(Long id);
-
 }

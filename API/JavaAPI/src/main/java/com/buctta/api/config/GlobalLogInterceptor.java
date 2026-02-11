@@ -3,9 +3,9 @@ package com.buctta.api.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,8 +35,8 @@ public class GlobalLogInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request,
-                           HttpServletResponse response,
-                           Object handler,
+                           @NonNull HttpServletResponse response,
+                           @NonNull Object handler,
                            @Nullable ModelAndView modelAndView) {
 
         Long start = (Long) request.getAttribute(START_TIME);
