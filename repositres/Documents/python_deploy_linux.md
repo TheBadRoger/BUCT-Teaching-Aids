@@ -153,7 +153,7 @@ EOF
 将学生人脸照片放入以下目录：
 
 ```
-face_database/人脸库/
+face_database/face_db/
 ```
 
 文件命名格式：`学号_姓名.jpg`，例如 `2024001_张三.jpg`。  

@@ -42,7 +42,7 @@ def load_face_database() -> dict:
             logger.warning("警告：%s 中未检测到人脸，已跳过", filename)
 
     if not FACE_ENCODINGS_CACHE:
-        raise RuntimeError("人脸库为空，请在 face_database/人脸库 中放入人脸照片")
+        raise RuntimeError("人脸库为空，请在 face_database/face_db 中放入人脸照片")
     logger.info("人脸库加载完成，共加载 %d 个人脸", len(FACE_ENCODINGS_CACHE))
     return FACE_ENCODINGS_CACHE
 
