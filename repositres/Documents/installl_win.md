@@ -40,7 +40,7 @@
 现在已经不需要创建数据表。Java项目采用Flyway组件来自动更新数据表，这样便于迁移。
 
 ## **4. 安装Redis**
-直接访问redis的[开源仓库](https://github.com/tporadowski/redis/releases)，可选zip或msi安装包
+直接访问redis的[开源仓库](https://github.com/tporadowski/redis/releases)，可选zip或msi安装包。zip安装需要配置环境变量，msi安装则根据指引完成即可，具体请自己搜索安装方法
 
 
 ## **5. 启动并测试项目**
