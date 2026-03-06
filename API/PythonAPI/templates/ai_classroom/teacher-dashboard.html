@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师仪表盘 - AI智慧课堂</title>
+    <link rel="stylesheet" href="/static/ai_classroom/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .classroom-info {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+        
+        /* 控制面板样式 */
+        .simulation-control-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .control-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .control-btn.secondary {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .control-btn.warning {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .control-btn.danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .control-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .simulation-status {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        /* 通知面板样式 */
+        .notification-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .notification-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .notification-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #a0aec0;
+        }
+        
+        .notification-item.info {
+            border-left-color: #4299e1;
+            background: #ebf8ff;
+        }
+        
+        .notification-item.error {
+            border-left-color: #f56565;
+            background: #fed7d7;
+        }
+        
+        .notification-item.action {
+            border-left-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .notification-item.response {
+            border-left-color: #ed8936;
+            background: #fffaf0;
+        }
+        
+        .notification-item.question {
+            border-left-color: #9f7aea;
+            background: #faf5ff;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: #718096;
+            margin-right: 10px;
+        }
+        
+        /* 分析网格样式 */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .analytics-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .analytics-card h4 {
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .emotion-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 150px;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        
+        .emotion-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s;
+        }
+        
+        .emotion-bar.positive {
+            background: #48bb78;
+        }
+        
+        .emotion-bar.neutral {
+            background: #ed8936;
+        }
+        
+        .emotion-bar.negative {
+            background: #f56565;
+        }
+        
+        .emotion-label {
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .detailed-metrics {
+            margin-top: 10px;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* 仪表盘样式 */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #48bb78;
+        }
+        
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #48bb78;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* 学生网格样式 */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .student-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .student-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+        
+        .student-metrics {
+            margin-bottom: 10px;
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+        
+        .student-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .student-emotion {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .emotion-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .emotion-positive {
+            background: #48bb78;
+        }
+        
+        .emotion-negative {
+            background: #f56565;
+        }
+        
+        .emotion-neutral {
+            background: #ed8936;
+        }
+        
+        .learning-state {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .state-excellent {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .state-moderate {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .state-needs_help {
+            background: #feebcb;
+            color: #744210;
+        }
+        
+        .detailed-metrics {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        /* 指标概览样式 */
+        .metrics-overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        /* 视觉指标样式 */
+        .vision-metrics {
+            margin-top: 15px;
+        }
+        
+        .vision-metric {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .vision-metric .metric-label {
+            width: 120px;
+            font-size: 14px;
+        }
+        
+        .vision-metric .progress-bar {
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .vision-metric .metric-value {
+            width: 40px;
+            font-size: 14px;
+            text-align: right;
+        }
+        
+        /* 互动工具样式 */
+        .interaction-tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .tool-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .tool-card h4 {
+            margin-bottom: 10px;
+        }
+        
+        .tool-card input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .tool-card button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* AI模拟面板样式 */
+        .ai-simulation-panel {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .ai-controls {
+            margin-top: 10px;
+        }
+        
+        .ai-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .ai-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .ai-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* 空状态样式 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        /* 新增样式 */
+        .student-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .student-selector select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+        }
+        
+        .analysis-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .analysis-result {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+        }
+        
+        .pattern-recognition {
+            margin-top: 10px;
+        }
+        
+        .pattern-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .anomaly-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .anomaly-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #ecc94b;
+        }
+        
+        .anomaly-item.high {
+            border-left-color: #f56565;
+            background: #fed7d7;
+        }
+        
+        .anomaly-item.medium {
+            border-left-color: #ed8936;
+            background: #feebc8;
+        }
+        
+        .anomaly-item.low {
+            border-left-color: #ecc94b;
+            background: #fefcbf;
+        }
+        
+        .anomaly-item.none {
+            border-left-color: #a0aec0;
+            background: #e2e8f0;
+            text-align: center;
+            color: #718096;
+        }
+        
+        .time-range-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .time-btn {
+            padding: 6px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .time-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .recommendations-panel {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .rec-icon {
+            font-size: 24px;
+        }
+        
+        .rec-content {
+            flex: 1;
+        }
+        
+        .rec-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .rec-description {
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>教师仪表盘 - AI情感与注意力分析</h1>
+            <div class="classroom-info">
+                <span id="classroomName">课堂ID: <span id="classroomIdDisplay"></span></span>
+                <span id="studentCount">学生数: 0</span>
+                <span id="avgAttention">平均注意力: --%</span>
+            </div>
+        </header>
+
+        <!-- 模拟学生控制面板 -->
+        <div class="simulation-control-panel">
+            <div class="control-header">
+                <h3>🎮 AI模拟控制系统</h3>
+                <div class="control-buttons">
+                    <button class="control-btn primary" onclick="generateSimulatedStudents()">
+                        👥 生成模拟学生
+                    </button>
+                    <button class="control-btn secondary" onclick="startAISimulation()">
+                        🎬 启动AI模拟
+                    </button>
+                    <button class="control-btn warning" onclick="stopAISimulation()">
+                        ⏹️ 停止模拟
+                    </button>
+                    <button class="control-btn danger" onclick="clearAllStudents()">
+                        🗑️ 清空学生
+                    </button>
+                </div>
+            </div>
+            <div class="simulation-status">
+                <span id="simulationStatus">🔴 模拟未启动</span>
+                <span id="aiDetectionStatus">🖥️ 计算机视觉: 未连接</span>
+            </div>
+        </div>
+
+        <!-- 实时通知面板 -->
+        <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">
+                <h4>🔔 实时课堂动态</h4>
+                <button onclick="clearNotifications()">清空</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <div class="notification-item info">
+                    <span class="notification-time" id="currentTime"></span>
+                    <span class="notification-message">等待课堂活动开始...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据分析概览 -->
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h4>情感状态分布</h4>
+                <div class="emotion-chart" id="emotionChart">
+                    <div class="chart-placeholder">
+                        <p>等待学生数据...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <h4>注意力分析</h4>
+                <div class="detailed-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">高注意力:</span>
+                        <span class="metric-value" id="highAttentionCount">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">低注意力:</span>
+                        <span class="metric-value" id="lowAttentionCount">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">稳定性:</span>
+                        <span class="metric-value" id="attentionStability">--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <h4>实时趋势</h4>
+                <div class="timeline" id="attentionTrend">
+                    <div class="timeline-placeholder">
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 高级分析面板 -->
+            <!-- 学生个体分析 -->
+            <div class="analytics-card">
+                <h4>🎯 学生个体分析</h4>
+                <div class="student-selector">
+                    <select id="studentSelector" onchange="loadStudentAnalysis()">
+                        <option value="">选择学生...</option>
+                    </select>
+                    <button onclick="loadStudentAnalysis()" class="analysis-btn">分析</button>
+                </div>
+                <div id="studentAnalysisResult" class="analysis-result">
+                    <p>选择学生查看详细分析</p>
+                </div>
+            </div>
+            
+            <!-- 学习模式识别 -->
+            <div class="analytics-card">
+                <h4>📊 学习模式识别</h4>
+                <div class="pattern-recognition">
+                    <div class="pattern-item">
+                        <span class="pattern-label">高效学习者:</span>
+                        <span class="pattern-value" id="efficientLearners">0</span>
+                    </div>
+                    <div class="pattern-item">
+                        <span class="pattern-label">需要关注:</span>
+                        <span class="pattern-value" id="needsAttention">0</span>
+                    </div>
+                    <div class="pattern-item">
+                        <span class="pattern-label">波动型:</span>
+                        <span class="pattern-value" id="volatileLearners">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 异常检测 -->
+            <div class="analytics-card">
+                <h4>⚠️ 异常检测</h4>
+                <div id="anomalyDetection">
+                    <div class="anomaly-list" id="anomalyList">
+                        <div class="anomaly-item none">
+                            <span>暂无异常检测</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <!-- 学生状态监控 -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h3>👥 学生状态监控</h3>
+                    <div class="live-indicator">
+                        <span class="indicator-dot"></span>
+                        <span>实时更新</span>
+                    </div>
+                </div>
+                <div class="students-grid" id="studentsGrid">
+                    <div class="empty-state">
+                        <div class="empty-icon">🎓</div>
+                        <h4>暂无学生数据</h4>
+                        <p>点击"生成模拟学生"开始课堂监控</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课堂数据概览 -->
+            <div class="dashboard-section">
+                <h3>📊 课堂数据分析</h3>
+                <div class="metrics-overview">
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgAttentionMetric">0%</div>
+                        <div class="metric-label">平均注意力</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgEngagement">0%</div>
+                        <div class="metric-label">平均参与度</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="activeStudents">0</div>
+                        <div class="metric-label">活跃学生</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="engagementChart"></canvas>
+                </div>
+
+                <!-- 计算机视觉指标 -->
+                <div class="detailed-metrics" style="margin-top: 20px;">
+                    <h4>🖥️ 计算机视觉监测指标</h4>
+                    <div class="vision-metrics">
+                        <div class="vision-metric">
+                            <span class="metric-label">👀 视线专注度</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="gazeFocusBar" style="width: 0%"></div>
+                            </div>
+                            <span class="metric-value" id="gazeFocusValue">--%</span>
+                        </div>
+                        <div class="vision-metric">
+                            <span class="metric-label">💺 姿势参与度</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="postureBar" style="width: 0%"></div>
+                            </div>
+                            <span class="metric-value" id="postureValue">--%</span>
+                        </div>
+                        <div class="vision-metric">
+                            <span class="metric-label">🙋 互动频率</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="interactionBar" style="width: 0%"></div>
+                            </div>
+                            <span class="metric-value" id="interactionValue">--%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 历史趋势分析 -->
+                <div style="margin-top: 30px;">
+                    <h3>📈 历史趋势分析</h3>
+                    <div class="trend-analysis">
+                        <div class="time-range-selector">
+                            <button class="time-btn active" onclick="changeTimeRange(1)">1小时</button>
+                            <button class="time-btn" onclick="changeTimeRange(6)">6小时</button>
+                            <button class="time-btn" onclick="changeTimeRange(24)">24小时</button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="historicalTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 互动工具 -->
+            <div class="dashboard-section">
+                <h3>💬 课堂互动</h3>
+                <div class="interaction-tools">
+                    <div class="tool-card">
+                        <h4>快速问答</h4>
+                        <input type="text" id="questionInput" placeholder="输入问题...">
+                        <button onclick="startQuickQuestion()">发布问题</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <h4>实时反馈</h4>
+                        <div id="quickResponses">
+                            <p>等待学生回答...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI行为模拟 -->
+                <div class="ai-simulation-panel">
+                    <h4>🤖 AI行为模拟器</h4>
+                    <div class="ai-controls">
+                        <div class="ai-actions">
+                            <button class="ai-btn" onclick="triggerAIDetection('face_focus')">
+                                👁️ 模拟面部专注
+                            </button>
+                            <button class="ai-btn" onclick="triggerAIDetection('hand_raise')">
+                                🙋 模拟举手
+                            </button>
+                            <button class="ai-btn" onclick="triggerAIDetection('posture_good')">
+                                💺 模拟端正坐姿
+                            </button>
+                            <button class="ai-btn" onclick="triggerAIDetection('distraction')">
+                                😴 模拟分心
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 个性化建议 -->
+                <div style="margin-top: 30px;">
+                    <h3>💡 教学建议</h3>
+                    <div class="recommendations-panel">
+                        <div id="teachingRecommendations">
+                            <div class="recommendation-item">
+                                <div class="rec-icon">💡</div>
+                                <div class="rec-content">
+                                    <div class="rec-title">等待数据分析...</div>
+                                    <div class="rec-description">系统将根据学生学习状态提供个性化教学建议</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const classroomId = urlParams.get('classroom') || `class_${Date.now()}`;
+        const teacherName = urlParams.get('teacher') || '张老师';
+
+        document.getElementById('classroomIdDisplay').textContent = classroomId;
+        
+        let engagementChart;
+        let historicalTrendChart;
+        let simulationInterval;
+        let aiSimulationInterval;
+        let simulatedStudents = [];
+        let notificationCount = 0;
+        let currentTimeRange = 1;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            initCharts();
+            
+            // 新增高级分析初始化
+            setTimeout(() => {
+                initStudentSelector();
+                updateAdvancedAnalytics();
+                
+                // 定期更新高级分析
+                setInterval(updateAdvancedAnalytics, 30000); // 每30秒更新一次
+            }, 2000);
+        });
+
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN');
+        }
+
+        // 连接Socket.io
+        const socket = io(window.location.origin);
+
+        // 教师加入课堂
+        socket.emit('teacher_join', {
+            classroom_id: classroomId,
+            teacher_id: `T${Date.now()}`
+        });
+
+        // 生成模拟学生
+        function generateSimulatedStudents() {
+            const studentNames = ['张三', '李四', '王五', '赵六', '钱七', '孙八'];
+            const studentTemplates = [
+                { attention: 85, engagement: 90, emotion: 'focused' },
+                { attention: 75, engagement: 80, emotion: 'neutral' },
+                { attention: 65, engagement: 70, emotion: 'confused' },
+                { attention: 90, engagement: 85, emotion: 'happy' },
+                { attention: 55, engagement: 60, emotion: 'bored' },
+                { attention: 80, engagement: 75, emotion: 'engaged' }
+            ];
+
+            simulatedStudents = studentNames.map((name, index) => {
+                const template = studentTemplates[index % studentTemplates.length];
+                return {
+                    id: `sim-student-${Date.now()}-${index}`,
+                    name: name,
+                    attention_level: template.attention,
+                    engagement_level: template.engagement,
+                    emotion: template.emotion,
+                    detailed_metrics: {
+                        gaze_focus: Math.round(template.attention * 0.9 + Math.random() * 10),
+                        posture_engagement: Math.round(template.engagement * 0.8 + Math.random() * 15),
+                        interaction_frequency: Math.round(50 + Math.random() * 40)
+                    },
+                    socket_id: `sim-${index}`,
+                    joined_at: new Date().toISOString(),
+                    last_updated: new Date().toISOString()
+                };
+            });
+
+            updateStudentGrid(simulatedStudents);
+            updateMetrics(simulatedStudents);
+            updateAnalytics();
+            initStudentSelector();
+            updateAdvancedAnalytics();
+
+            addNotification(`👥 已生成 ${simulatedStudents.length} 个模拟学生`, 'join');
+            document.getElementById('aiDetectionStatus').textContent = '🖥️ 计算机视觉: 模拟连接';
+        }
+
+        // 启动AI模拟
+        function startAISimulation() {
+            if (simulatedStudents.length === 0) {
+                addNotification('❌ 请先生成模拟学生', 'error');
+                return;
+            }
+
+            if (aiSimulationInterval) {
+                clearInterval(aiSimulationInterval);
+            }
+
+            addNotification('🎬 AI模拟已启动 - 计算机视觉数据流开始', 'info');
+            document.getElementById('simulationStatus').innerHTML = '🟢 模拟运行中';
+            
+            aiSimulationInterval = setInterval(() => {
+                simulateAIDetection();
+            }, 2000);
+        }
+
+        function stopAISimulation() {
+            if (aiSimulationInterval) {
+                clearInterval(aiSimulationInterval);
+                aiSimulationInterval = null;
+            }
+            addNotification('⏹️ AI模拟已停止', 'info');
+            document.getElementById('simulationStatus').innerHTML = '🔴 模拟未启动';
+        }
+
+        function clearAllStudents() {
+            simulatedStudents = [];
+            updateStudentGrid([]);
+            updateMetrics([]);
+            updateAnalytics();
+            stopAISimulation();
+            addNotification('🗑️ 已清空所有学生数据', 'info');
+        }
+
+        // 模拟AI计算机视觉检测
+        function simulateAIDetection() {
+            if (simulatedStudents.length === 0) return;
+
+            const detectionTypes = [
+                { type: 'face_focus', message: '检测到面部专注', metric: 'gaze_focus', change: 5 },
+                { type: 'hand_raise', message: '检测到举手动作', metric: 'interaction_frequency', change: 8 },
+                { type: 'posture_good', message: '检测到端正坐姿', metric: 'posture_engagement', change: 6 },
+                { type: 'distraction', message: '检测到注意力分散', metric: 'gaze_focus', change: -10 },
+                { type: 'looking_around', message: '检测到环顾四周', metric: 'posture_engagement', change: -8 },
+                { type: 'active_participation', message: '检测到积极参与', metric: 'interaction_frequency', change: 12 }
+            ];
+
+            const randomDetection = detectionTypes[Math.floor(Math.random() * detectionTypes.length)];
+            const randomStudent = simulatedStudents[Math.floor(Math.random() * simulatedStudents.length)];
+
+            // 更新学生指标
+            updateStudentWithAIDetection(randomStudent, randomDetection);
+            
+            // 发送通知
+            addNotification(`🤖 ${randomStudent.name} ${randomDetection.message}`, 'action');
+            
+            // 更新界面
+            updateStudentGrid(simulatedStudents);
+            updateMetrics(simulatedStudents);
+            updateAnalytics();
+            updateAdvancedAnalytics();
+        }
+
+        function updateStudentWithAIDetection(student, detection) {
+            // 更新详细指标
+            if (student.detailed_metrics) {
+                const currentValue = student.detailed_metrics[detection.metric] || 50;
+                const newValue = Math.max(0, Math.min(100, currentValue + detection.change));
+                student.detailed_metrics[detection.metric] = newValue;
+            }
+
+            // 根据详细指标更新主要指标
+            updateMainMetricsFromAI(student);
+            
+            student.last_updated = new Date().toISOString();
+        }
+
+        function updateMainMetricsFromAI(student) {
+            if (!student.detailed_metrics) return;
+
+            // 基于计算机视觉数据计算主要指标
+            const gazeWeight = 0.4;
+            const postureWeight = 0.3;
+            const interactionWeight = 0.3;
+
+            const newAttention = Math.round(
+                (student.detailed_metrics.gaze_focus * gazeWeight) +
+                (student.detailed_metrics.posture_engagement * postureWeight) +
+                (student.detailed_metrics.interaction_frequency * interactionWeight)
+            );
+
+            const newEngagement = Math.round(
+                (student.detailed_metrics.gaze_focus * 0.3) +
+                (student.detailed_metrics.posture_engagement * 0.4) +
+                (student.detailed_metrics.interaction_frequency * 0.3)
+            );
+
+            student.attention_level = Math.max(0, Math.min(100, newAttention));
+            student.engagement_level = Math.max(0, Math.min(100, newEngagement));
+
+            // 根据指标更新情感状态
+            updateEmotionFromMetrics(student);
+        }
+
+        function updateEmotionFromMetrics(student) {
+            const attention = student.attention_level;
+            const engagement = student.engagement_level;
+
+            if (attention >= 80 && engagement >= 80) {
+                student.emotion = 'focused';
+            } else if (attention >= 70 && engagement >= 70) {
+                student.emotion = 'engaged';
+            } else if (attention >= 60) {
+                student.emotion = 'neutral';
+            } else if (attention >= 40) {
+                student.emotion = 'confused';
+            } else {
+                student.emotion = 'bored';
+            }
+        }
+
+        // 手动触发AI检测
+        function triggerAIDetection(detectionType) {
+            if (simulatedStudents.length === 0) {
+                addNotification('❌ 没有学生可以检测', 'error');
+                return;
+            }
+
+            const detectionMap = {
+                'face_focus': { message: '面部专注检测', metric: 'gaze_focus', change: 15 },
+                'hand_raise': { message: '举手动作检测', metric: 'interaction_frequency', change: 20 },
+                'posture_good': { message: '端正坐姿检测', metric: 'posture_engagement', change: 18 },
+                'distraction': { message: '注意力分散检测', metric: 'gaze_focus', change: -25 }
+            };
+
+            const detection = detectionMap[detectionType];
+            if (!detection) return;
+
+            const randomStudent = simulatedStudents[Math.floor(Math.random() * simulatedStudents.length)];
+            updateStudentWithAIDetection(randomStudent, detection);
+            
+            addNotification(`🖥️ 计算机视觉: ${randomStudent.name} ${detection.message}`, 'action');
+            
+            updateStudentGrid(simulatedStudents);
+            updateMetrics(simulatedStudents);
+            updateAnalytics();
+            updateAdvancedAnalytics();
+        }
+
+        // 更新学生网格
+        function updateStudentGrid(students) {
+            const grid = document.getElementById('studentsGrid');
+            
+            if (students.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎓</div>
+                        <h4>暂无学生数据</h4>
+                        <p>点击"生成模拟学生"开始课堂监控</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            students.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                
+                const learningState = getLearningState(student);
+                const emotionCategory = getEmotionCategory(student.emotion);
+                
+                studentCard.innerHTML = `
+                    <div class="student-name">${student.name}</div>
+                    <div class="student-metrics">
+                        <div class="metric">
+                            <span>注意力: </span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${student.attention_level}%"></div>
+                            </div>
+                            <span>${student.attention_level}%</span>
+                        </div>
+                        <div class="metric">
+                            <span>参与度: </span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${student.engagement_level}%"></div>
+                            </div>
+                            <span>${student.engagement_level}%</span>
+                        </div>
+                    </div>
+                    <div class="student-footer">
+                        <div class="student-emotion ${student.emotion}">
+                            <span class="emotion-indicator emotion-${emotionCategory}"></span>
+                            ${student.emotion}
+                        </div>
+                        <div class="learning-state state-${learningState}">
+                            ${getStateText(learningState)}
+                        </div>
+                    </div>
+                    ${student.detailed_metrics ? `
+                    <div class="detailed-metrics">
+                        <div class="detail-item">👀 ${student.detailed_metrics.gaze_focus}%</div>
+                        <div class="detail-item">💺 ${student.detailed_metrics.posture_engagement}%</div>
+                        <div class="detail-item">🙋 ${student.detailed_metrics.interaction_frequency}%</div>
+                    </div>
+                    ` : ''}
+                `;
+                grid.appendChild(studentCard);
+            });
+
+            document.getElementById('studentCount').textContent = `学生数: ${students.length}`;
+        }
+
+        function updateMetrics(students) {
+            if (students.length === 0) {
+                document.getElementById('avgAttention').textContent = '平均注意力: --%';
+                document.getElementById('avgAttentionMetric').textContent = '0%';
+                document.getElementById('avgEngagement').textContent = '0%';
+                document.getElementById('activeStudents').textContent = '0';
+                return;
+            }
+
+            const avgAttention = students.reduce((sum, s) => sum + s.attention_level, 0) / students.length;
+            const avgEngagement = students.reduce((sum, s) => sum + s.engagement_level, 0) / students.length;
+
+            document.getElementById('avgAttention').textContent = `平均注意力: ${avgAttention.toFixed(1)}%`;
+            document.getElementById('avgAttentionMetric').textContent = `${avgAttention.toFixed(1)}%`;
+            document.getElementById('avgEngagement').textContent = `${avgEngagement.toFixed(1)}%`;
+            document.getElementById('activeStudents').textContent = students.length;
+
+            // 更新计算机视觉指标
+            updateVisionMetrics(students);
+        }
+
+        function updateVisionMetrics(students) {
+            if (students.length === 0) return;
+
+            const avgGaze = students.reduce((sum, s) => sum + (s.detailed_metrics?.gaze_focus || 0), 0) / students.length;
+            const avgPosture = students.reduce((sum, s) => sum + (s.detailed_metrics?.posture_engagement || 0), 0) / students.length;
+            const avgInteraction = students.reduce((sum, s) => sum + (s.detailed_metrics?.interaction_frequency || 0), 0) / students.length;
+
+            document.getElementById('gazeFocusValue').textContent = `${Math.round(avgGaze)}%`;
+            document.getElementById('gazeFocusBar').style.width = `${Math.round(avgGaze)}%`;
+            document.getElementById('postureValue').textContent = `${Math.round(avgPosture)}%`;
+            document.getElementById('postureBar').style.width = `${Math.round(avgPosture)}%`;
+            document.getElementById('interactionValue').textContent = `${Math.round(avgInteraction)}%`;
+            document.getElementById('interactionBar').style.width = `${Math.round(avgInteraction)}%`;
+        }
+
+        function getEmotionCategory(emotion) {
+            if (['focused', 'happy', 'engaged', 'excited'].includes(emotion)) return 'positive';
+            if (['confused', 'bored', 'frustrated', 'distracted'].includes(emotion)) return 'negative';
+            return 'neutral';
+        }
+
+        function getLearningState(student) {
+            const attention = student.attention_level;
+            const engagement = student.engagement_level;
+            
+            if (attention >= 80 && engagement >= 80) return 'excellent';
+            if (attention >= 60 && engagement >= 60) return 'moderate';
+            return 'needs_help';
+        }
+
+        function getStateText(state) {
+            const texts = {
+                'excellent': '优秀',
+                'moderate': '良好', 
+                'needs_help': '需关注'
+            };
+            return texts[state] || state;
+        }
+
+        function updateAnalytics() {
+            if (simulatedStudents.length === 0) return;
+
+            const emotionDistribution = {
+                positive: simulatedStudents.filter(s => getEmotionCategory(s.emotion) === 'positive').length,
+                neutral: simulatedStudents.filter(s => getEmotionCategory(s.emotion) === 'neutral').length,
+                negative: simulatedStudents.filter(s => getEmotionCategory(s.emotion) === 'negative').length
+            };
+
+            const attentionLevels = simulatedStudents.map(s => s.attention_level);
+            const engagementLevels = simulatedStudents.map(s => s.engagement_level);
+
+            const avgAttention = attentionLevels.reduce((a, b) => a + b, 0) / attentionLevels.length;
+            const attentionVariance = attentionLevels.reduce((sum, val) => sum + Math.pow(val - avgAttention, 2), 0) / attentionLevels.length;
+
+            updateEmotionChart(emotionDistribution);
+            updateAttentionMetrics({
+                high_attention_count: attentionLevels.filter(a => a > 80).length,
+                low_attention_count: attentionLevels.filter(a => a < 50).length,
+                attention_variance: attentionVariance
+            });
+        }
+
+        function updateEmotionChart(emotionDistribution) {
+            const chart = document.getElementById('emotionChart');
+            chart.innerHTML = '';
+            
+            const total = emotionDistribution.positive + emotionDistribution.neutral + emotionDistribution.negative;
+            const maxHeight = 100;
+            
+            ['positive', 'neutral', 'negative'].forEach(category => {
+                const count = emotionDistribution[category];
+                const percentage = total > 0 ? (count / total) * 100 : 0;
+                const height = (percentage / 100) * maxHeight;
+                
+                const bar = document.createElement('div');
+                bar.className = `emotion-bar ${category}`;
+                bar.style.height = `${height}px`;
+                bar.innerHTML = `<div class="emotion-label">${getEmotionLabel(category)}<br>${Math.round(percentage)}%</div>`;
+                chart.appendChild(bar);
+            });
+        }
+
+        function getEmotionLabel(category) {
+            const labels = {
+                'positive': '积极',
+                'neutral': '中性', 
+                'negative': '消极'
+            };
+            return labels[category] || category;
+        }
+
+        function updateAttentionMetrics(metrics) {
+            document.getElementById('highAttentionCount').textContent = metrics.high_attention_count;
+            document.getElementById('lowAttentionCount').textContent = metrics.low_attention_count;
+            document.getElementById('attentionStability').textContent = `${Math.max(0, 100 - metrics.attention_variance).toFixed(1)}%`;
+        }
+
+        // 通知系统
+        function addNotification(message, type = 'info') {
+            notificationCount++;
+            const notificationList = document.getElementById('notificationList');
+            const notification = document.createElement('div');
+            notification.className = `notification-item ${type}`;
+            notification.innerHTML = `
+                <span class="notification-time">${new Date().toLocaleTimeString('zh-CN')}</span>
+                <span class="notification-message">${message}</span>
+            `;
+            
+            notificationList.insertBefore(notification, notificationList.firstChild);
+            
+            // 限制通知数量
+            if (notificationList.children.length > 10) {
+                notificationList.removeChild(notificationList.lastChild);
+            }
+            
+            // 显示通知面板
+            document.getElementById('notificationPanel').style.display = 'block';
+        }
+
+        function clearNotifications() {
+            document.getElementById('notificationList').innerHTML = `
+                <div class="notification-item info">
+                    <span class="notification-time" id="currentTime"></span>
+                    <span class="notification-message">通知已清空</span>
+                </div>
+            `;
+            notificationCount = 0;
+        }
+
+        function startQuickQuestion() {
+            const question = document.getElementById('questionInput').value;
+            if (question) {
+                // 模拟学生回答问题
+                if (simulatedStudents.length > 0) {
+                    const randomStudent = simulatedStudents[Math.floor(Math.random() * simulatedStudents.length)];
+                    setTimeout(() => {
+                        addNotification(`💬 ${randomStudent.name} 回答了问题: ${getRandomAnswer()}`, 'response');
+                    }, 1000);
+                }
+                
+                addNotification(`📝 发布了新问题: ${question}`, 'question');
+                document.getElementById('questionInput').value = '';
+            }
+        }
+
+        function getRandomAnswer() {
+            const answers = ['A', 'B', 'C', 'D', '正确', '错误', '明白了', '还需要讲解'];
+            return answers[Math.floor(Math.random() * answers.length)];
+        }
+
+        // 初始化图表
+        function initCharts() {
+            const ctx = document.getElementById('engagementChart').getContext('2d');
+            engagementChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '平均注意力',
+                        data: [],
+                        borderColor: '#667eea',
+                        tension: 0.4,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // 新增JavaScript功能
+
+        // 初始化学生选择器
+        function initStudentSelector() {
+            const selector = document.getElementById('studentSelector');
+            selector.innerHTML = '<option value="">选择学生...</option>';
+            
+            if (simulatedStudents.length > 0) {
+                simulatedStudents.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = student.name;
+                    selector.appendChild(option);
+                });
+            }
+        }
+
+        // 加载学生分析
+        function loadStudentAnalysis() {
+            const studentId = document.getElementById('studentSelector').value;
+            if (!studentId) return;
+            
+            try {
+                // 模拟API调用 - 在实际应用中，这里应该从服务器获取数据
+                const student = simulatedStudents.find(s => s.id === studentId);
+                if (student) {
+                    const data = generateStudentAnalysisData(student);
+                    displayStudentAnalysis(data);
+                }
+            } catch (error) {
+                console.error('加载学生分析失败:', error);
+                document.getElementById('studentAnalysisResult').innerHTML = 
+                    '<p style="color: #f56565;">分析加载失败</p>';
+            }
+        }
+
+        // 生成模拟学生分析数据
+        function generateStudentAnalysisData(student) {
+            return {
+                student_info: {
+                    name: student.name,
+                    id: student.id
+                },
+                advanced_analysis: {
+                    attention_patterns: {
+                        average_attention: student.attention_level,
+                        attention_stability: Math.round(80 + Math.random() * 15),
+                        high_attention_percentage: Math.round(student.attention_level * 0.8 + Math.random() * 20)
+                    },
+                    anomalies: student.attention_level < 50 ? [
+                        {
+                            message: '注意力持续偏低',
+                            severity: 'high',
+                            suggestion: '建议立即关注并提供帮助'
+                        }
+                    ] : [],
+                    recommendations: [
+                        {
+                            action: '提供个性化学习材料',
+                            reason: '根据学习模式分析，该学生更适合视觉学习'
+                        },
+                        {
+                            action: '增加互动环节',
+                            reason: '互动参与度较低，需要更多参与机会'
+                        }
+                    ]
+                }
+            };
+        }
+
+        // 显示学生分析结果
+        function displayStudentAnalysis(data) {
+            const container = document.getElementById('studentAnalysisResult');
+            const analysis = data.advanced_analysis;
+            
+            let html = `
+                <div class="student-analysis">
+                    <h4>${data.student_info.name} 的学习分析</h4>
+                    <div class="analysis-section">
+                        <h5>注意力模式</h5>
+                        <div class="metric-grid">
+                            <div class="metric">
+                                <span>平均注意力:</span>
+                                <span>${analysis.attention_patterns.average_attention}%</span>
+                            </div>
+                            <div class="metric">
+                                <span>稳定性:</span>
+                                <span>${analysis.attention_patterns.attention_stability}%</span>
+                            </div>
+                            <div class="metric">
+                                <span>高注意力时段:</span>
+                                <span>${analysis.attention_patterns.high_attention_percentage}%</span>
+                            </div>
+                        </div>
+                    </div>
+            `;
+            
+            // 添加异常检测
+            if (analysis.anomalies && analysis.anomalies.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h5>检测到异常</h5>
+                        ${analysis.anomalies.map(anomaly => `
+                            <div class="anomaly-item ${anomaly.severity}">
+                                <strong>${anomaly.message}</strong>
+                                <p>${anomaly.suggestion}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // 添加建议
+            if (analysis.recommendations && analysis.recommendations.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h5>个性化建议</h5>
+                        ${analysis.recommendations.map(rec => `
+                            <div class="recommendation-item">
+                                <div class="rec-icon">💡</div>
+                                <div class="rec-content">
+                                    <div class="rec-title">${rec.action}</div>
+                                    <div class="rec-description">${rec.reason}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // 更改时间范围
+        function changeTimeRange(hours) {
+            currentTimeRange = hours;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 重新加载历史数据
+            loadHistoricalData();
+        }
+
+        // 加载历史数据
+        function loadHistoricalData() {
+            if (simulatedStudents.length === 0) return;
+            
+            try {
+                // 这里简化实现，实际应该从服务器获取数据
+                updateHistoricalChart(generateHistoricalData());
+            } catch (error) {
+                console.error('加载历史数据失败:', error);
+            }
+        }
+
+        // 生成模拟历史数据
+        function generateHistoricalData() {
+            const labels = [];
+            const attentionData = [];
+            const engagementData = [];
+            
+            const now = new Date();
+            for (let i = currentTimeRange; i >= 0; i--) {
+                const time = new Date(now.getTime() - i * 60 * 60 * 1000);
+                labels.push(time.getHours() + ':00');
+                
+                // 模拟数据波动
+                const baseAttention = 60 + Math.random() * 30;
+                const baseEngagement = 65 + Math.random() * 25;
+                
+                attentionData.push(Math.round(baseAttention));
+                engagementData.push(Math.round(baseEngagement));
+            }
+            
+            return { labels, attentionData, engagementData };
+        }
+
+        // 更新历史图表
+        function updateHistoricalChart(data) {
+            const ctx = document.getElementById('historicalTrendChart').getContext('2d');
+            
+            if (historicalTrendChart) {
+                historicalTrendChart.destroy();
+            }
+            
+            historicalTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: '平均注意力',
+                            data: data.attentionData,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '平均参与度',
+                            data: data.engagementData,
+                            borderColor: '#48bb78',
+                            backgroundColor: 'rgba(72, 187, 120, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // 更新学习模式识别
+        function updateLearningPatterns() {
+            if (simulatedStudents.length === 0) return;
+            
+            let efficientCount = 0;
+            let needsAttentionCount = 0;
+            let volatileCount = 0;
+            
+            simulatedStudents.forEach(student => {
+                const attention = student.attention_level;
+                const engagement = student.engagement_level;
+                
+                if (attention >= 80 && engagement >= 80) {
+                    efficientCount++;
+                } else if (attention < 60 || engagement < 60) {
+                    needsAttentionCount++;
+                } else {
+                    volatileCount++;
+                }
+            });
+            
+            document.getElementById('efficientLearners').textContent = efficientCount;
+            document.getElementById('needsAttention').textContent = needsAttentionCount;
+            document.getElementById('volatileLearners').textContent = volatileCount;
+        }
+
+        // 更新异常检测
+        function updateAnomalyDetection() {
+            const anomalyList = document.getElementById('anomalyList');
+            
+            // 模拟异常检测
+            const anomalies = [];
+            
+            simulatedStudents.forEach(student => {
+                if (student.attention_level < 40) {
+                    anomalies.push({
+                        student: student.name,
+                        type: '低注意力',
+                        severity: 'high',
+                        message: `${student.name} 注意力水平过低 (${student.attention_level}%)`,
+                        suggestion: '建议立即关注并提供帮助'
+                    });
+                } else if (student.engagement_level < 40) {
+                    anomalies.push({
+                        student: student.name,
+                        type: '低参与度',
+                        severity: 'medium',
+                        message: `${student.name} 参与度较低 (${student.engagement_level}%)`,
+                        suggestion: '建议增加互动提高参与感'
+                    });
+                }
+            });
+            
+            if (anomalies.length === 0) {
+                anomalyList.innerHTML = '<div class="anomaly-item none"><span>暂无异常检测</span></div>';
+            } else {
+                anomalyList.innerHTML = anomalies.map(anomaly => `
+                    <div class="anomaly-item ${anomaly.severity}">
+                        <strong>${anomaly.message}</strong>
+                        <p>${anomaly.suggestion}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 更新教学建议
+        function updateTeachingRecommendations() {
+            const recommendationsContainer = document.getElementById('teachingRecommendations');
+            
+            const recommendations = [
+                {
+                    icon: '🎯',
+                    title: '分组互动教学',
+                    description: '根据学习模式将学生分组，进行差异化教学'
+                },
+                {
+                    icon: '⏱️',
+                    title: '调整教学节奏',
+                    description: '在注意力普遍下降时段安排休息或互动活动'
+                },
+                {
+                    icon: '📊',
+                    title: '重点关注需要帮助的学生',
+                    description: '为注意力持续偏低的学生提供额外支持'
+                }
+            ];
+            
+            recommendationsContainer.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <div class="rec-icon">${rec.icon}</div>
+                    <div class="rec-content">
+                        <div class="rec-title">${rec.title}</div>
+                        <div class="rec-description">${rec.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 在现有的模拟更新函数中调用新功能
+        function updateAdvancedAnalytics() {
+            updateLearningPatterns();
+            updateAnomalyDetection();
+            updateTeachingRecommendations();
+            loadHistoricalData();
+        }
+    </script>
+</body>
+</html>

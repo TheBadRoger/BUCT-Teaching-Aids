@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智慧课堂系统</title>
+    <link rel="stylesheet" href="/static/ai_classroom/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>AI智慧课堂系统</h1>
+            <p>实时互动与学习分析平台</p>
+        </header>
+
+        <div class="main-options">
+            <div class="option-card" onclick="enterAsTeacher()">
+                <div class="icon">👨‍🏫</div>
+                <h3>教师入口</h3>
+                <p>创建课堂、查看分析、管理互动</p>
+            </div>
+
+            <div class="option-card" onclick="enterAsStudent()">
+                <div class="icon">🎓</div>
+                <h3>学生入口</h3>
+                <p>加入课堂、参与互动、提交反馈</p>
+            </div>
+        </div>
+
+        <div class="classroom-join" id="joinSection" style="display: none;">
+            <h3>加入课堂</h3>
+            <input type="text" id="classroomId" placeholder="输入课堂ID">
+            <input type="text" id="userName" placeholder="输入您的姓名">
+            <button onclick="joinClassroom()">加入</button>
+        </div>
+    </div>
+
+    <script>
+        function enterAsTeacher() {
+            const classroomId = prompt("请输入课堂ID（新建课堂请直接输入新ID）:");
+            const teacherName = prompt("请输入您的姓名:");
+
+            if (classroomId && teacherName) {
+                // 创建或加入课堂
+                fetch('/api/classroom/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        classroom_id: classroomId,
+                        teacher_name: teacherName,
+                        subject: 'AI课堂演示'
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = `teacher-dashboard.html?classroom=${data.classroom_id}&teacher=${encodeURIComponent(teacherName)}`;
+                        }
+                    });
+            }
+        }
+
+        function enterAsStudent() {
+            document.getElementById('joinSection').style.display = 'block';
+        }
+
+        function joinClassroom() {
+            const classroomId = document.getElementById('classroomId').value;
+            const userName = document.getElementById('userName').value;
+
+            if (classroomId && userName) {
+                window.location.href = `student-view.html?classroom=${classroomId}&student=${encodeURIComponent(userName)}&id=S${Date.now()}`;
+            } else {
+                alert('请填写完整信息');
+            }
+        }
+    </script>
+</body>
+
+</html>

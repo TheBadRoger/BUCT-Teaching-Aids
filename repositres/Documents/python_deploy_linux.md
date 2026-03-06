@@ -77,7 +77,7 @@ QUIT;
 进入项目中 Python 后端所在目录：
 
 ```bash
-cd /path/to/BUCT-Teaching-Aids/API/PythonAPI/unified_backend
+cd /path/to/BUCT-Teaching-Aids/API/PythonAPI
 ```
 
 创建并激活 Python 虚拟环境：
@@ -153,7 +153,7 @@ EOF
 将学生人脸照片放入以下目录：
 
 ```
-face_database/人脸库/
+face_database/face_db/
 ```
 
 文件命名格式：`学号_姓名.jpg`，例如 `2024001_张三.jpg`。  
@@ -227,9 +227,9 @@ After=network.target mysql.service
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=/path/to/BUCT-Teaching-Aids/API/PythonAPI/unified_backend
-Environment="PATH=/path/to/BUCT-Teaching-Aids/API/PythonAPI/unified_backend/venv/bin"
-ExecStart=/path/to/BUCT-Teaching-Aids/API/PythonAPI/unified_backend/venv/bin/python3 app.py
+WorkingDirectory=/path/to/BUCT-Teaching-Aids/API/PythonAPI
+Environment="PATH=/path/to/BUCT-Teaching-Aids/API/PythonAPI/venv/bin"
+ExecStart=/path/to/BUCT-Teaching-Aids/API/PythonAPI/venv/bin/python3 app.py
 Restart=on-failure
 RestartSec=5s
 StandardOutput=journal
