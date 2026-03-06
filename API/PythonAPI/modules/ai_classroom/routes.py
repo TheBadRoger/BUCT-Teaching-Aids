@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import time
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from flask_socketio import SocketIO, emit
 
 from config import Config
@@ -230,6 +230,26 @@ def _get_student_analytics_simple(student):
         'engagement_score': eng,
         'focus_duration': 0
     }
+
+
+# ── 前端页面路由 ──────────────────────────────────────────────────────────────────
+@ai_classroom_bp.route('/classroom/')
+@ai_classroom_bp.route('/classroom/index.html')
+def classroom_index():
+    """AI智慧课堂首页"""
+    return render_template('ai_classroom/index.html')
+
+
+@ai_classroom_bp.route('/classroom/teacher-dashboard.html')
+def classroom_teacher_dashboard():
+    """教师仪表盘页面"""
+    return render_template('ai_classroom/teacher-dashboard.html')
+
+
+@ai_classroom_bp.route('/classroom/student-view.html')
+def classroom_student_view():
+    """学生视图页面"""
+    return render_template('ai_classroom/student-view.html')
 
 
 # ── HTTP 路由 ─────────────────────────────────────────────────────────────────────

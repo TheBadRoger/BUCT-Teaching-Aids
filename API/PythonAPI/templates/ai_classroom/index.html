@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI智慧课堂系统</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/static/ai_classroom/css/style.css">
 </head>
 
 <body>
@@ -44,7 +44,7 @@
 
             if (classroomId && teacherName) {
                 // 创建或加入课堂
-                fetch('http://localhost:5000/api/classroom/create', {
+                fetch('/api/classroom/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

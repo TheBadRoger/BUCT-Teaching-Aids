@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学生视图 - AI智慧课堂</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/static/ai_classroom/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
     <!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
@@ -134,7 +134,7 @@
         document.getElementById('classroomId').textContent = classroomId;
 
         // 连接Socket.io
-        const socket = io('http://localhost:5000');
+        const socket = io(window.location.origin);
 
         // 学生加入课堂
         socket.emit('join_classroom', {
