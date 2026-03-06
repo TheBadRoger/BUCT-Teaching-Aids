@@ -37,10 +37,14 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 > 其余项目组的进度，以后就在这里加就行
 
 ## 项目文件结构
-* ***API/JavaAPI*** - Java后端项目文件夹。
-* ***API/PythonAPI*** - Python后端项目文件夹。
-* ***API/src/main/resources/static*** - 前端项目文件夹。
-* ***repositres*** - 资源文件夹。主要存放仓库文档相关资源
+由于我们有Java和Python两个后端，这两个后端都支持 **前后端合并部署**，所以两个部分的前端要分开
+
+* ***API/JavaAPI/src/*** - Java后端文件夹
+* ***API/JavaAPI/src/resources/static/*** - 与Java后端合并部署的前端文件夹
+* ***API/PythonAPI/*** - Python后端文件夹
+* ***API/PythonAPI/static*** - 与Python后端合并部署的前端css，js文件夹
+* ***API/PythonAPI/templates*** - 与Python后端合并部署的前端html网页文件夹
+* ***repositres*** - 仓库文档相关资源文件夹
 
 ## 文档
 
