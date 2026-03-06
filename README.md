@@ -26,7 +26,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
     ON BUCTTA_DATABASE.* 
     TO 'java_springboot_buctta'@'localhost';
 ```
-之后**java后端的application.properties就不要改了**
+* 之后**java后端的application.properties就不要改了**
 
 ## 工作进度
 
@@ -46,6 +46,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 
 ||||
 |:-:|:-:|:-:
-|后端接口文档|[Java](./repositres/Documents/ApiDoc.md)|[Python](./repositres/Documents/PythonAPIDoc.md)|
+|后端接口文档|[Java](./repositres/Documents/JavaAPIDoc.md)|[Python](./repositres/Documents/PythonAPIDoc.md)|
 |Java后端部署方法|[Windows](./repositres/Documents/java_deploy_win.md)|[Ubuntu Linux](./repositres/Documents/java_deploy_linux.md)|
 |Python后端部署方法| - |[Ubuntu Linux](./repositres/Documents/python_deploy_linux.md)|
