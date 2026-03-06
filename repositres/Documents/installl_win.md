@@ -33,12 +33,14 @@
 
 修改完成后启动 ***MySQL Command Line Client*** （不是 ***MySQL Shell*** ）。打开后界面会显示“Enter Password”，这是在要求你登录根用户，此时输入刚刚设置的根用户密码即可登录。
 
-输入命令```create database BUCTTA_DATABASE;```创建数据库
-
-输入命令```use BUCTTA_DATABASE;```进入数据库
-
-现在已经不需要创建数据表。Java项目采用Flyway组件来自动更新数据表，这样便于迁移。
-
+登陆后进入MySQL Shell，输入如下命令创建后端服务账号和数据库：
+```sql
+CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE;
+CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '~springboot1794Zz!';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW 
+    ON BUCTTA_DATABASE.* 
+    TO 'java_springboot_buctta'@'localhost';
+```
 ## **4. 安装Redis**
 直接访问redis的[开源仓库](https://github.com/tporadowski/redis/releases)，可选zip或msi安装包。zip安装需要配置环境变量，msi安装则根据指引完成即可，具体请自己搜索安装方法
 
