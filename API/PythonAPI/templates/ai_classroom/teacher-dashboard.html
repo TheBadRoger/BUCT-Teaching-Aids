@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教师仪表盘 - AI智慧课堂</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/static/ai_classroom/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -981,7 +981,7 @@
         }
 
         // 连接Socket.io
-        const socket = io('http://localhost:5000');
+        const socket = io(window.location.origin);
 
         // 教师加入课堂
         socket.emit('teacher_join', {
