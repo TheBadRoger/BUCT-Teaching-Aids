@@ -39,7 +39,7 @@ class Config:
     # Face Recognition (face_hand_up module)
     FACE_DB_PATH = os.environ.get(
         'FACE_DB_PATH',
-        os.path.join(os.path.dirname(__file__), 'face_database', '人脸库')
+        os.path.join(os.path.dirname(__file__), 'face_database', 'face_db')
     )
     TOLERANCE = 0.6
     FACE_ENCODINGS_CACHE: dict = {}
