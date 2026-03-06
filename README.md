@@ -44,5 +44,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 
 ## 文档
 
-* [Java后端接口文档](./repositres/Documents/ApiDoc.md)
-* Java后端部署方法：[Windows](./repositres/Documents/installl_win.md) | [Ubuntu Linux](./repositres/Documents/installl_linux.md)
+||||
+|:-:|:-:|:-:
+|后端接口文档|[Java](./repositres/Documents/ApiDoc.md)|[Python](./repositres/Documents/PythonAPIDoc.md)|
+|Java后端部署方法|[Windows](./repositres/Documents/java_deploy_win.md)|[Ubuntu Linux](./repositres/Documents/java_deploy_linux.md)|
+|Python后端部署方法| - |[Ubuntu Linux](./repositres/Documents/python_deploy_linux.md)|
