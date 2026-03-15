@@ -473,15 +473,29 @@
   {
     "code": 200,
     "msg": "获取成功",
-    "data": [
-      {
-        "student_id": 2024001,
-        "name": "张三",
-        "class_name": "高材2304",
-        "avg_mastery": 0.75,
-        "knowledge_count": 12
-      }
-    ]
+    "data": {
+      "class_name": "高材2304",
+      "student_list": [
+        {
+          "student_name": "张三",
+          "student_id": 2024001,
+          "learning_progress": 75.5,
+          "mastery_rate": 82.3,
+          "data_study_duration": 3600,
+          "practice_duration": 1800,
+          "practice_count": 15
+        },
+        {
+          "student_name": "李四",
+          "student_id": 2024002,
+          "learning_progress": 68.0,
+          "mastery_rate": 79.5,
+          "data_study_duration": 3200,
+          "practice_duration": 2100,
+          "practice_count": 18
+        }
+      ]
+    }
   }
   ```
 - **返回**（缺少参数）：`{ "code": 400, "msg": "缺少参数 class_name" }` HTTP 400
@@ -501,14 +515,16 @@
     "msg": "获取成功",
     "data": [
       {
-        "knowledge_id": 101,
-        "knowledge_name": "导数与微分",
-        "avg_mastery": 0.68,
-        "student_count": 28
+        "knowledge_name": "高分子化学",
+        "avg_progress": 72.5,
+        "avg_mastery": 78.3,
+        "learned_count": 28,
+        "total_count": 30
       }
     ]
   }
   ```
+- **返回**（缺少参数）：`{ "code": 400, "msg": "缺少参数 class_name" }` HTTP 400
 
 ### GET /api/report/student
 - **描述**：获取指定学生的完整学情报告（知识点掌握详情、学习趋势等）。
@@ -522,13 +538,20 @@
   ```json
   {
     "code": 200,
-    "msg": "获取成功",
+    "msg": "获取学生学情报告成功",
     "data": {
-      "student": { "student_id": 2024001, "name": "张三", "class_name": "高材2304" },
+      "student_name": "张三",
+      "student_id": 1001,
+      "class_name": "高材2304",
+      "report_time": "2024-05-20 15:30:00",
       "knowledge_mastery": [
-        { "knowledge_name": "导数与微分", "mastery_level": 0.72, "last_updated": "2024-01-01" }
-      ],
-      "summary": { "avg_mastery": 0.75, "strong_areas": [...], "weak_areas": [...] }
+        {
+          "knowledge_name": "Python基础语法",
+          "mastery_rate": 92.0,
+          "level": "优秀",
+          "weak_points": []
+        }
+      ]
     }
   }
   ```
