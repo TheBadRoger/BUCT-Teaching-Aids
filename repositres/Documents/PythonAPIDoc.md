@@ -334,35 +334,36 @@
 
 ## 抬头率检测模块 `/api/headup_rate`
 
-### POST /api/headup_rate/detect
-- **描述**：检测并记录学生抬头率。支持两种输入方式：后端计算（传入图片）或直接入库（传入已计算结果）。
-- **请求体**（JSON）：
+### POST `/api/headup_rate/detect`
+- **描述**: 检测并记录学生抬头率。支持两种输入方式：后端计算（传入图片）或直接入库（传入已计算结果）。
+- **请求体** (JSON):
 
-  | 字段 | 类型 | 必填 | 说明 |
-  |------|------|------|------|
-  | `student_id` | int | 是 | 学号 |
-  | `course_id` | string | 是 | 课程ID，如 "math_101" |
-  | `course_name` | string | 是 | 课程名称，如 "高等数学（上）" |
-  | `data_type` | string | 是 | 数据类型：`"image"` 或 `"video_frame"` |
-  | `raw_data` | string | 否 | base64 编码的图片数据（后端计算时必填） |
-  | `calculated_rate` | float | 否 | 前端已计算好的抬头率（0-100），直接存入数据库 |
-  | `detection_device` | string | 否 | 检测设备名称，如 "教室摄像头-1" |
-  | `remarks` | string | 否 | 备注，如 "上课10分钟检测" |
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `student_id` | int | 是 | 学号 |
+| `course_id` | string | 是 | 课程ID，如 `"math_101"` |
+| `course_name` | string | 是 | 课程名称，如 `"高等数学（上）"` |
+| `data_type` | string | 是 | 数据类型：`"image"` 或 `"video_frame"` |
+| `raw_data` | string | 否 | base64 编码的图片数据（后端计算时必填） |
+| `calculated_rate` | float | 否 | 前端已计算好的抬头率（0-100），直接存入数据库 |
+| `detection_device` | string | 否 | 检测设备名称，如 `"教室摄像头-1"` |
+| `remarks` | string | 否 | 备注，如 `"上课10分钟检测"` |
 
-- **返回**（成功）：
-  ```json
-  {
-    "code": 200,
-    "msg": "检测成功",
-    "data": {
-      "student_id": 1001,
-      "course_id": "math_101",
-      "head_up_rate": 85.5,
-      "detection_time": "2024-01-01 10:00:00"
-    }
+- **返回** (成功):
+```json
+{
+  "code": 200,
+  "msg": "检测成功",
+  "data": {
+    "student_id": 1001,
+    "course_id": "math_101",
+    "head_up_rate": 85.5,
+    "detection_time": "2024-01-01 10:00:00"
   }
+}
   ```
 - **返回**（参数错误）：`{ "code": 400, "msg": "缺少必填字段：student_id, course_id" }` HTTP 400
+- **返回**（检测失败）：`{ "code": 500, "msg": "检测失败：具体异常信息" }` HTTP 500
 
 ### GET /api/headup_rate/history
 - **描述**：获取抬头率历史记录（可按课程过滤）。
@@ -391,9 +392,10 @@
     ]
   }
   ```
+- **返回**（服务异常）：`{"code": 500, "msg": "具体异常信息"}` HTTP 500
 
 ### GET /api/headup_rate/student/`<student_id>`
-- **描述**：获取指定学生的抬头率历史记录。
+- **描述**：获取指定学生的抬头率历史记录按检测时间倒序排列。
 - **路径参数**：`student_id` (int) — 学号
 - **查询参数**：
 
@@ -409,12 +411,14 @@
     "msg": "获取成功",
     "student_id": 1001,
     "data": [
-      { "id": 1, "course_id": "math_101", "course_name": "高等数学（上）", "detection_time": "...", "head_up_rate": 85.5 }
+      { "id": 1, "course_id": "math_101", "course_name": "高等数学（上）", "detection_time": "2024-01-01 10:00:00", "head_up_rate": 85.5 }
     ]
   }
   ```
+- **返回**（服务异常）：`{"code": 500, "msg": "具体异常信息"}` HTTP 500
 
 ---
+
 
 ## 学情分析模块
 
