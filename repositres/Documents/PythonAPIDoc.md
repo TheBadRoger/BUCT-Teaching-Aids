@@ -293,8 +293,12 @@
     }
   }
   ```
-- **返回**（摄像头不可用）：`{ "code": 500, "msg": "无法打开摄像头，请检查摄像头ID或连接" }` HTTP 500
-
+- **返回**（摄像头不可用）：`{ "code": 500, "msg": "无法打开摄像头，请检查摄像头ID或连接", "data": null}` HTTP 500
+- **返回**（无法读取摄像头画面）：`{ "code": 500, "msg": "无法读取摄像头画面", "data": null }` HTTP 500
+- **注意事项**:
+- 接口执行时会自动将结果存入数据库
+- 当 `total_student` 为 0 时，不会记录到数据库
+- 学生ID_姓名格式为: `{学生ID}_{姓名}`，例如 `2024001_张三`
 ### GET /api/face_hand_up/history_hand_up
 - **描述**：查询历史举手率记录。
 - **查询参数**：
@@ -329,40 +333,79 @@
   ```html
   <img src="http://localhost:5000/api/face_hand_up/video_feed">
   ```
+-**画面标记说明**:
+| 标记类型 | 颜色 | 显示内容 | 位置 |
+| ------ | ------ |------| ------|
+| 人脸框 | 绿色 | 学生ID_姓名 | 人脸周围 |
+| 举手框 | 红色 | "Hand Up"文字 | 举手区域 |
+
+-**注意事项**:
+- 此为持续的视频流，会占用网络带宽
+- 建议在不需要查看画面时销毁 img 标签以释放资源
+- 如果摄像头初始化失败，视频流将无法显示
+- 画面处理包括：人脸识别、举手检测、标记绘制，会有一帧的延迟
+  
+### 数据库表结构 (hand_up_record)
+
+| 字段名 | 类型 | 描述 |
+| ------ | ------ | ------ |
+| id | int | 主键ID，自增 |
+| total_student | int | 已识别有效学生数 |
+| hand_up_student | int | 举手学生数 |
+| hand_up_rate | float | 举手率（0-1） |
+| record_time | datetime | 记录时间 |
+| class_name | varchar(50) | 班级名称 |
+
+### 人脸照片命名规范
+
+人脸库照片需放在 `face_database` 目录下，命名格式为：
+```
+{学生ID}_{姓名}.jpg
+```
+例如：
+- `2024001_张三.jpg`
+- `2024002_李四.png`
+- `2024003_王五.jpeg`
+
+**要求**:
+- 照片中只包含单人脸
+- 支持格式: jpg, jpeg, png
+- 文件名中的下划线 `_` 用于分隔ID和姓名
 
 ---
 
 ## 抬头率检测模块 `/api/headup_rate`
 
-### POST /api/headup_rate/detect
-- **描述**：检测并记录学生抬头率。支持两种输入方式：后端计算（传入图片）或直接入库（传入已计算结果）。
-- **请求体**（JSON）：
+### POST `/api/headup_rate/detect`
+- **描述**: 检测并记录学生抬头率。支持两种输入方式：后端计算（传入图片）或直接入库（传入已计算结果）。
+- **请求体** (JSON):
 
-  | 字段 | 类型 | 必填 | 说明 |
-  |------|------|------|------|
-  | `student_id` | int | 是 | 学号 |
-  | `course_id` | string | 是 | 课程ID，如 "math_101" |
-  | `course_name` | string | 是 | 课程名称，如 "高等数学（上）" |
-  | `data_type` | string | 是 | 数据类型：`"image"` 或 `"video_frame"` |
-  | `raw_data` | string | 否 | base64 编码的图片数据（后端计算时必填） |
-  | `calculated_rate` | float | 否 | 前端已计算好的抬头率（0-100），直接存入数据库 |
-  | `detection_device` | string | 否 | 检测设备名称，如 "教室摄像头-1" |
-  | `remarks` | string | 否 | 备注，如 "上课10分钟检测" |
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `student_id` | int | 是 | 学号 |
+| `course_id` | string | 是 | 课程ID，如 `"math_101"` |
+| `course_name` | string | 是 | 课程名称，如 `"高等数学（上）"` |
+| `data_type` | string | 是 | 数据类型：`"image"` 或 `"video_frame"` |
+| `raw_data` | string | 否 | base64 编码的图片数据（后端计算时必填） |
+| `calculated_rate` | float | 否 | 前端已计算好的抬头率（0-100），直接存入数据库 |
+| `detection_device` | string | 否 | 检测设备名称，如 `"教室摄像头-1"` |
+| `remarks` | string | 否 | 备注，如 `"上课10分钟检测"` |
 
-- **返回**（成功）：
-  ```json
-  {
-    "code": 200,
-    "msg": "检测成功",
-    "data": {
-      "student_id": 1001,
-      "course_id": "math_101",
-      "head_up_rate": 85.5,
-      "detection_time": "2024-01-01 10:00:00"
-    }
+- **返回** (成功):
+```json
+{
+  "code": 200,
+  "msg": "检测成功",
+  "data": {
+    "student_id": 1001,
+    "course_id": "math_101",
+    "head_up_rate": 85.5,
+    "detection_time": "2024-01-01 10:00:00"
   }
+}
   ```
 - **返回**（参数错误）：`{ "code": 400, "msg": "缺少必填字段：student_id, course_id" }` HTTP 400
+- **返回**（检测失败）：`{ "code": 500, "msg": "检测失败：具体异常信息" }` HTTP 500
 
 ### GET /api/headup_rate/history
 - **描述**：获取抬头率历史记录（可按课程过滤）。
@@ -391,9 +434,10 @@
     ]
   }
   ```
+- **返回**（服务异常）：`{"code": 500, "msg": "具体异常信息"}` HTTP 500
 
 ### GET /api/headup_rate/student/`<student_id>`
-- **描述**：获取指定学生的抬头率历史记录。
+- **描述**：获取指定学生的抬头率历史记录按检测时间倒序排列。
 - **路径参数**：`student_id` (int) — 学号
 - **查询参数**：
 
@@ -409,12 +453,14 @@
     "msg": "获取成功",
     "student_id": 1001,
     "data": [
-      { "id": 1, "course_id": "math_101", "course_name": "高等数学（上）", "detection_time": "...", "head_up_rate": 85.5 }
+      { "id": 1, "course_id": "math_101", "course_name": "高等数学（上）", "detection_time": "2024-01-01 10:00:00", "head_up_rate": 85.5 }
     ]
   }
   ```
+- **返回**（服务异常）：`{"code": 500, "msg": "具体异常信息"}` HTTP 500
 
 ---
+
 
 ## 学情分析模块
 
@@ -431,15 +477,29 @@
   {
     "code": 200,
     "msg": "获取成功",
-    "data": [
-      {
-        "student_id": 2024001,
-        "name": "张三",
-        "class_name": "高材2304",
-        "avg_mastery": 0.75,
-        "knowledge_count": 12
-      }
-    ]
+    "data": {
+      "class_name": "高材2304",
+      "student_list": [
+        {
+          "student_name": "张三",
+          "student_id": 2024001,
+          "learning_progress": 75.5,
+          "mastery_rate": 82.3,
+          "data_study_duration": 3600,
+          "practice_duration": 1800,
+          "practice_count": 15
+        },
+        {
+          "student_name": "李四",
+          "student_id": 2024002,
+          "learning_progress": 68.0,
+          "mastery_rate": 79.5,
+          "data_study_duration": 3200,
+          "practice_duration": 2100,
+          "practice_count": 18
+        }
+      ]
+    }
   }
   ```
 - **返回**（缺少参数）：`{ "code": 400, "msg": "缺少参数 class_name" }` HTTP 400
@@ -459,14 +519,16 @@
     "msg": "获取成功",
     "data": [
       {
-        "knowledge_id": 101,
-        "knowledge_name": "导数与微分",
-        "avg_mastery": 0.68,
-        "student_count": 28
+        "knowledge_name": "高分子化学",
+        "avg_progress": 72.5,
+        "avg_mastery": 78.3,
+        "learned_count": 28,
+        "total_count": 30
       }
     ]
   }
   ```
+- **返回**（缺少参数）：`{ "code": 400, "msg": "缺少参数 class_name" }` HTTP 400
 
 ### GET /api/report/student
 - **描述**：获取指定学生的完整学情报告（知识点掌握详情、学习趋势等）。
@@ -480,13 +542,20 @@
   ```json
   {
     "code": 200,
-    "msg": "获取成功",
+    "msg": "获取学生学情报告成功",
     "data": {
-      "student": { "student_id": 2024001, "name": "张三", "class_name": "高材2304" },
+      "student_name": "张三",
+      "student_id": 1001,
+      "class_name": "高材2304",
+      "report_time": "2024-05-20 15:30:00",
       "knowledge_mastery": [
-        { "knowledge_name": "导数与微分", "mastery_level": 0.72, "last_updated": "2024-01-01" }
-      ],
-      "summary": { "avg_mastery": 0.75, "strong_areas": [...], "weak_areas": [...] }
+        {
+          "knowledge_name": "Python基础语法",
+          "mastery_rate": 92.0,
+          "level": "优秀",
+          "weak_points": []
+        }
+      ]
     }
   }
   ```
