@@ -51,9 +51,9 @@ cp .env.example .env
 编辑 `.env`，至少修改以下字段：
 
 ```ini
-MYSQL_ROOT_PASSWORD=~dockerdeploy91734Zz!
-JAVA_DB_PASSWORD=~dockerdeploy91734Zz!
-PYTHON_DB_PASSWORD=~dockerdeploy91734Zz!
+MYSQL_ROOT_PASSWORD=${BUCTTA_MYSQL_ROOT_PASSWORD}
+JAVA_DB_PASSWORD=${BUCTTA_JAVA_DB_PASSWORD}
+PYTHON_DB_PASSWORD=${BUCTTA_PYTHON_DB_PASSWORD}
 REDIS_PASSWORD=请替换为强密码
 SPRING_PROFILES_ACTIVE=prod
 
@@ -198,5 +198,5 @@ docker compose down -v
     - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
     - 当前统一口令如下（Java/Python 场景一致）：
     ```ini
-    MYSQL_ROOT_PASSWORD=~dockerdeploy91734Zz!
+    MYSQL_ROOT_PASSWORD=${BUCTTA_MYSQL_ROOT_PASSWORD}
     ```

@@ -29,3 +29,7 @@ replay_pid*
 # Testing files
 /API/JavaAPI/temp/
 
+# Secret environment files
+/.env/*.env
+/docker/.env
+/API/PythonAPI/.env
