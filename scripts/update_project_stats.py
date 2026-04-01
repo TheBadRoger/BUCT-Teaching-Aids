@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import re
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -12,6 +12,7 @@ README_PATH = ROOT_DIR / "README.md"
 GENERATED_DIR = ROOT_DIR / "scripts" / "generated"
 STATS_JSON_PATH = GENERATED_DIR / "stats.json"
 STATS_MD_PATH = GENERATED_DIR / "README_STATS.md"
+UTC_PLUS_8 = timezone(timedelta(hours=8))
 
 EXCLUDED_DIRS = {
     ".git",
@@ -91,6 +92,7 @@ def collect_stats() -> dict:
 
     return {
         "updated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "updated_at_utc8": datetime.now(UTC_PLUS_8).strftime("%Y-%m-%d %H:%M:%S"),
         "total_lines": total_lines,
         "language_count": len(sorted_language_lines),
         "top_language": top_language,
@@ -109,11 +111,11 @@ def build_stats_markdown(stats: dict) -> str:
 
     return "\n".join(
         [
-            "# Comment translated to English.
+            "## 项目统计",
             "",
-            f"> 统计更新时间（UTC）：`{stats['updated_at_utc']}`",
+            f"> 统计更新时间（UTC+8）：`{stats['updated_at_utc8']}`",
             "",
-            "# Comment translated to English.
+            "### 核心统计",
             "",
             "| 指标 | 数值 |",
             "| :-- | --: |",
@@ -121,7 +123,7 @@ def build_stats_markdown(stats: dict) -> str:
             f"| Java 接口数 | {stats['java_endpoint_count']} |",
             f"| Python 接口数 | {stats['python_endpoint_count']} |",
             "",
-            "# Comment translated to English.
+            "### 语言占比图",
             "",
             "```mermaid",
             "%%{init: {'theme':'base','themeVariables': {",
