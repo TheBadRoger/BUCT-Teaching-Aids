@@ -46,7 +46,7 @@ services:
       redis:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
       SERVER_PORT: 80
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BUCTTA_DATABASE?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: java_springboot_buctta
