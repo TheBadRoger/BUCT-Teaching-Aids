@@ -179,24 +179,23 @@ docker compose down -v
     SPRING_PROFILES_ACTIVE=prod docker compose up -d
     ```
    - 建议将真实口令保存在项目根目录的 `.env/secrets.env` 中，再手动同步到 `docker/.env`，避免凭据直接写入文档或源码模板。
-    - 约定：**手动部署**使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`；**Docker 部署**使用 `MYSQL_ROOT_PASSWORD`。
+   - 约定：**手动部署**使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`；**Docker 部署**使用 `MYSQL_ROOT_PASSWORD`。
+   - 说明：该差异是按当前 Docker 场景要求实现（不初始化 Java/Python 独立用户，统一使用 root）。
 
 5. **MySQL root 连接说明（默认即为 root）**
    - 当前 `docker-compose.yml` 已默认让 Java/Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`。
-   - 本仓库仍保留两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
-     - `docker-compose.java-root.yml`：Java 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
-     - `docker-compose.python-root.yml`：Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
-   - 在当前默认配置下，这两个覆盖文件通常无需额外叠加。
-   - **注意**：同一个 MySQL 实例只能有一个 root 密码，因此两个覆盖文件应分场景分别使用，不要同时叠加。
-   - Java 场景（含 root 密码覆盖）：
+   - 本仓库仍保留两个覆盖文件，仅用于兼容历史命令；在当前默认配置下通常不需要使用：
+     - `docker-compose.java-root.yml`: Java 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+     - `docker-compose.python-root.yml`: Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+   - Java 场景（历史兼容命令）：
    ```bash
    docker compose -f docker-compose.yml -f docker-compose.java-root.yml up -d --build
    ```
-    - Python 场景（含 root 密码覆盖）：
+    - Python 场景（历史兼容命令）：
     ```bash
    docker compose -f docker-compose.yml -f docker-compose.python-root.yml up -d --build
     ```
-    - **不要同时叠加两个 root 覆盖文件**，否则 Java/Python 会同时改用 root 账户，偏离“按场景单独覆盖”的设计意图：
+     - **不要同时叠加两个 root 覆盖文件**（功能上虽然等价于默认 root 场景，但会增加配置复杂度）：
     ```bash
     # 不推荐（不要这样做）
     docker compose -f docker-compose.yml -f docker-compose.java-root.yml -f docker-compose.python-root.yml up -d --build
@@ -210,7 +209,7 @@ docker compose down -v
 6. **如何在生产环境用 GitHub Actions + Secrets 管理环境变量？**
    - 推荐做法：
      1) 在仓库中创建 `production` 环境 (Settings → Environments)
-      2) 在该环境中配置 Secrets（至少）：
+      2) 在该环境中配置 Secrets (至少)：
         - `PROD_HOST`、`PROD_USER`、`PROD_SSH_KEY`
         - `PROD_DEPLOY_PATH`（可选，默认 `/opt/BUCT-Teaching-Aids`）
         - `MYSQL_ROOT_PASSWORD`
@@ -235,8 +234,8 @@ docker compose down -v
       - 只需要更新基础依赖镜像（如 `mysql`/`redis`）且不希望在服务器构建：`deploy-production-pull.yml`
     - 宿主机环境变量影响说明：
       - **不会修改实体机的全局环境变量**（不会写入 `/etc/environment`、`~/.bashrc` 等）；
-     - 变量仅在当前 SSH 部署进程与 Docker Compose 命令执行期间生效；
-     - 工作流使用临时 env 文件（`mktemp`）并在执行结束后删除，避免在服务器残留明文凭据。
+       - 变量仅在当前 SSH 部署进程与 Docker Compose 命令执行期间生效；
+       - 工作流使用临时 env 文件（`mktemp`）并在执行结束后删除，避免在服务器残留明文凭据。
    - 安全建议：
      - 不要将真实口令写入仓库文件；
      - 仅在 GitHub Secrets/Environment Secrets 中维护生产口令；
