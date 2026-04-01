@@ -16,7 +16,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           DEPLOY_PATH: ${{ secrets.PROD_DEPLOY_PATH }}
-          SPRING_PROFILES_ACTIVE: prod
+          SPRING_PROFILES_ACTIVE: docker
           JAVA_HOST_PORT: "80"
           PYTHON_HOST_PORT: "8080"
           MYSQL_HOST_PORT: "3306"

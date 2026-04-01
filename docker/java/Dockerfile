@@ -3,7 +3,7 @@ FROM maven:3.9-eclipse-temurin-25 AS builder
 WORKDIR /build
 COPY API/JavaAPI/pom.xml /build/pom.xml
 COPY API/JavaAPI/src /build/src
-RUN mvn -B -DskipTests clean package
+RUN mvn -B -DskipTests -Pdocker clean package
 
 FROM eclipse-temurin:25-jre
 
