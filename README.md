@@ -1,8 +1,61 @@
 # 北化教学辅助系统
 
-***生产环境主机***：10.14.48.76
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Project Type](https://img.shields.io/badge/Project%20Type-Faculty--level%20Project-7A3E65)](./README.md)
+![Java](https://img.shields.io/badge/Java-25-437291?logo=openjdk&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+[![Build](https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Build)](https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml)
+[![Unit Tests](https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Unit%20Tests)](https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml)
+![Last Commit](https://img.shields.io/github/last-commit/TheBadRoger/BUCT-Teaching-Aids?label=Last%20Commit)
+![Repo Size](https://img.shields.io/github/repo-size/TheBadRoger/BUCT-Teaching-Aids?label=Repo%20Size)
+![Total Lines](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscript%2Fgenerated%2Fstats.json&query=%24.total_lines&label=Total%20Lines&color=3B82F6)
+![Language Count](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscript%2Fgenerated%2Fstats.json&query=%24.language_count&label=Language%20Count&color=10B981)
+![Top Language](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscript%2Fgenerated%2Fstats.json&query=%24.top_language&label=Top%20Language&color=8B5CF6)
 
-***数据库名称：*** BUCTTA_DATABASE
+<!-- STATS_SECTION_START -->
+## 项目统计
+
+> 统计更新时间（UTC）：`2026-04-01T13:22:34Z`
+
+### 核心统计
+
+| 指标 | 数值 |
+| :-- | --: |
+| 代码总行数（非空行） | 21123 |
+| Java 接口数 | 53 |
+| Python 接口数 | 27 |
+
+### 语言占比图
+
+```mermaid
+%%{init: {'theme':'base','themeVariables': {
+  'fontFamily': 'Fira Code, JetBrains Mono, Source Code Pro, Cascadia Code, Menlo, Consolas, monospace',
+  'pieStrokeColor': 'transparent',
+  'pieStrokeWidth': '0px',
+  'pieOuterStrokeWidth': '0px',
+  'pie1': '#FF4D6D',
+  'pie2': '#FF8E3C',
+  'pie3': '#FFD60A',
+  'pie4': '#22C55E',
+  'pie5': '#00D1FF',
+  'pie6': '#4F46E5',
+  'pie7': '#D946EF',
+  'pie8': '#14B8A6',
+  'pie9': '#F97316',
+  'pie10': '#A855F7'
+}}}%%
+pie showData
+    "HTML (37.09%)" : 7835
+    "Java (26.68%)" : 5635
+    "CSS (13.43%)" : 2837
+    "Markdown (9.61%)" : 2030
+    "Python (7.48%)" : 1581
+    "JavaScript (3.17%)" : 670
+    "YAML (1.69%)" : 356
+    "SQL (0.82%)" : 174
+    "Shell (0.02%)" : 5
+```
+<!-- STATS_SECTION_END -->
 
 ## 开发框架简介
 * 前端：经典HTML+js+css
@@ -21,7 +74,7 @@
 
 ```sql
 CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE;
-CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '~springboot1794Zz!';
+CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '${BUCTTA_JAVA_DB_PASSWORD}';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW 
     ON BUCTTA_DATABASE.* 
     TO 'java_springboot_buctta'@'localhost';
@@ -53,5 +106,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 |后端接口文档|[Java](./repositres/Documents/JavaAPIDoc.md)|[Python](./repositres/Documents/PythonAPIDoc.md)|
 |Java后端部署方法|[Windows](./repositres/Documents/java_deploy_win.md)|[Ubuntu Linux](./repositres/Documents/java_deploy_linux.md)|
 |Python后端部署方法| - |[Ubuntu Linux](./repositres/Documents/python_deploy_linux.md)|
+|Docker部署方法|[Docker](./repositres/Documents/docker_deploy.md)|-|
 
 > [Python后端项目详解](./repositres/Documents/python_api_intro.md)
