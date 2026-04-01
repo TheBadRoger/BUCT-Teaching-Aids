@@ -219,20 +219,21 @@ docker compose down -v
      3) 使用仓库内工作流手动触发部署（`workflow_dispatch`）：
          - `.github/workflows/deploy-production.yml`（会重建镜像）
          - `.github/workflows/deploy-production-fast.yml`（不重建镜像，快速重启）
-         - `.github/workflows/deploy-production-pull.yml`（先拉取最新镜像，再不重建重启）
+         - `.github/workflows/deploy-production-pull.yml`（拉取依赖镜像并以 `--no-build` 重启）
     - 三个工作流都会在服务器上创建临时 env 文件，并执行：
     ```bash
     # 本地重建镜像再启动
     docker compose up -d --build
     # 或：直接重启（不重建）
     docker compose up -d
-    # 或：拉取镜像后重启（不重建）
-    docker compose pull && docker compose up -d
+    # 或：拉取依赖镜像后重启（不重建）
+    docker compose pull mysql redis
+    docker compose up -d --no-build
     ```
     - 选择建议：
       - 代码改动且需要服务器本地重建：`deploy-production.yml`
       - 仅配置变更/快速重启：`deploy-production-fast.yml`
-      - 镜像已由外部 CI 构建并推送：`deploy-production-pull.yml`
+      - 只需要更新基础依赖镜像（如 `mysql`/`redis`）且不希望在服务器构建：`deploy-production-pull.yml`
     - 宿主机环境变量影响说明：
       - **不会修改实体机的全局环境变量**（不会写入 `/etc/environment`、`~/.bashrc` 等）；
      - 变量仅在当前 SSH 部署进程与 Docker Compose 命令执行期间生效；
