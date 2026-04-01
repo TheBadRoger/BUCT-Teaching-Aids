@@ -201,11 +201,11 @@ docker compose down -v
     # 不推荐（不要这样做）
     docker compose -f docker-compose.yml -f docker-compose.java-root.yml -f docker-compose.python-root.yml up -d --build
     ```
-     - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
-     - 当前统一口令如下（Java/Python 场景一致，仅 Docker 场景使用）：
-     ```ini
+    - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
+    - 当前统一口令如下（Java/Python 场景一致，仅 Docker 场景使用）：
+    ```ini
     DOCKER_DB_PASSWORD=your_shared_docker_db_password
-     ```
+    ```
 
 6. **如何在生产环境用 GitHub Actions + Secrets 管理环境变量？**
    - 推荐做法：
