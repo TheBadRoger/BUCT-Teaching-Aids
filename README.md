@@ -13,19 +13,19 @@
 ![Top Language](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscript%2Fgenerated%2Fstats.json&query=%24.top_language&label=Top%20Language&color=8B5CF6)
 
 <!-- STATS_SECTION_START -->
-## Project Statistics
+## 项目统计
 
-> Updated (UTC): `2026-04-01T13:16:37Z`
+> 统计更新时间（UTC）：`2026-04-01T13:22:34Z`
 
-### Core Metrics
+### 核心统计
 
-| Metric | Value |
+| 指标 | 数值 |
 | :-- | --: |
-| Total Lines (Non-empty) | 21092 |
-| Java API Endpoints | 53 |
-| Python API Endpoints | 27 |
+| 代码总行数（非空行） | 21123 |
+| Java 接口数 | 53 |
+| Python 接口数 | 27 |
 
-### Language Distribution
+### 语言占比图
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables': {
@@ -45,12 +45,12 @@
   'pie10': '#A855F7'
 }}}%%
 pie showData
-    "HTML (37.15%)" : 7835
-    "Java (26.72%)" : 5635
-    "CSS (13.45%)" : 2837
-    "Markdown (9.48%)" : 1999
-    "Python (7.50%)" : 1581
-    "JavaScript (3.18%)" : 670
+    "HTML (37.09%)" : 7835
+    "Java (26.68%)" : 5635
+    "CSS (13.43%)" : 2837
+    "Markdown (9.61%)" : 2030
+    "Python (7.48%)" : 1581
+    "JavaScript (3.17%)" : 670
     "YAML (1.69%)" : 356
     "SQL (0.82%)" : 174
     "Shell (0.02%)" : 5
