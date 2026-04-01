@@ -55,6 +55,7 @@ MYSQL_ROOT_PASSWORD=请替换为强密码
 JAVA_DB_PASSWORD=请替换为 Java 数据库用户密码
 PYTHON_DB_PASSWORD=请替换为 Python 数据库用户密码
 REDIS_PASSWORD=请替换为强密码
+SPRING_PROFILES_ACTIVE=prod
 
 JAVA_HOST_PORT=80
 PYTHON_HOST_PORT=8080
@@ -71,6 +72,24 @@ REDIS_HOST_PORT=6379
 ```bash
 docker compose up -d --build
 ```
+
+> 首次部署或 Dockerfile/依赖变更时使用 `--build`。
+> 仅修改 `.env`、`docker-compose*.yml` 或运行参数时，可直接：
+> `docker compose up -d`（更快，无需重建镜像）。
+
+---
+
+## 4.1 项目更新后是否必须重新构建？
+
+- **代码更新（Java/Python 源码变化）**：需要重建镜像，建议使用：
+  ```bash
+  docker compose up -d --build
+  ```
+- **仅配置更新（环境变量、端口映射、profile）**：通常不需要重建，使用：
+  ```bash
+  docker compose up -d
+  ```
+- **更方便的选择**：开发阶段可直接在宿主机运行后端（参考 `java_deploy_linux.md`、`python_deploy_linux.md`），仅将 MySQL/Redis 用 Docker 托管，减少反复镜像构建时间。
 
 查看状态：
 
@@ -151,3 +170,28 @@ docker compose down -v
 
 3. **YOLO 模型首次运行下载**
    - `ultralytics` 首次可能下载模型，请确保网络可访问相应源。
+
+4. **Docker 构建时可否为后端选择配置文件？**
+   - **可以**。
+   - Java 后端默认读取 `SPRING_PROFILES_ACTIVE`，可在 `.env` 中设置，例如：
+   ```ini
+   SPRING_PROFILES_ACTIVE=dev
+   ```
+   - 启动时也可临时覆盖：
+   ```bash
+   SPRING_PROFILES_ACTIVE=prod docker compose up -d
+   ```
+
+5. **按需求使用 root 身份连接 MySQL（专用覆盖文件）**
+   - 本仓库提供两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
+     - `docker-compose.java-root.yml`：Java 使用 `root / ~springboot1794Zz!`
+     - `docker-compose.python-root.yml`：Python 使用 `root / ~flask2417Zz!`
+   - **注意**：同一个 MySQL 实例只能有一个 root 密码，因此两个覆盖文件应分场景分别使用，不要同时叠加。
+   - Java 场景（含 root 密码覆盖）：
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.java-root.yml up -d --build
+   ```
+   - Python 场景（含 root 密码覆盖）：
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.python-root.yml up -d --build
+   ```
