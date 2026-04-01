@@ -31,7 +31,9 @@ jobs:
             set -euo pipefail
             DEPLOY_PATH="${DEPLOY_PATH:-/opt/BUCT-Teaching-Aids}"
             cd "${DEPLOY_PATH}/docker"
-            cat > .env <<EOF
+            ENV_FILE="$(mktemp /tmp/buctta-deploy-env.XXXXXX)"
+            trap 'rm -f "${ENV_FILE}"' EXIT
+            cat > "${ENV_FILE}" <<EOF
             MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             DOCKER_DB_PASSWORD=${DOCKER_DB_PASSWORD}
             REDIS_PASSWORD=${REDIS_PASSWORD}
@@ -41,4 +43,4 @@ jobs:
             MYSQL_HOST_PORT=${MYSQL_HOST_PORT}
             REDIS_HOST_PORT=${REDIS_HOST_PORT}
             EOF
-            docker compose up -d --build
+            docker compose --env-file "${ENV_FILE}" up -d --build
