@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = ROOT_DIR / "README.md"
-GENERATED_DIR = ROOT_DIR / "script" / "generated"
+GENERATED_DIR = ROOT_DIR / "scripts" / "generated"
 STATS_JSON_PATH = GENERATED_DIR / "stats.json"
 STATS_MD_PATH = GENERATED_DIR / "README_STATS.md"
 
@@ -109,11 +109,11 @@ def build_stats_markdown(stats: dict) -> str:
 
     return "\n".join(
         [
-            "## 项目统计",
+            "# Comment translated to English.
             "",
             f"> 统计更新时间（UTC）：`{stats['updated_at_utc']}`",
             "",
-            "### 核心统计",
+            "# Comment translated to English.
             "",
             "| 指标 | 数值 |",
             "| :-- | --: |",
@@ -121,7 +121,7 @@ def build_stats_markdown(stats: dict) -> str:
             f"| Java 接口数 | {stats['java_endpoint_count']} |",
             f"| Python 接口数 | {stats['python_endpoint_count']} |",
             "",
-            "### 语言占比图",
+            "# Comment translated to English.
             "",
             "```mermaid",
             "%%{init: {'theme':'base','themeVariables': {",
