@@ -94,8 +94,8 @@ def collect_stats() -> dict:
         "total_lines": total_lines,
         "language_count": len(sorted_language_lines),
         "top_language": top_language,
-        "java_interface_count": java_endpoints,
-        "python_interface_count": python_endpoints,
+        "java_endpoint_count": java_endpoints,
+        "python_endpoint_count": python_endpoints,
         "language_lines": sorted_language_lines,
     }
 
@@ -127,8 +127,8 @@ def build_stats_markdown(stats: dict) -> str:
             f"| 代码总行数（非空行） | {stats['total_lines']} |",
             f"| 语言数量 | {stats['language_count']} |",
             f"| 使用最多的语言 | {stats['top_language']} |",
-            f"| Java 接口数 | {stats['java_interface_count']} |",
-            f"| Python 接口数 | {stats['python_interface_count']} |",
+            f"| Java 接口数 | {stats['java_endpoint_count']} |",
+            f"| Python 接口数 | {stats['python_endpoint_count']} |",
             "",
             "### 各语言代码行数",
             "",
