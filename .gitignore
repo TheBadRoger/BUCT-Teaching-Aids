@@ -37,3 +37,12 @@ replay_pid*
 # Python cache
 __pycache__/
 *.pyc
+
+# JetBrains local state (shared configs in .idea are intentionally versioned)
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/httpRequests/
+.idea/queries/
+.idea/dataSources/
+.idea/dataSources.local.xml

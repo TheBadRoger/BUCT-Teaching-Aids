@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JavaAPI Debug" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="japi" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.buctta.api.JavaApiApplication" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/API/JavaAPI" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
