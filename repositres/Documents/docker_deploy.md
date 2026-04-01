@@ -34,7 +34,7 @@ docker/
 │   └── Dockerfile
 └── mysql/
     └── init/
-        └── 01-init-users.sql
+        └── 01-init-users.sh
 ```
 
 ---
@@ -52,6 +52,8 @@ cp .env.example .env
 
 ```ini
 MYSQL_ROOT_PASSWORD=请替换为强密码
+JAVA_DB_PASSWORD=请替换为 Java 数据库用户密码
+PYTHON_DB_PASSWORD=请替换为 Python 数据库用户密码
 REDIS_PASSWORD=请替换为强密码
 
 JAVA_HOST_PORT=80
@@ -126,7 +128,7 @@ docker compose down -v
    - 与现有 `config.py` 的 `PORT` 环境变量读取机制保持一致。
 
 3. **数据库初始化**
-   - `mysql/init/01-init-users.sql` 在 MySQL 首次初始化时创建项目所需用户并授权：
+   - `mysql/init/01-init-users.sh` 在 MySQL 首次初始化时读取环境变量并创建项目所需用户与授权：
      - `java_springboot_buctta`
      - `python_flask_buctta`
 
@@ -149,4 +151,3 @@ docker compose down -v
 
 3. **YOLO 模型首次运行下载**
    - `ultralytics` 首次可能下载模型，请确保网络可访问相应源。
-

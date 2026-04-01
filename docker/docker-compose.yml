@@ -6,6 +6,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: BUCTTA_DATABASE
+      JAVA_DB_PASSWORD: ${JAVA_DB_PASSWORD}
+      PYTHON_DB_PASSWORD: ${PYTHON_DB_PASSWORD}
     command: >
       --default-authentication-plugin=mysql_native_password
     ports:
@@ -14,7 +16,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_ROOT_PASSWORD mysql -uroot -h localhost -e 'SELECT 1'"]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -27,7 +29,7 @@ services:
     ports:
       - "${REDIS_HOST_PORT}:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "PING"]
+      test: ["CMD-SHELL", "REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli PING"]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -48,7 +50,7 @@ services:
       SERVER_PORT: 80
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BUCTTA_DATABASE?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: java_springboot_buctta
-      SPRING_DATASOURCE_PASSWORD: ~springboot1794Zz!
+      SPRING_DATASOURCE_PASSWORD: ${JAVA_DB_PASSWORD}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
@@ -70,7 +72,7 @@ services:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: python_flask_buctta
-      MYSQL_PASSWORD: python_flask_buctta_pwd
+      MYSQL_PASSWORD: ${PYTHON_DB_PASSWORD}
       MYSQL_DB: BUCTTA_DATABASE
     ports:
       - "${PYTHON_HOST_PORT}:8080"
