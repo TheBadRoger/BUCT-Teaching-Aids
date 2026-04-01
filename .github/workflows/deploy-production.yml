@@ -14,6 +14,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           DOCKER_DB_PASSWORD: ${{ secrets.DOCKER_DB_PASSWORD }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          DEPLOY_PATH: ${{ secrets.PROD_DEPLOY_PATH }}
           SPRING_PROFILES_ACTIVE: prod
           JAVA_HOST_PORT: "80"
           PYTHON_HOST_PORT: "8080"
@@ -23,10 +24,11 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          envs: MYSQL_ROOT_PASSWORD,DOCKER_DB_PASSWORD,REDIS_PASSWORD,SPRING_PROFILES_ACTIVE,JAVA_HOST_PORT,PYTHON_HOST_PORT,MYSQL_HOST_PORT,REDIS_HOST_PORT
+          envs: MYSQL_ROOT_PASSWORD,DOCKER_DB_PASSWORD,REDIS_PASSWORD,DEPLOY_PATH,SPRING_PROFILES_ACTIVE,JAVA_HOST_PORT,PYTHON_HOST_PORT,MYSQL_HOST_PORT,REDIS_HOST_PORT
           script: |
             set -euo pipefail
-            cd /opt/BUCT-Teaching-Aids/docker
+            DEPLOY_PATH="${DEPLOY_PATH:-/opt/BUCT-Teaching-Aids}"
+            cd "${DEPLOY_PATH}/docker"
             cat > .env <<EOF
             MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             DOCKER_DB_PASSWORD=${DOCKER_DB_PASSWORD}
