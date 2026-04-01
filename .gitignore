@@ -33,3 +33,7 @@ replay_pid*
 /.env/*.env
 /docker/.env
 /API/PythonAPI/.env
+
+# Python cache
+__pycache__/
+*.pyc
