@@ -1,9 +1,5 @@
 services:
-  mysql:
-    environment:
-      MYSQL_ROOT_PASSWORD: "~flask2417Zz!"
-
   python-backend:
     environment:
       MYSQL_USER: root
-      MYSQL_PASSWORD: "~flask2417Zz!"
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
