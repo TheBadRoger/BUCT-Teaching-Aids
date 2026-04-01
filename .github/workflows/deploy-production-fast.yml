@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Production (No Rebuild)
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Deploy over SSH
+      - name: Deploy over SSH without rebuilding images
         uses: appleboy/ssh-action@v1.2.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -43,4 +43,4 @@ jobs:
             MYSQL_HOST_PORT=${MYSQL_HOST_PORT}
             REDIS_HOST_PORT=${REDIS_HOST_PORT}
             EOF
-            docker compose --env-file "${ENV_FILE}" up -d --build
+            docker compose --env-file "${ENV_FILE}" up -d

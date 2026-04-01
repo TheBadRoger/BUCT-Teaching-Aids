@@ -216,11 +216,20 @@ docker compose down -v
         - `MYSQL_ROOT_PASSWORD`
         - `DOCKER_DB_PASSWORD`
         - `REDIS_PASSWORD`
-     3) 使用仓库内工作流 `.github/workflows/deploy-production.yml` 手动触发部署（`workflow_dispatch`）。
-   - 该工作流会在服务器上生成 `docker/.env` 并执行：
+     3) 使用仓库内工作流手动触发部署（`workflow_dispatch`）：
+        - `.github/workflows/deploy-production.yml`（会重建镜像）
+        - `.github/workflows/deploy-production-fast.yml`（不重建镜像，快速重启）
+   - 两个工作流都会在服务器上创建临时 env 文件，并执行：
    ```bash
+   # 重建镜像
    docker compose up -d --build
+   # 或：不重建镜像
+   docker compose up -d
    ```
+   - 宿主机环境变量影响说明：
+     - **不会修改实体机的全局环境变量**（不会写入 `/etc/environment`、`~/.bashrc` 等）；
+     - 变量仅在当前 SSH 部署进程与 Docker Compose 命令执行期间生效；
+     - 工作流使用临时 env 文件（`mktemp`）并在执行结束后删除，避免在服务器残留明文凭据。
    - 安全建议：
      - 不要将真实口令写入仓库文件；
      - 仅在 GitHub Secrets/Environment Secrets 中维护生产口令；
