@@ -192,11 +192,16 @@ docker compose down -v
    ```bash
    docker compose -f docker-compose.yml -f docker-compose.java-root.yml up -d --build
    ```
-   - Python 场景（含 root 密码覆盖）：
-   ```bash
+    - Python 场景（含 root 密码覆盖）：
+    ```bash
    docker compose -f docker-compose.yml -f docker-compose.python-root.yml up -d --build
-   ```
-    - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
+    ```
+    - **不要同时叠加两个 root 覆盖文件**，否则 Java/Python 会同时改用 root 账户，偏离“按场景单独覆盖”的设计意图：
+    ```bash
+    # 不推荐（不要这样做）
+    docker compose -f docker-compose.yml -f docker-compose.java-root.yml -f docker-compose.python-root.yml up -d --build
+    ```
+     - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
      - 当前统一口令如下（Java/Python 场景一致，仅 Docker 场景使用）：
      ```ini
     DOCKER_DB_PASSWORD=your_shared_docker_db_password
