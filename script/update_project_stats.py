@@ -102,48 +102,43 @@ def collect_stats() -> dict:
 
 def build_stats_markdown(stats: dict) -> str:
     total = stats["total_lines"] or 1
-    rows = []
+    pie_rows = []
     for language, lines in stats["language_lines"].items():
         percent = lines / total * 100
-        rows.append(f"| {language} | {lines} | {percent:.2f}% |")
-
-    pie_rows = []
-    palette = ["#5B8FF9", "#5AD8A6", "#5D7092", "#F6BD16", "#E8684A", "#6DC8EC", "#9270CA"]
-    for idx, (language, lines) in enumerate(stats["language_lines"].items()):
-        percent = lines / total * 100
-        color = palette[idx % len(palette)]
         pie_rows.append(f'    "{language} ({percent:.2f}%)" : {lines}')
 
     return "\n".join(
         [
-            "## 项目统计",
+            "## Project Statistics",
             "",
-            f"> 统计更新时间（UTC）：`{stats['updated_at_utc']}`",
+            f"> Updated (UTC): `{stats['updated_at_utc']}`",
             "",
-            "### 核心统计",
+            "### Core Metrics",
             "",
-            "| 指标 | 数值 |",
+            "| Metric | Value |",
             "| :-- | --: |",
-            f"| 代码总行数（非空行） | {stats['total_lines']} |",
-            f"| 语言数量 | {stats['language_count']} |",
-            f"| 使用最多的语言 | {stats['top_language']} |",
-            f"| Java 接口数 | {stats['java_endpoint_count']} |",
-            f"| Python 接口数 | {stats['python_endpoint_count']} |",
+            f"| Total Lines (Non-empty) | {stats['total_lines']} |",
+            f"| Java API Endpoints | {stats['java_endpoint_count']} |",
+            f"| Python API Endpoints | {stats['python_endpoint_count']} |",
             "",
-            "### 各语言代码行数",
-            "",
-            "| 语言 | 行数 | 占比 |",
-            "| :-- | --: | --: |",
-            *rows,
-            "",
-            "### 语言占比图",
+            "### Language Distribution",
             "",
             "```mermaid",
             "%%{init: {'theme':'base','themeVariables': {",
-            "  'fontFamily': 'JetBrains Mono, Fira Code, Consolas, monospace',",
+            "  'fontFamily': 'Fira Code, JetBrains Mono, Source Code Pro, Cascadia Code, Menlo, Consolas, monospace',",
             "  'pieStrokeColor': 'transparent',",
             "  'pieStrokeWidth': '0px',",
-            "  'pieOuterStrokeWidth': '0px'",
+            "  'pieOuterStrokeWidth': '0px',",
+            "  'pie1': '#FF4D6D',",
+            "  'pie2': '#FF8E3C',",
+            "  'pie3': '#FFD60A',",
+            "  'pie4': '#22C55E',",
+            "  'pie5': '#00D1FF',",
+            "  'pie6': '#4F46E5',",
+            "  'pie7': '#D946EF',",
+            "  'pie8': '#14B8A6',",
+            "  'pie9': '#F97316',",
+            "  'pie10': '#A855F7'",
             "}}}%%",
             "pie showData",
             *pie_rows,
