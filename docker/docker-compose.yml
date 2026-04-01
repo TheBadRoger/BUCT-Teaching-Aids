@@ -6,8 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: BUCTTA_DATABASE
-      JAVA_DB_PASSWORD: ${DOCKER_DB_PASSWORD}
-      PYTHON_DB_PASSWORD: ${DOCKER_DB_PASSWORD}
+      DOCKER_DB_PASSWORD: ${DOCKER_DB_PASSWORD}
     command: >
       --default-authentication-plugin=mysql_native_password
     ports:
