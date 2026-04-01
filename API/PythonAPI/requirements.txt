@@ -29,7 +29,7 @@ face-recognition==1.3.0
 face-recognition-models==0.3.0
 
 # YOLO pose estimation (headup_rate module)
-ultralytics==8.12.0
+ultralytics==8.4.33
 
 # Data analysis (ai_classroom module)
 pandas==2.0.3
