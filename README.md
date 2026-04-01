@@ -1,33 +1,36 @@
 # 北化教学辅助系统
 
 <p align="center">
-  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
-  <a href="./README.md"><img alt="Project Type" src="https://img.shields.io/badge/Project%20Type-Faculty--level%20Project-7A3E65" /></a>
-  <img alt="Java" src="https://img.shields.io/badge/Java-25-437291?logo=openjdk&logoColor=white" />
-  <img alt="Python" src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" />
-  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Build" /></a>
-  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml"><img alt="Unit Tests" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Unit%20Tests" /></a>
+  <strong>项目信息</strong><br />
+  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/github/license/TheBadRoger/BUCT-Teaching-Aids?style=flat-square&labelColor=0f172a&color=64748b" /></a>
+  <a href="./README.md"><img alt="Project Type" src="https://img.shields.io/badge/Project%20Type-Faculty--level%20Project-6366f1?style=flat-square&labelColor=0f172a" /></a>
+  <a href="https://openjdk.org/projects/jdk/25/"><img alt="Java" src="https://img.shields.io/badge/Java-25-0ea5e9?logo=openjdk&logoColor=white&style=flat-square&labelColor=0f172a" /></a>
+  <a href="https://www.python.org/downloads/release/python-3110/"><img alt="Python" src="https://img.shields.io/badge/Python-3.11-3b82f6?logo=python&logoColor=white&style=flat-square&labelColor=0f172a" /></a>
+  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/commits/main"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/TheBadRoger/BUCT-Teaching-Aids?style=flat-square&labelColor=0f172a&color=06b6d4" /></a>
+  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids"><img alt="Repo Size" src="https://img.shields.io/github/repo-size/TheBadRoger/BUCT-Teaching-Aids?style=flat-square&labelColor=0f172a&color=14b8a6" /></a>
   <br /><br />
-  <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TheBadRoger/BUCT-Teaching-Aids?label=Last%20Commit" />
-  <img alt="Repo Size" src="https://img.shields.io/github/repo-size/TheBadRoger/BUCT-Teaching-Aids?label=Repo%20Size" />
-  <img alt="Total Lines" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.total_lines&label=Total%20Lines&color=3B82F6" />
-  <img alt="Language Count" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.language_count&label=Language%20Count&color=10B981" />
-  <img alt="Top Language" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.top_language&label=Top%20Language&color=8B5CF6" />
+  <strong>代码统计</strong><br />
+  <a href="#项目统计"><img alt="Total Lines" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.total_lines&label=Total%20Lines&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
+  <a href="#项目统计"><img alt="Language Count" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.language_count&label=Language%20Count&style=flat-square&labelColor=0f172a&color=0ea5e9" /></a>
+  <a href="#项目统计"><img alt="Top Language" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fstats.json&query=%24.top_language&label=Top%20Language&style=flat-square&labelColor=0f172a&color=a855f7" /></a>
+  <br /><br />
+  <strong>CI状态</strong><br />
+  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Build&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
+  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/ci.yml"><img alt="Unit Tests" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/ci.yml?branch=main&label=Unit%20Tests&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
 </p>
 
 <!-- STATS_SECTION_START -->
-
 ## 项目统计
 
-> 统计更新时间（UTC）：`2026-04-01T13:30:57Z`
+> 统计更新时间（UTC+8）：`2026-04-02 00:17:05`
 
 ### 核心统计
 
-| 指标                 |  数值 |
-| :------------------- | ----: |
-| 代码总行数（非空行） | 21123 |
-| Java 接口数          |    53 |
-| Python 接口数        |    27 |
+| 指标 | 数值 |
+| :-- | --: |
+| 代码总行数（非空行） | 21180 |
+| Java 接口数 | 53 |
+| Python 接口数 | 27 |
 
 ### 语言占比图
 
@@ -49,17 +52,16 @@
   'pie10': '#A855F7'
 }}}%%
 pie showData
-    "HTML (37.09%)" : 7835
-    "Java (26.68%)" : 5635
-    "CSS (13.43%)" : 2837
-    "Markdown (9.61%)" : 2030
-    "Python (7.48%)" : 1581
-    "JavaScript (3.17%)" : 670
-    "YAML (1.69%)" : 356
+    "HTML (36.99%)" : 7835
+    "Java (26.61%)" : 5635
+    "CSS (13.39%)" : 2837
+    "Markdown (9.84%)" : 2085
+    "Python (7.47%)" : 1583
+    "JavaScript (3.16%)" : 670
+    "YAML (1.68%)" : 356
     "SQL (0.82%)" : 174
     "Shell (0.02%)" : 5
 ```
-
 <!-- STATS_SECTION_END -->
 
 ## 开发框架简介
