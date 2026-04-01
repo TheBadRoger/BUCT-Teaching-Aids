@@ -1,0 +1,11 @@
+CREATE USER IF NOT EXISTS 'java_springboot_buctta'@'%' IDENTIFIED BY '~springboot1794Zz!';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
+    ON BUCTTA_DATABASE.*
+    TO 'java_springboot_buctta'@'%';
+
+CREATE USER IF NOT EXISTS 'python_flask_buctta'@'%' IDENTIFIED BY 'python_flask_buctta_pwd';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES
+    ON BUCTTA_DATABASE.*
+    TO 'python_flask_buctta'@'%';
+
+FLUSH PRIVILEGES;

@@ -53,5 +53,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 |后端接口文档|[Java](./repositres/Documents/JavaAPIDoc.md)|[Python](./repositres/Documents/PythonAPIDoc.md)|
 |Java后端部署方法|[Windows](./repositres/Documents/java_deploy_win.md)|[Ubuntu Linux](./repositres/Documents/java_deploy_linux.md)|
 |Python后端部署方法| - |[Ubuntu Linux](./repositres/Documents/python_deploy_linux.md)|
+|Docker部署方法|[Docker](./repositres/Documents/docker_deploy.md)|-|
 
 > [Python后端项目详解](./repositres/Documents/python_api_intro.md)
