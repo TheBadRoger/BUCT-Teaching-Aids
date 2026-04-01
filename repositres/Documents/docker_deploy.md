@@ -1,0 +1,152 @@
+# Docker 部署说明（Java + Python 同容器编排）
+
+本文档说明如何使用 Docker 在同一套编排中同时部署：
+
+- Java 后端（容器内端口 `80`）
+- Python 后端（容器内端口 `8080`）
+- MySQL（供两个后端共享）
+- Redis（供 Java 后端使用）
+
+> 相关依赖项已参考现有部署文档：`java_deploy_linux.md`、`python_deploy_linux.md`。
+
+---
+
+## 1. 前置条件
+
+请先安装以下工具：
+
+- Docker Engine
+- Docker Compose（`docker compose` 子命令）
+
+---
+
+## 2. 目录说明
+
+本次 Docker 部署文件位于项目根目录的 `docker/` 下：
+
+```text
+docker/
+├── .env.example
+├── docker-compose.yml
+├── java/
+│   └── Dockerfile
+├── python/
+│   └── Dockerfile
+└── mysql/
+    └── init/
+        └── 01-init-users.sql
+```
+
+---
+
+## 3. 配置环境变量
+
+进入 Docker 目录并复制模板：
+
+```bash
+cd /path/to/BUCT-Teaching-Aids/docker
+cp .env.example .env
+```
+
+编辑 `.env`，至少修改以下字段：
+
+```ini
+MYSQL_ROOT_PASSWORD=请替换为强密码
+REDIS_PASSWORD=请替换为强密码
+
+JAVA_HOST_PORT=80
+PYTHON_HOST_PORT=8080
+MYSQL_HOST_PORT=3306
+REDIS_HOST_PORT=6379
+```
+
+---
+
+## 4. 启动服务
+
+在 `docker/` 目录执行：
+
+```bash
+docker compose up -d --build
+```
+
+查看状态：
+
+```bash
+docker compose ps
+```
+
+查看日志：
+
+```bash
+docker compose logs -f
+```
+
+---
+
+## 5. 端口与访问
+
+容器内端口规划（避免冲突）：
+
+- Java 后端：`80`
+- Python 后端：`8080`
+
+默认主机映射（可在 `.env` 调整）：
+
+- Java：`http://<服务器IP>:80`
+- Python：`http://<服务器IP>:8080`
+- Python 健康检查：`http://<服务器IP>:8080/health`
+
+---
+
+## 6. 停止与清理
+
+停止服务：
+
+```bash
+docker compose down
+```
+
+同时删除数据卷（会清空 MySQL 数据）：
+
+```bash
+docker compose down -v
+```
+
+---
+
+## 7. 实现说明（与项目现有配置的对应关系）
+
+1. **Java 容器内端口 80**
+   - 在 `docker-compose.yml` 中为 Java 服务注入 `SERVER_PORT=80`。
+   - 保持 `SPRING_PROFILES_ACTIVE=prod`，并通过环境变量覆盖数据库与 Redis 地址（容器内服务名 `mysql`、`redis`）。
+
+2. **Python 容器内端口 8080**
+   - 在 `docker-compose.yml` 中为 Python 服务注入 `PORT=8080`。
+   - 与现有 `config.py` 的 `PORT` 环境变量读取机制保持一致。
+
+3. **数据库初始化**
+   - `mysql/init/01-init-users.sql` 在 MySQL 首次初始化时创建项目所需用户并授权：
+     - `java_springboot_buctta`
+     - `python_flask_buctta`
+
+4. **与现有部署文档一致的依赖思路**
+   - Java 镜像基于 JDK 25 + Maven 构建。
+   - Python 镜像安装了现有文档提到的关键系统依赖（OpenCV / cmake / build-essential / boost）与 `requirements.txt`。
+
+---
+
+## 8. 常见问题
+
+1. **80 端口被占用**
+   - 修改 `.env` 中 `JAVA_HOST_PORT`，例如改成 `8081`，然后重启：
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Python 第一次构建较慢**
+   - `face-recognition` 等依赖需要编译，首次构建耗时较长，属正常现象。
+
+3. **YOLO 模型首次运行下载**
+   - `ultralytics` 首次可能下载模型，请确保网络可访问相应源。
+
