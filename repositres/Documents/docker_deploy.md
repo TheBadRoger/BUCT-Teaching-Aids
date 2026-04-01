@@ -51,7 +51,7 @@ cp .env.example .env
 编辑 `.env`，至少修改以下字段：
 
 ```ini
-MYSQL_ROOT_PASSWORD=请替换为强密码
+MYSQL_ROOT_PASSWORD=请替换为当前场景的root密码（Java场景可设为~springboot1794Zz!，Python场景可设为~flask2417Zz!）
 JAVA_DB_PASSWORD=请替换为 Java 数据库用户密码
 PYTHON_DB_PASSWORD=请替换为 Python 数据库用户密码
 REDIS_PASSWORD=请替换为强密码
@@ -162,7 +162,7 @@ docker compose down -v
 1. **80 端口被占用**
    - 修改 `.env` 中 `JAVA_HOST_PORT`，例如改成 `8081`，然后重启：
    ```bash
-   docker compose up -d --build
+   docker compose up -d
    ```
 
 2. **Python 第一次构建较慢**
@@ -184,8 +184,8 @@ docker compose down -v
 
 5. **按需求使用 root 身份连接 MySQL（专用覆盖文件）**
    - 本仓库提供两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
-     - `docker-compose.java-root.yml`：Java 使用 `root / ~springboot1794Zz!`
-     - `docker-compose.python-root.yml`：Python 使用 `root / ~flask2417Zz!`
+    - `docker-compose.java-root.yml`：Java 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+    - `docker-compose.python-root.yml`：Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
    - **注意**：同一个 MySQL 实例只能有一个 root 密码，因此两个覆盖文件应分场景分别使用，不要同时叠加。
    - Java 场景（含 root 密码覆盖）：
    ```bash
@@ -194,4 +194,13 @@ docker compose down -v
    - Python 场景（含 root 密码覆盖）：
    ```bash
    docker compose -f docker-compose.yml -f docker-compose.python-root.yml up -d --build
+   ```
+   - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
+   - 若你需要按指定口令部署，请在 `.env` 自行填入对应值：
+   ```ini
+   # Java 场景
+   MYSQL_ROOT_PASSWORD=your_java_root_password
+
+   # Python 场景（切换前请先 down 再 up）
+   MYSQL_ROOT_PASSWORD=your_python_root_password
    ```
