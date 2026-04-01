@@ -51,10 +51,10 @@ cp .env.example .env
 编辑 `.env`，至少修改以下字段：
 
 ```ini
-MYSQL_ROOT_PASSWORD=${BUCTTA_MYSQL_ROOT_PASSWORD}
-JAVA_DB_PASSWORD=${BUCTTA_JAVA_DB_PASSWORD}
-PYTHON_DB_PASSWORD=${BUCTTA_PYTHON_DB_PASSWORD}
-REDIS_PASSWORD=${REDIS_PASSWORD}
+MYSQL_ROOT_PASSWORD=your_mysql_root_password
+JAVA_DB_PASSWORD=your_java_db_password
+PYTHON_DB_PASSWORD=your_python_db_password
+REDIS_PASSWORD=your_redis_password
 SPRING_PROFILES_ACTIVE=prod
 
 JAVA_HOST_PORT=80
@@ -173,14 +173,15 @@ docker compose down -v
 
 4. **Docker 构建时可否为后端选择配置文件？**
    - **可以**。
-   - Java 后端默认读取 `SPRING_PROFILES_ACTIVE`，可在 `.env` 中设置，例如：
+- Java 后端默认读取 `SPRING_PROFILES_ACTIVE`，可在 `.env` 中设置，例如：
    ```ini
    SPRING_PROFILES_ACTIVE=dev
    ```
    - 启动时也可临时覆盖：
    ```bash
-   SPRING_PROFILES_ACTIVE=prod docker compose up -d
-   ```
+    SPRING_PROFILES_ACTIVE=prod docker compose up -d
+    ```
+   - 建议将真实口令保存在项目根目录的 `.env/secrets.env` 中，再手动同步到 `docker/.env`，避免凭据直接写入文档或源码模板。
 
 5. **按需求使用 root 身份连接 MySQL（专用覆盖文件）**
    - 本仓库提供两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
