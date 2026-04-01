@@ -36,7 +36,7 @@
 登陆后进入MySQL Shell，输入如下命令创建后端服务账号和数据库：
 ```sql
 CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE;
-CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '~springboot1794Zz!';
+CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY '${BUCTTA_JAVA_DB_PASSWORD}';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW 
     ON BUCTTA_DATABASE.* 
     TO 'java_springboot_buctta'@'localhost';

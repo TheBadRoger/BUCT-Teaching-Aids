@@ -8,7 +8,7 @@ load_dotenv()
 _MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
 _MYSQL_PORT = os.environ.get('MYSQL_PORT', '3306')
 _MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
-_MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', '~dockerdeploy91734Zz!')
+_MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', os.environ.get('BUCTTA_PYTHON_DB_PASSWORD', ''))
 _MYSQL_DB = os.environ.get('MYSQL_DB', 'BUCTTA_DATABASE')
 _DEFAULT_DB_URL = (
     f"mysql+pymysql://{_MYSQL_USER}:{_MYSQL_PASSWORD}@"

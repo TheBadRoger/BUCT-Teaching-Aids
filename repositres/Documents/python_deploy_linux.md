@@ -60,7 +60,7 @@ sudo mysql
 
 CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE USER 'python_flask_buctta'@'localhost' IDENTIFIED BY '~dockerdeploy91734Zz!';
+CREATE USER 'python_flask_buctta'@'localhost' IDENTIFIED BY '${BUCTTA_PYTHON_DB_PASSWORD}';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES
     ON BUCTTA_DATABASE.*
@@ -123,7 +123,7 @@ SECRET_KEY=<随机安全密钥，可用 python3 -c "import secrets; print(secret
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_USER=python_flask_buctta
-MYSQL_PASSWORD=~dockerdeploy91734Zz!
+MYSQL_PASSWORD=${BUCTTA_PYTHON_DB_PASSWORD}
 MYSQL_DB=BUCTTA_DATABASE
 ```
 
