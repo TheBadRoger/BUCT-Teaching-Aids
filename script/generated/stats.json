@@ -1,10 +1,10 @@
 {
-  "updated_at_utc": "2026-04-01T12:14:36Z",
+  "updated_at_utc": "2026-04-01T12:15:38Z",
   "total_lines": 21136,
   "language_count": 9,
   "top_language": "HTML",
-  "java_interface_count": 53,
-  "python_interface_count": 27,
+  "java_endpoint_count": 53,
+  "python_endpoint_count": 27,
   "language_lines": {
     "HTML": 7835,
     "Java": 5635,
