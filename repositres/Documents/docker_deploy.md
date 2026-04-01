@@ -209,9 +209,10 @@ docker compose down -v
 
 6. **如何在生产环境用 GitHub Actions + Secrets 管理环境变量？**
    - 推荐做法：
-     1) 在仓库中创建 `production` 环境（Settings → Environments）
+     1) 在仓库中创建 `production` 环境 (Settings → Environments)
      2) 在该环境中配置 Secrets（至少）：
         - `PROD_HOST`、`PROD_USER`、`PROD_SSH_KEY`
+        - `PROD_DEPLOY_PATH`（可选，默认 `/opt/BUCT-Teaching-Aids`）
         - `MYSQL_ROOT_PASSWORD`
         - `DOCKER_DB_PASSWORD`
         - `REDIS_PASSWORD`
