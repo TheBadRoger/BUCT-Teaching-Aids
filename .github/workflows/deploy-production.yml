@@ -14,7 +14,6 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          DOCKER_DB_PASSWORD: ${{ secrets.DOCKER_DB_PASSWORD }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           DEPLOY_PATH: ${{ secrets.PROD_DEPLOY_PATH }}
           SPRING_PROFILES_ACTIVE: prod
@@ -26,7 +25,7 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          envs: MYSQL_ROOT_PASSWORD,DOCKER_DB_PASSWORD,REDIS_PASSWORD,DEPLOY_PATH,SPRING_PROFILES_ACTIVE,JAVA_HOST_PORT,PYTHON_HOST_PORT,MYSQL_HOST_PORT,REDIS_HOST_PORT
+          envs: MYSQL_ROOT_PASSWORD,REDIS_PASSWORD,DEPLOY_PATH,SPRING_PROFILES_ACTIVE,JAVA_HOST_PORT,PYTHON_HOST_PORT,MYSQL_HOST_PORT,REDIS_HOST_PORT
           script: |
             set -euo pipefail
             DEPLOY_PATH="${DEPLOY_PATH:-/opt/BUCT-Teaching-Aids}"
@@ -35,7 +34,6 @@ jobs:
             trap 'rm -f "${ENV_FILE}"' EXIT
             cat > "${ENV_FILE}" <<EOF
             MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            DOCKER_DB_PASSWORD=${DOCKER_DB_PASSWORD}
             REDIS_PASSWORD=${REDIS_PASSWORD}
             SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
             JAVA_HOST_PORT=${JAVA_HOST_PORT}
