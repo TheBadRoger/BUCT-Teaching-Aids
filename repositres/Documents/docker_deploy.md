@@ -53,7 +53,7 @@ cp .env.example .env
 ```ini
 MYSQL_ROOT_PASSWORD=your_mysql_root_password
 REDIS_PASSWORD=your_redis_password
-SPRING_PROFILES_ACTIVE=prod
+SPRING_PROFILES_ACTIVE=docker
 
 JAVA_HOST_PORT=80
 PYTHON_HOST_PORT=8080
@@ -138,18 +138,19 @@ docker compose down -v
 
 1. **Java 容器内端口 80**
    - 在 `docker-compose.yml` 中为 Java 服务注入 `SERVER_PORT=80`。
-   - 保持 `SPRING_PROFILES_ACTIVE=prod`，并通过环境变量覆盖数据库与 Redis 地址（容器内服务名 `mysql`、`redis`）。
+   - Docker 默认使用 `SPRING_PROFILES_ACTIVE=docker`，并通过环境变量覆盖数据库与 Redis 地址（容器内服务名 `mysql`、`redis`）。
 
 2. **Python 容器内端口 8080**
    - 在 `docker-compose.yml` 中为 Python 服务注入 `PORT=8080`。
    - 与现有 `config.py` 的 `PORT` 环境变量读取机制保持一致。
 
 3. **数据库初始化**
-   - MySQL 首次初始化时会基于 `MYSQL_ROOT_PASSWORD` 初始化 root 口令，并创建 `BUCTTA_DATABASE`。
-   - Docker 默认场景下，Java/Python 均使用 root 账户连接数据库。
+    - MySQL 首次初始化时会基于 `MYSQL_ROOT_PASSWORD` 初始化 root 口令，并创建 `BUCTTA_DATABASE`。
+   - `docker/mysql/init/02-init-schema.sql` 会在 MySQL 初始化阶段执行建表脚本（来自原 Flyway V1 脚本）。
+    - Docker 默认场景下，Java/Python 均使用 root 账户连接数据库。
 
 4. **与现有部署文档一致的依赖思路**
-   - Java 镜像基于 JDK 25 + Maven 构建。
+   - Java 镜像基于 JDK 25 + Maven 构建，Docker 构建使用 `-Pdocker` 排除 Flyway 依赖与 `dbmigrate` 脚本打包。
    - Python 镜像安装了现有文档提到的关键系统依赖（OpenCV / cmake / build-essential / boost）与 `requirements.txt`。
 
 ---
@@ -172,11 +173,11 @@ docker compose down -v
    - **可以**。
 - Java 后端默认读取 `SPRING_PROFILES_ACTIVE`，可在 `.env` 中设置，例如：
    ```ini
-   SPRING_PROFILES_ACTIVE=dev
+   SPRING_PROFILES_ACTIVE=docker
    ```
    - 启动时也可临时覆盖：
    ```bash
-    SPRING_PROFILES_ACTIVE=prod docker compose up -d
+    SPRING_PROFILES_ACTIVE=docker docker compose up -d
     ```
    - 建议将真实口令保存在项目根目录的 `.env/secrets.env` 中，再手动同步到 `docker/.env`，避免凭据直接写入文档或源码模板。
    - 约定：**手动部署**使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`；**Docker 部署**使用 `MYSQL_ROOT_PASSWORD`。
