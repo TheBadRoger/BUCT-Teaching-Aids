@@ -206,3 +206,21 @@ docker compose down -v
      ```ini
     DOCKER_DB_PASSWORD=your_shared_docker_db_password
      ```
+
+6. **如何在生产环境用 GitHub Actions + Secrets 管理环境变量？**
+   - 推荐做法：
+     1) 在仓库中创建 `production` 环境（Settings → Environments）
+     2) 在该环境中配置 Secrets（至少）：
+        - `PROD_HOST`、`PROD_USER`、`PROD_SSH_KEY`
+        - `MYSQL_ROOT_PASSWORD`
+        - `DOCKER_DB_PASSWORD`
+        - `REDIS_PASSWORD`
+     3) 使用仓库内工作流 `.github/workflows/deploy-production.yml` 手动触发部署（`workflow_dispatch`）。
+   - 该工作流会在服务器上生成 `docker/.env` 并执行：
+   ```bash
+   docker compose up -d --build
+   ```
+   - 安全建议：
+     - 不要将真实口令写入仓库文件；
+     - 仅在 GitHub Secrets/Environment Secrets 中维护生产口令；
+     - 为 `production` 环境开启审批规则（required reviewers）。
