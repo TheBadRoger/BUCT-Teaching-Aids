@@ -52,7 +52,6 @@ cp .env.example .env
 
 ```ini
 MYSQL_ROOT_PASSWORD=your_mysql_root_password
-DOCKER_DB_PASSWORD=your_shared_docker_db_password
 REDIS_PASSWORD=your_redis_password
 SPRING_PROFILES_ACTIVE=prod
 
@@ -146,9 +145,8 @@ docker compose down -v
    - 与现有 `config.py` 的 `PORT` 环境变量读取机制保持一致。
 
 3. **数据库初始化**
-   - `mysql/init/01-init-users.sh` 在 MySQL 首次初始化时读取环境变量并创建项目所需用户与授权：
-     - `java_springboot_buctta`
-     - `python_flask_buctta`
+   - MySQL 首次初始化时会基于 `MYSQL_ROOT_PASSWORD` 初始化 root 口令，并创建 `BUCTTA_DATABASE`。
+   - Docker 默认场景下，Java/Python 均使用 root 账户连接数据库。
 
 4. **与现有部署文档一致的依赖思路**
    - Java 镜像基于 JDK 25 + Maven 构建。
@@ -181,12 +179,14 @@ docker compose down -v
     SPRING_PROFILES_ACTIVE=prod docker compose up -d
     ```
    - 建议将真实口令保存在项目根目录的 `.env/secrets.env` 中，再手动同步到 `docker/.env`，避免凭据直接写入文档或源码模板。
-   - 约定：**手动部署**使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`；**Docker 部署**使用统一的 `DOCKER_DB_PASSWORD`。
+    - 约定：**手动部署**使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`；**Docker 部署**使用 `MYSQL_ROOT_PASSWORD`。
 
-5. **按需求使用 root 身份连接 MySQL（专用覆盖文件）**
-   - 本仓库提供两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
-    - `docker-compose.java-root.yml`：Java 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
-    - `docker-compose.python-root.yml`：Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+5. **MySQL root 连接说明（默认即为 root）**
+   - 当前 `docker-compose.yml` 已默认让 Java/Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`。
+   - 本仓库仍保留两个覆盖文件（与 `docker-compose.yml` 叠加使用）：
+     - `docker-compose.java-root.yml`：Java 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+     - `docker-compose.python-root.yml`：Python 使用 `root / ${MYSQL_ROOT_PASSWORD}`（必填）
+   - 在当前默认配置下，这两个覆盖文件通常无需额外叠加。
    - **注意**：同一个 MySQL 实例只能有一个 root 密码，因此两个覆盖文件应分场景分别使用，不要同时叠加。
    - Java 场景（含 root 密码覆盖）：
    ```bash
@@ -202,19 +202,18 @@ docker compose down -v
     docker compose -f docker-compose.yml -f docker-compose.java-root.yml -f docker-compose.python-root.yml up -d --build
     ```
     - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
-    - 当前统一口令如下（Java/Python 场景一致，仅 Docker 场景使用）：
-    ```ini
-    DOCKER_DB_PASSWORD=your_shared_docker_db_password
-    ```
+     - Docker 场景下请维护 root 口令：
+     ```ini
+     MYSQL_ROOT_PASSWORD=your_mysql_root_password
+     ```
 
 6. **如何在生产环境用 GitHub Actions + Secrets 管理环境变量？**
    - 推荐做法：
      1) 在仓库中创建 `production` 环境 (Settings → Environments)
-     2) 在该环境中配置 Secrets（至少）：
+      2) 在该环境中配置 Secrets（至少）：
         - `PROD_HOST`、`PROD_USER`、`PROD_SSH_KEY`
         - `PROD_DEPLOY_PATH`（可选，默认 `/opt/BUCT-Teaching-Aids`）
         - `MYSQL_ROOT_PASSWORD`
-        - `DOCKER_DB_PASSWORD`
         - `REDIS_PASSWORD`
      3) 使用仓库内工作流手动触发部署（`workflow_dispatch`）：
          - `.github/workflows/deploy-production.yml`（会重建镜像）
