@@ -1,4 +1,4 @@
-name: Deploy to Production (Pull Images)
+name: Deploy to Production (Pull Dependencies, No Build)
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Deploy over SSH by pulling latest images
+      - name: Deploy over SSH by pulling dependency images and restarting
         uses: appleboy/ssh-action@v1.2.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -43,5 +43,5 @@ jobs:
             MYSQL_HOST_PORT=${MYSQL_HOST_PORT}
             REDIS_HOST_PORT=${REDIS_HOST_PORT}
             EOF
-            docker compose --env-file "${ENV_FILE}" pull
-            docker compose --env-file "${ENV_FILE}" up -d
+            docker compose --env-file "${ENV_FILE}" pull mysql redis
+            docker compose --env-file "${ENV_FILE}" up -d --no-build
