@@ -51,9 +51,9 @@ cp .env.example .env
 编辑 `.env`，至少修改以下字段：
 
 ```ini
-MYSQL_ROOT_PASSWORD=请替换为当前场景的root密码（Java场景可设为~springboot1794Zz!，Python场景可设为~flask2417Zz!）
-JAVA_DB_PASSWORD=请替换为 Java 数据库用户密码
-PYTHON_DB_PASSWORD=请替换为 Python 数据库用户密码
+MYSQL_ROOT_PASSWORD=~dockerdeploy91734Zz!
+JAVA_DB_PASSWORD=~dockerdeploy91734Zz!
+PYTHON_DB_PASSWORD=~dockerdeploy91734Zz!
 REDIS_PASSWORD=请替换为强密码
 SPRING_PROFILES_ACTIVE=prod
 
@@ -195,12 +195,8 @@ docker compose down -v
    ```bash
    docker compose -f docker-compose.yml -f docker-compose.python-root.yml up -d --build
    ```
-   - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
-   - 若你需要按指定口令部署，请在 `.env` 自行填入对应值：
-   ```ini
-   # Java 场景
-   MYSQL_ROOT_PASSWORD=your_java_root_password
-
-   # Python 场景（切换前请先 down 再 up）
-   MYSQL_ROOT_PASSWORD=your_python_root_password
-   ```
+    - 建议在 `.env` 中维护 `MYSQL_ROOT_PASSWORD`，避免在 Compose 文件中写死凭据。
+    - 当前统一口令如下（Java/Python 场景一致）：
+    ```ini
+    MYSQL_ROOT_PASSWORD=~dockerdeploy91734Zz!
+    ```
