@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+_APP_PROFILE = os.environ.get('APP_PROFILE', '').strip().lower()
+
 # Read database connection parameters at module level so they can be
 # referenced when building DATABASE_URL without duplicating os.environ calls.
 _MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
@@ -16,7 +18,7 @@ _DEFAULT_DB_URL = (
 )
 
 
-class Config:
+class BaseConfig:
     # Flask
     SECRET_KEY = os.environ.get('SECRET_KEY', 'buctta-secret-key-change-in-production')
     DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
@@ -67,3 +69,9 @@ class Config:
         'CLASSROOM_DB_PATH',
         os.path.join(os.path.dirname(__file__), 'classroom_data.db')
     )
+
+
+if _APP_PROFILE == 'docker':
+    from config_docker import DockerConfig as Config
+else:
+    Config = BaseConfig

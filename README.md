@@ -22,7 +22,7 @@
 <!-- STATS_SECTION_START -->
 ## 项目统计
 
-> 统计更新时间（UTC+8）：`2026-04-02 00:23:30`
+> 统计更新时间（UTC+8）：`2026-04-02 12:29:22`
 
 ### 核心统计
 
@@ -99,4 +99,3 @@ pie showData
 | [Python](documents/python_apidoc.md) |   [Ubuntu Linux - Java](documents/java_deploy_linux.md)   | [Python](documents/python_api_intro.md) |
 |                        -                         | [Ubuntu Linux - Python](documents/python_deploy_linux.md) | - |
 |                        -                         |           [Docker](documents/docker_deploy.md)            | - |
-|                        -                         |           [.env 配置方法](documents/env_config.md)            | - |

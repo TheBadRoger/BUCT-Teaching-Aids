@@ -116,6 +116,8 @@ cp .env.example .env
 nano .env   # 或使用 vim .env
 ```
 
+> 说明：这里的 `.env` 是 `API/PythonAPI/.env`，仅用于 Python 后端单独部署；不要复用根目录 `/.env`（根目录变量用于 Docker Compose）。
+
 需要修改的关键字段：
 
 ```ini
@@ -123,7 +125,7 @@ SECRET_KEY=<随机安全密钥，可用 python3 -c "import secrets; print(secret
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_USER=python_flask_buctta
-MYSQL_PASSWORD=${BUCTTA_PYTHON_DB_PASSWORD}
+MYSQL_PASSWORD=replace_with_python_db_password
 MYSQL_DB=BUCTTA_DATABASE
 ```
 
