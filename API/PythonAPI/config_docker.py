@@ -1,36 +1,22 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-_APP_PROFILE = os.environ.get('APP_PROFILE', '').strip().lower()
-
-# Read database connection parameters at module level so they can be
-# referenced when building DATABASE_URL without duplicating os.environ calls.
-_MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
-_MYSQL_PORT = os.environ.get('MYSQL_PORT', '3306')
-_MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
-_MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', os.environ.get('BUCTTA_PYTHON_DB_PASSWORD', ''))
-_MYSQL_DB = os.environ.get('MYSQL_DB', 'BUCTTA_DATABASE')
-_DEFAULT_DB_URL = (
-    f"mysql+pymysql://{_MYSQL_USER}:{_MYSQL_PASSWORD}@"
-    f"{_MYSQL_HOST}:{_MYSQL_PORT}/{_MYSQL_DB}?charset=utf8mb4"
-)
 
 
-class BaseConfig:
+class DockerConfig:
     # Flask
     SECRET_KEY = os.environ.get('SECRET_KEY', 'buctta-secret-key-change-in-production')
-    DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
-    PORT = int(os.environ.get('PORT', 5000))
+    DEBUG = False
+    PORT = 8080
 
-    # Database - MySQL
-    MYSQL_HOST = _MYSQL_HOST
-    MYSQL_PORT = int(_MYSQL_PORT)
-    MYSQL_USER = _MYSQL_USER
-    MYSQL_PASSWORD = _MYSQL_PASSWORD
-    MYSQL_DB = _MYSQL_DB
-    DATABASE_URL = os.environ.get('DATABASE_URL', _DEFAULT_DB_URL)
+    # Database - fixed for docker internal network
+    MYSQL_HOST = 'mysql'
+    MYSQL_PORT = 3306
+    MYSQL_USER = 'root'
+    MYSQL_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD', '')
+    MYSQL_DB = 'BUCTTA_DATABASE'
+    DATABASE_URL = os.environ.get(
+        'DATABASE_URL',
+        f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8mb4"
+    )
 
     # Camera (face_hand_up module)
     CAMERA_ID = int(os.environ.get('CAMERA_ID', 0))
@@ -69,9 +55,3 @@ class BaseConfig:
         'CLASSROOM_DB_PATH',
         os.path.join(os.path.dirname(__file__), 'classroom_data.db')
     )
-
-
-if _APP_PROFILE == 'docker':
-    from config_docker import DockerConfig as Config
-else:
-    Config = BaseConfig

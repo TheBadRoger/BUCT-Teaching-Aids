@@ -99,4 +99,3 @@ pie showData
 | [Python](documents/python_apidoc.md) |   [Ubuntu Linux - Java](documents/java_deploy_linux.md)   | [Python](documents/python_api_intro.md) |
 |                        -                         | [Ubuntu Linux - Python](documents/python_deploy_linux.md) | - |
 |                        -                         |           [Docker](documents/docker_deploy.md)            | - |
-|                        -                         |           [.env 配置方法](documents/env_config.md)            | - |

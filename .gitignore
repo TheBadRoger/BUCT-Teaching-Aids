@@ -30,9 +30,9 @@ replay_pid*
 /API/JavaAPI/temp/
 
 # Secret environment files
-/.env/*.env
-/docker/.env
-/API/PythonAPI/.env
+**/.env
+**/.env.*
+!**/.env.example
 
 # Python cache
 __pycache__/

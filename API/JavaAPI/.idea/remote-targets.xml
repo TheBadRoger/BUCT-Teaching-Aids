@@ -2,13 +2,15 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
-      <target name="WSL" type="wsl" uuid="bf06a197-8882-437c-b6f2-301e489f647e">
+      <target name="WSL - Ubuntu" type="wsl" uuid="9da8189d-3f2e-4eb7-8f27-08d028309b3b">
         <config>
           <option name="distributionMsId" value="Ubuntu" />
+          <option name="projectRootOnTarget" value="{exitCode=0, timeout=false, cancelled=false, stdout=/tmp/tmp.3RsyJUDLkh&#13;&#10;, stderr=}/JavaAPI" />
         </config>
         <ContributedStateBase type="JavaLanguageRuntime">
           <config>
-            <option name="homePath" value="$PROJECT_DIR$/../../../../usr/lib/jvm/java-1.25.0-openjdk-amd64" />
+            <option name="homePath" value="/usr/lib/jvm/java-21-openjdk-amd64" />
+            <option name="javaVersionString" value="21.0.9" />
           </config>
         </ContributedStateBase>
         <ContributedStateBase type="MavenRuntime">
