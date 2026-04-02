@@ -1,7 +1,6 @@
-# Shared .idea config is versioned; ignore only local machine state.
+# 默认忽略的文件
 /shelf/
 /workspace.xml
-/tasks.xml
 # 基于编辑器的 HTTP 客户端请求
 /httpRequests/
 # 已忽略包含查询文件的默认文件夹
@@ -9,5 +8,3 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-/copilot*.xml
-/**/usage.statistics.xml
