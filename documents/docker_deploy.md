@@ -4,8 +4,8 @@
 
 - Java 后端（容器内端口 `80`）
 - Python 后端（容器内端口 `8080`）
-- MySQL（供两个后端共享）
-- Redis（供 Java 后端使用）
+- MySQL（容器内端口 `3306`）
+- Redis（容器内端口 `6371`）
 
 > 相关依赖项已参考现有部署文档：`java_deploy_linux.md`、`python_deploy_linux.md`。
 
@@ -82,7 +82,7 @@ docker compose --env-file ../.env logs -f
 
 ## 5. 端口与访问
 
-容器内端口规划（避免冲突）：
+容器内端口规划（固定，不通过环境变量配置）：
 
 - Java 后端：`80`
 - Python 后端：`8080`
@@ -97,23 +97,23 @@ docker compose --env-file ../.env logs -f
 - MySQL：`<服务器IP>:3306`
 - Redis：`<服务器IP>:6379`
 
-`.env` 中的 `*_HOST_PORT` 变量用于定义**主机侧发布端口**，例如：
+`.env` 中的 `*_CONTAINER_PORT` 变量用于定义 Docker 对外发布端口（即主机侧端口），例如：
 
-- `JAVA_HOST_PORT` 映射到 Java 容器 `80`
-- `PYTHON_HOST_PORT` 映射到 Python 容器 `8080`
-- `MYSQL_HOST_PORT` 映射到 MySQL 容器 `3306`
-- `REDIS_HOST_PORT` 映射到 Redis 容器 `6371`
+- `JAVA_CONTAINER_PORT` 映射到 Java 容器 `80`
+- `PYTHON_CONTAINER_PORT` 映射到 Python 容器 `8080`
+- `MYSQL_CONTAINER_PORT` 映射到 MySQL 容器 `3306`
+- `REDIS_CONTAINER_PORT` 映射到 Redis 容器 `6371`
 
 命令行临时覆盖主机端口映射示例：
 
 ```bash
-JAVA_HOST_PORT=8081 PYTHON_HOST_PORT=8082 MYSQL_HOST_PORT=3307 REDIS_HOST_PORT=6380 docker compose --env-file ../.env up -d --build
+JAVA_CONTAINER_PORT=8081 PYTHON_CONTAINER_PORT=8082 MYSQL_CONTAINER_PORT=3307 REDIS_CONTAINER_PORT=6380 docker compose --env-file ../.env up -d --build
 ```
 
 PowerShell 示例：
 
 ```powershell
-$env:JAVA_HOST_PORT="8081"; $env:PYTHON_HOST_PORT="8082"; $env:MYSQL_HOST_PORT="3307"; $env:REDIS_HOST_PORT="6380"; docker compose --env-file ../.env up -d --build
+$env:JAVA_CONTAINER_PORT="8081"; $env:PYTHON_CONTAINER_PORT="8082"; $env:MYSQL_CONTAINER_PORT="3307"; $env:REDIS_CONTAINER_PORT="6380"; docker compose --env-file ../.env up -d --build
 ```
 
 ---
@@ -140,6 +140,7 @@ docker compose --env-file ../.env down -v
 - Java 的 Docker 配置固定连接 `mysql:3306` 与 `redis:6371`，并使用 `MYSQL_ROOT_PASSWORD`/`REDIS_PASSWORD`。
 - Python 服务在 Docker 中通过 `APP_PROFILE=docker` 读取 `config_docker.py`。
 - Python 的 Docker 配置固定连接 `mysql:3306`，并使用 `MYSQL_ROOT_PASSWORD`。
+- Docker 启动时不会执行 [Java 脚本](../API/JavaAPI/docker/mysql/01-create-user.sh) 或 [Python 脚本](../API/PythonAPI/docker/mysql/01-create-user.sh)；它们仅用于非 Docker 直连部署。
 - MySQL 首次初始化会创建 `BUCTTA_DATABASE`，并执行 `docker/mysql/init/02-init-schema.sql`。
 - Docker 默认场景下 Java/Python 使用 `root / ${MYSQL_ROOT_PASSWORD}` 连接数据库。
 
@@ -148,7 +149,7 @@ docker compose --env-file ../.env down -v
 ## 8. 常见问题
 
 1. **80 端口被占用**
-   - 直接修改 `.env` 中 `JAVA_HOST_PORT`，或按第 5 节命令行临时覆盖后重启。
+   - 直接修改 `.env` 中 `JAVA_CONTAINER_PORT`，或按第 5 节命令行临时覆盖后重启。
 
 2. **Python 第一次构建较慢**
    - `face-recognition` 等依赖需要编译，首次构建耗时较长，属正常现象。
@@ -159,7 +160,7 @@ docker compose --env-file ../.env down -v
 4. **Docker 构建时可否为后端选择配置文件？**
    - Java：Docker Compose 已固定为 `SPRING_PROFILES_ACTIVE=docker`。
    - Python：Docker Compose 已固定为 `APP_PROFILE=docker`。
-   - 当前约定：手动部署使用 `BUCTTA_JAVA_DB_PASSWORD` / `BUCTTA_PYTHON_DB_PASSWORD`，Docker 部署使用 `MYSQL_ROOT_PASSWORD`。
+   - 当前约定：非 Docker 部署使用本地 `.env` 中的密码变量，Docker 部署使用 `MYSQL_ROOT_PASSWORD` 和 `REDIS_PASSWORD`。
 
 5. **MySQL root 连接说明（默认即为 root）**
    - 默认即使用 `root / ${MYSQL_ROOT_PASSWORD}`，通常不需要叠加历史覆盖文件。
