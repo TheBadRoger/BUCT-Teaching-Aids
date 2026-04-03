@@ -1,6 +1,6 @@
 # 部署方法（Ubuntu Linux）
 
-## **1. 安装依赖项** 
+## **1. 安装依赖项**
 
 ```shell
 sudo apt update
@@ -17,24 +17,8 @@ sudo apt install mysql-server
 # Redis
 sudo apt install redis-server
 ```
-## **2. 配置MySQL**
-MySQL安装完成后输入```sudo systemctl status mysql.service```验证服务状态，如果服务未启动，需要输入```sudo systemctl start mysql.service```来启动服务
 
-输入```sudo systemctl enable mysql.service```来让MySQL开机自启
-
-随后输入```sudo mysql_secure_installation```启动安全安装脚本，跟随指引进行安装
-
-完成后输入sudo mysql即可以根用户身份登录MySQL并打开MySQL Shell。之后输入如下代码
-```sql
-CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE;
-CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY 'replace_with_java_db_password';
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW 
-    ON BUCTTA_DATABASE.* 
-    TO 'java_springboot_buctta'@'localhost';
-```
-输入```quit```退出MySQL Shell，返回默认Shell
-
-## **3. 配置 JavaAPI 环境变量（单独部署）**
+## **2. 配置项目环境变量**
 
 Java 后端单独部署时，请使用 `API/JavaAPI/.env`，不要使用根目录 `/.env`（根目录变量仅用于 Docker 编排）。
 
@@ -53,6 +37,27 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=replace_with_redis_password
 ```
+
+## **3. 配置MySQL**
+MySQL安装完成后输入```sudo systemctl status mysql.service```验证服务状态，如果服务未启动，需要输入```sudo systemctl start mysql.service```来启动服务
+
+输入```sudo systemctl enable mysql.service```来让MySQL开机自启
+
+随后输入```sudo mysql_secure_installation```启动安全安装脚本，跟随指引进行安装
+
+完成后输入sudo mysql即可以根用户身份登录MySQL并打开MySQL Shell。之后输入如下代码
+```sql
+CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE;
+CREATE USER 'java_springboot_buctta'@'localhost' IDENTIFIED BY 'replace_with_java_db_password';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
+    ON BUCTTA_DATABASE.*
+    TO 'java_springboot_buctta'@'localhost';
+```
+* 注意这里的密码要替换成你环境变量里设置的密码
+
+输入```quit```退出MySQL Shell，返回默认Shell
+
+
 
 ## **4. 启动并测试项目**
 * 启动后端：打开命令行，进入 `API/JavaAPI` 目录。输入命令```mvn spring-boot:run```,等到命令行能够一直保持并且不再弹出文本，说明启动成功。启动成功后不要关闭命令行窗口。（如下图所示）
