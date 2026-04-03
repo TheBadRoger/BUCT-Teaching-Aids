@@ -1,6 +1,6 @@
 # Python 后端部署方法（Ubuntu Linux）
 
-本文档说明如何在 Ubuntu Linux 服务器上部署 **BUCT 教学辅助系统统一 Python 后端**。  
+本文档说明如何在 Ubuntu Linux 服务器上部署 **BUCT 教学辅助系统统一 Python 后端**。
 该后端由 Flask + Flask-SocketIO 构建，集成了以下功能模块：
 
 | 模块 | URL 前缀 | 功能 |
@@ -31,9 +31,29 @@ sudo apt install -y cmake build-essential libboost-all-dev
 sudo apt install -y v4l-utils
 ```
 
----
+## 2. 配置项目环境变量
 
-## 2. 安装并配置 MySQL
+复制模板文件并填写真实配置：
+
+```bash
+cp .env.example .env
+nano .env   # 或使用 vim .env
+```
+
+> 说明：这里的 `.env` 是 `API/PythonAPI/.env`，仅用于 Python 后端单独部署；不要复用根目录 `/.env`（根目录变量用于 Docker Compose）。
+
+需要修改的关键字段：
+
+```ini
+SECRET_KEY=<随机安全密钥，可用 python3 -c "import secrets; print(secrets.token_hex(32)" 生成>
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_USER=python_flask_buctta
+MYSQL_PASSWORD=replace_with_python_db_password
+MYSQL_DB=BUCTTA_DATABASE
+```
+
+## 3. 安装并配置 MySQL
 
 ```bash
 sudo apt install -y mysql-server
@@ -70,9 +90,9 @@ FLUSH PRIVILEGES;
 QUIT;
 ```
 
----
+* 注意这里的密码要替换成你环境变量里设置的密码
 
-## 3. 获取代码并配置环境
+## 4. 获取代码并配置环境
 
 进入项目中 Python 后端所在目录：
 
@@ -87,9 +107,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
----
-
-## 4. 安装 Python 依赖
+## 5. 安装 Python 依赖
 
 > **注意**：`face-recognition` 依赖 `dlib`，编译耗时较长（约 5–10 分钟）。
 
@@ -105,31 +123,6 @@ pip install Flask Flask-Cors Flask-SocketIO eventlet SQLAlchemy PyMySQL \
             python-dotenv numpy opencv-python pandas Jinja2 Pillow imutils ultralytics
 ```
 
----
-
-## 5. 配置环境变量
-
-复制模板文件并填写真实配置：
-
-```bash
-cp .env.example .env
-nano .env   # 或使用 vim .env
-```
-
-> 说明：这里的 `.env` 是 `API/PythonAPI/.env`，仅用于 Python 后端单独部署；不要复用根目录 `/.env`（根目录变量用于 Docker Compose）。
-
-需要修改的关键字段：
-
-```ini
-SECRET_KEY=<随机安全密钥，可用 python3 -c "import secrets; print(secrets.token_hex(32)" 生成>
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_USER=python_flask_buctta
-MYSQL_PASSWORD=replace_with_python_db_password
-MYSQL_DB=BUCTTA_DATABASE
-```
-
----
 
 ## 6. 初始化数据库表
 
@@ -148,8 +141,6 @@ print("数据库表创建完成")
 EOF
 ```
 
----
-
 ## 7. 配置人脸库（face_hand_up 模块）
 
 将学生人脸照片放入以下目录：
@@ -158,10 +149,9 @@ EOF
 face_database/face_db/
 ```
 
-文件命名格式：`学号_姓名.jpg`，例如 `2024001_张三.jpg`。  
+文件命名格式：`学号_姓名.jpg`，例如 `2024001_张三.jpg`。
 每张照片中只允许出现**一张人脸**，支持 `.jpg`、`.jpeg`、`.png` 格式。
 
----
 
 ## 8. 启动并测试项目
 
@@ -192,8 +182,6 @@ curl -X POST http://localhost:5000/api/headup_rate/detect \
      -H "Content-Type: application/json" \
      -d '{"student_id":1001,"course_id":"math_101","course_name":"数学","data_type":"image","calculated_rate":85.5}'
 ```
-
----
 
 ## 9. 生产部署（后台持久运行）
 
@@ -250,11 +238,9 @@ sudo systemctl start buctta-python.service
 sudo systemctl status buctta-python.service
 ```
 
----
-
 ## 10. 注意事项
 
-- **开发环境**：在 `.env` 中设置 `DEBUG=true`，Flask 会开启热重载和详细错误信息。  
+- **开发环境**：在 `.env` 中设置 `DEBUG=true`，Flask 会开启热重载和详细错误信息。
 - **生产环境**：务必设置 `DEBUG=false`，并使用强随机 `SECRET_KEY`。
 - **YOLO 模型**：`headup_rate` 模块首次运行时，`ultralytics` 会自动下载 `yolov8n-pose.pt`（约 6 MB），请确保服务器能访问 GitHub/CDN。若无法访问，请手动下载后通过 `.env` 中的 `YOLO_MODEL_PATH` 指定本地路径。
 - **摄像头权限**：运行 `face_hand_up` 或 `headup_rate` 视频流接口时，需确保运行用户有摄像头设备访问权限（`sudo usermod -aG video <username>`）。
