@@ -12,6 +12,8 @@ README_PATH = ROOT_DIR / "README.md"
 GENERATED_DIR = ROOT_DIR / "scripts" / "generated"
 STATS_JSON_PATH = GENERATED_DIR / "stats.json"
 STATS_MD_PATH = GENERATED_DIR / "README_STATS.md"
+JAVA_BADGE_JSON_PATH = GENERATED_DIR / "java-unit-test-badge.json"
+PYTHON_BADGE_JSON_PATH = GENERATED_DIR / "python-unit-test-badge.json"
 UTC_PLUS_8 = timezone(timedelta(hours=8))
 
 EXCLUDED_DIRS = {
@@ -84,14 +86,14 @@ def _count_pattern_in_files(base_dir: Path, suffix: str, pattern: re.Pattern[str
     return total
 
 
-def _unit_test_badge_text(results_path: Path) -> str:
+def _unit_test_badge_message_and_color(results_path: Path) -> tuple[str, str]:
     try:
         data = json.loads(results_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        return "no result"
+        return "no result", "9ca3af"
 
     if data.get("status") != "completed":
-        return "no result"
+        return "no result", "9ca3af"
 
     total: int = data.get("total", 0)
     failed: int = data.get("failed", 0)
@@ -99,10 +101,10 @@ def _unit_test_badge_text(results_path: Path) -> str:
     if failed == 0:
         passed = data.get("passed", total)
         case_word = "case" if passed == 1 else "cases"
-        return f"{passed} {case_word} passing"
+        return f"{passed} {case_word} passing", "22c55e"
 
     case_word = "case" if total == 1 else "cases"
-    return f"{failed} of {total} {case_word} failing"
+    return f"{failed} of {total} {case_word} failing", "ef4444"
 
 
 def collect_stats() -> dict:
@@ -115,8 +117,12 @@ def collect_stats() -> dict:
     python_test_case_count = _count_pattern_in_files(
         PYTHON_TEST_DIR, ".py", PYTHON_TEST_CASE_PATTERN
     )
-    java_unit_test_badge_text = _unit_test_badge_text(JAVA_TEST_RESULTS_PATH)
-    python_unit_test_badge_text = _unit_test_badge_text(PYTHON_TEST_RESULTS_PATH)
+    java_unit_test_badge_text, java_unit_test_badge_color = (
+        _unit_test_badge_message_and_color(JAVA_TEST_RESULTS_PATH)
+    )
+    python_unit_test_badge_text, python_unit_test_badge_color = (
+        _unit_test_badge_message_and_color(PYTHON_TEST_RESULTS_PATH)
+    )
 
     for file_path in ROOT_DIR.rglob("*"):
         if not file_path.is_file() or _is_excluded(file_path):
@@ -153,7 +159,9 @@ def collect_stats() -> dict:
         "java_test_case_count": java_test_case_count,
         "python_test_case_count": python_test_case_count,
         "java_unit_test_badge_text": java_unit_test_badge_text,
+        "java_unit_test_badge_color": java_unit_test_badge_color,
         "python_unit_test_badge_text": python_unit_test_badge_text,
+        "python_unit_test_badge_color": python_unit_test_badge_color,
         "language_lines": sorted_language_lines,
     }
 
@@ -234,6 +242,36 @@ def main() -> None:
         encoding="utf-8",
     )
     STATS_MD_PATH.write_text(stats_md, encoding="utf-8")
+    JAVA_BADGE_JSON_PATH.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "label": "Java Unit Test",
+                "message": stats["java_unit_test_badge_text"],
+                "color": stats["java_unit_test_badge_color"],
+                "labelColor": "0f172a",
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    PYTHON_BADGE_JSON_PATH.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "label": "Python Unit Test",
+                "message": stats["python_unit_test_badge_text"],
+                "color": stats["python_unit_test_badge_color"],
+                "labelColor": "0f172a",
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     update_readme(stats_md, stats)
 
 
