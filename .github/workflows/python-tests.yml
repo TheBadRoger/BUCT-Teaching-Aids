@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   test:
@@ -26,55 +26,4 @@ jobs:
 
       - name: Run Python tests
         working-directory: API/PythonAPI
-        run: pytest --junit-xml=../../scripts/generated/pytest-results.xml --tb=short || true
-
-      - name: Parse and save test results
-        run: |
-          python3 - <<'EOF'
-          import xml.etree.ElementTree as ET, json, os
-          results_xml = "scripts/generated/pytest-results.xml"
-          if not os.path.exists(results_xml):
-              data = {"status": "no result", "passed": 0, "failed": 0, "total": 0}
-          else:
-              root = ET.parse(results_xml).getroot()
-              suite = root if root.tag == "testsuite" else root.find("testsuite")
-              total = int(suite.get("tests", 0))
-              failed = int(suite.get("failures", 0)) + int(suite.get("errors", 0))
-              data = {"status": "completed", "passed": total - failed, "failed": failed, "total": total}
-          os.makedirs("scripts/generated", exist_ok=True)
-          with open("scripts/generated/python-test-results.json", "w") as f:
-              json.dump(data, f, indent=2)
-              f.write("\n")
-
-          # Generate badge JSON directly so the badge updates immediately
-          status = data["status"]
-          total = data["total"]
-          failed = data["failed"]
-          passed = data.get("passed", total - failed)
-          if status != "completed":
-              message, color = "no result", "9ca3af"
-          elif failed == 0:
-              case_word = "case" if passed == 1 else "cases"
-              message, color = f"{passed} {case_word} passing", "22c55e"
-          else:
-              case_word = "case" if total == 1 else "cases"
-              message, color = f"{failed} of {total} {case_word} failing", "ef4444"
-          badge = {"schemaVersion": 1, "label": "Python Unit Test", "message": message, "color": color, "labelColor": "0f172a"}
-          with open("scripts/generated/python-unit-test-badge.json", "w") as f:
-              json.dump(badge, f, indent=2)
-              f.write("\n")
-          EOF
-
-      - name: Commit test results
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/generated/python-test-results.json scripts/generated/python-unit-test-badge.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore(tests): update Python test results"
-            git pull --rebase
-            git push
-          fi
+        run: pytest --tb=short
