@@ -5,11 +5,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
@@ -20,14 +20,31 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequestMapping("/api/generate")
 public class FileDownloadCtrl {
-    // 使用项目运行目录下的 temp 文件夹
-    @Value("${file.download-dir:./temp/}")
-    private String STATIC_DIR;
-
-    @GetMapping("/download/{timeStamp}")
+    @GetMapping({"/download/{timeStamp}", "/judgereport/{timeStamp}"})
     public ResponseEntity<byte[]> downloadReport(
             @PathVariable String timeStamp,
             @RequestParam String text) throws IOException {
+
+        return buildDownloadResponse(timeStamp, text);
+    }
+
+    @PostMapping(
+            value = {"/download/{timeStamp}", "/judgereport/{timeStamp}"},
+            consumes = MediaType.TEXT_PLAIN_VALUE
+    )
+    public ResponseEntity<byte[]> downloadReportByPost(
+            @PathVariable String timeStamp,
+            @RequestBody String text) throws IOException {
+
+        return buildDownloadResponse(timeStamp, text);
+    }
+
+    private ResponseEntity<byte[]> buildDownloadResponse(String timeStamp, String text) throws IOException {
+        if (!StringUtils.hasText(text)) {
+            return ResponseEntity.badRequest()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body("text parameter is required".getBytes(StandardCharsets.UTF_8));
+        }
 
         String fileName = "judgereport_" + timeStamp + ".xlsx";
 
@@ -39,7 +56,7 @@ public class FileDownloadCtrl {
                 .replace("+", "%20");  // 处理空格编码问题
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
         headers.setContentDispositionFormData("attachment", fileName);
         headers.set(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename*=utf-8''" + encodedFileName);

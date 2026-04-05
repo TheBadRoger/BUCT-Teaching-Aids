@@ -3,36 +3,8 @@
 # Requirements
 # ──────────────────────────────────────────────────
 
-# Web framework
-Flask==2.3.3
-Flask-Cors==4.0.0
-Flask-SocketIO==5.3.4
+# Install core backend dependencies
+-r requirements-base.txt
 
-# WebSocket transport
-eventlet==0.33.3
-bidict==0.23.1
-
-# Database
-SQLAlchemy==2.0.23
-PyMySQL==1.1.1
-python-dotenv==1.0.0
-
-# Computer vision (face_hand_up & headup_rate modules)
-numpy==1.26.1
-opencv-python==4.8.1.78
-Pillow==10.1.0
-imutils==0.5.4
-
-# Face recognition (face_hand_up module)
-# Note: dlib must be installed first; see Linux deployment guide
-face-recognition==1.3.0
-face-recognition-models==0.3.0
-
-# YOLO pose estimation (headup_rate module)
-ultralytics==8.4.33
-
-# Data analysis (ai_classroom module)
-pandas==2.0.3
-
-# Template rendering (PBL module)
-Jinja2==3.1.6
+# Install computer-vision and AI dependencies
+-r requirements-cv.txt

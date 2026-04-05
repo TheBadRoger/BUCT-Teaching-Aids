@@ -21,6 +21,7 @@ public class SecurityAuthorize {
                         .requestMatchers(
                                 "/enter.html",
                                 "/register.html",
+                                "/error",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",

@@ -1,4 +1,4 @@
-name: CI
+name: Java Backend Unit Tests
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  java-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,17 +26,3 @@ jobs:
       - name: Run Java tests
         working-directory: API/JavaAPI
         run: mvn -B test
-
-  python-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Compile Python files
-        run: python -m compileall API/PythonAPI
