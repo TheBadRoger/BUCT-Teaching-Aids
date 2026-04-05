@@ -6,8 +6,6 @@ import re
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.error import URLError
-from urllib.request import Request, urlopen
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = ROOT_DIR / "README.md"
@@ -57,8 +55,8 @@ PYTHON_TEST_CASE_PATTERN = re.compile(r"^\s*def\s+test_\w*\s*\(", re.MULTILINE)
 
 JAVA_TEST_DIR = ROOT_DIR / "API" / "JavaAPI" / "src" / "test" / "java"
 PYTHON_TEST_DIR = ROOT_DIR / "API" / "PythonAPI" / "tests"
-GITHUB_REPO = "TheBadRoger/BUCT-Teaching-Aids"
-MAIN_BRANCH = "main"
+JAVA_TEST_RESULTS_PATH = GENERATED_DIR / "java-test-results.json"
+PYTHON_TEST_RESULTS_PATH = GENERATED_DIR / "python-test-results.json"
 
 SECTION_START = "<!-- STATS_SECTION_START -->"
 SECTION_END = "<!-- STATS_SECTION_END -->"
@@ -86,52 +84,25 @@ def _count_pattern_in_files(base_dir: Path, suffix: str, pattern: re.Pattern[str
     return total
 
 
-def _fetch_workflow_status(workflow_file: str) -> str:
-    api = (
-        f"https://api.github.com/repos/{GITHUB_REPO}/actions/workflows/"
-        f"{workflow_file}/runs?branch={MAIN_BRANCH}&per_page=1"
-    )
-
-    request = Request(
-        api,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "buct-teaching-aids-stats-bot",
-        },
-    )
-
+def _unit_test_badge_text(results_path: Path) -> str:
     try:
-        with urlopen(request, timeout=10) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-    except (URLError, OSError, json.JSONDecodeError):
+        data = json.loads(results_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
         return "no result"
 
-    runs = payload.get("workflow_runs", [])
-    if not runs:
+    if data.get("status") != "completed":
         return "no result"
 
-    latest = runs[0]
-    if latest.get("status") != "completed":
-        return "no result"
+    total: int = data.get("total", 0)
+    failed: int = data.get("failed", 0)
 
-    conclusion = latest.get("conclusion")
-    if conclusion == "success":
-        return "passing"
-    if conclusion in {
-        "failure",
-        "timed_out",
-        "cancelled",
-        "action_required",
-        "startup_failure",
-        "stale",
-    }:
-        return "failing"
-    return "no result"
+    if failed == 0:
+        passed = data.get("passed", total)
+        case_word = "case" if passed == 1 else "cases"
+        return f"{passed} {case_word} passing"
 
-
-def _unit_test_badge_text(case_count: int, workflow_file: str) -> str:
-    status = _fetch_workflow_status(workflow_file)
-    return f"{case_count} case(s) {status}"
+    case_word = "case" if total == 1 else "cases"
+    return f"{failed} of {total} {case_word} failing"
 
 
 def collect_stats() -> dict:
@@ -144,12 +115,8 @@ def collect_stats() -> dict:
     python_test_case_count = _count_pattern_in_files(
         PYTHON_TEST_DIR, ".py", PYTHON_TEST_CASE_PATTERN
     )
-    java_unit_test_badge_text = _unit_test_badge_text(
-        java_test_case_count, "java-tests.yml"
-    )
-    python_unit_test_badge_text = _unit_test_badge_text(
-        python_test_case_count, "python-tests.yml"
-    )
+    java_unit_test_badge_text = _unit_test_badge_text(JAVA_TEST_RESULTS_PATH)
+    python_unit_test_badge_text = _unit_test_badge_text(PYTHON_TEST_RESULTS_PATH)
 
     for file_path in ROOT_DIR.rglob("*"):
         if not file_path.is_file() or _is_excluded(file_path):
