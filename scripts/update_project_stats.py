@@ -6,6 +6,8 @@ import re
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 README_PATH = ROOT_DIR / "README.md"
@@ -47,6 +49,16 @@ JAVA_ENDPOINT_PATTERN = re.compile(
     r"@\s*(GetMapping|PostMapping|PutMapping|DeleteMapping|PatchMapping|RequestMapping)\b"
 )
 PYTHON_ENDPOINT_PATTERN = re.compile(r"@\s*[\w.]*route\s*\(")
+JAVA_TEST_CASE_PATTERN = re.compile(
+    r"^\s*@(?:Test|ParameterizedTest|RepeatedTest|TestFactory|TestTemplate)\b",
+    re.MULTILINE,
+)
+PYTHON_TEST_CASE_PATTERN = re.compile(r"^\s*def\s+test_\w*\s*\(", re.MULTILINE)
+
+JAVA_TEST_DIR = ROOT_DIR / "API" / "JavaAPI" / "src" / "test" / "java"
+PYTHON_TEST_DIR = ROOT_DIR / "API" / "PythonAPI" / "tests"
+GITHUB_REPO = "TheBadRoger/BUCT-Teaching-Aids"
+MAIN_BRANCH = "main"
 
 SECTION_START = "<!-- STATS_SECTION_START -->"
 SECTION_END = "<!-- STATS_SECTION_END -->"
@@ -61,10 +73,83 @@ def _count_non_empty_lines(file_path: Path) -> int:
         return sum(1 for line in f if line.strip())
 
 
+def _count_pattern_in_files(base_dir: Path, suffix: str, pattern: re.Pattern[str]) -> int:
+    if not base_dir.exists():
+        return 0
+
+    total = 0
+    for file_path in base_dir.rglob(f"*{suffix}"):
+        if not file_path.is_file() or _is_excluded(file_path):
+            continue
+        content = file_path.read_text(encoding="utf-8", errors="ignore")
+        total += len(pattern.findall(content))
+    return total
+
+
+def _fetch_workflow_status(workflow_file: str) -> str:
+    api = (
+        f"https://api.github.com/repos/{GITHUB_REPO}/actions/workflows/"
+        f"{workflow_file}/runs?branch={MAIN_BRANCH}&per_page=1"
+    )
+
+    request = Request(
+        api,
+        headers={
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "buct-teaching-aids-stats-bot",
+        },
+    )
+
+    try:
+        with urlopen(request, timeout=10) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (URLError, OSError, json.JSONDecodeError):
+        return "no result"
+
+    runs = payload.get("workflow_runs", [])
+    if not runs:
+        return "no result"
+
+    latest = runs[0]
+    if latest.get("status") != "completed":
+        return "no result"
+
+    conclusion = latest.get("conclusion")
+    if conclusion == "success":
+        return "passing"
+    if conclusion in {
+        "failure",
+        "timed_out",
+        "cancelled",
+        "action_required",
+        "startup_failure",
+        "stale",
+    }:
+        return "failing"
+    return "no result"
+
+
+def _unit_test_badge_text(case_count: int, workflow_file: str) -> str:
+    status = _fetch_workflow_status(workflow_file)
+    return f"{case_count} case(s) {status}"
+
+
 def collect_stats() -> dict:
     language_lines: dict[str, int] = defaultdict(int)
     java_endpoints = 0
     python_endpoints = 0
+    java_test_case_count = _count_pattern_in_files(
+        JAVA_TEST_DIR, ".java", JAVA_TEST_CASE_PATTERN
+    )
+    python_test_case_count = _count_pattern_in_files(
+        PYTHON_TEST_DIR, ".py", PYTHON_TEST_CASE_PATTERN
+    )
+    java_unit_test_badge_text = _unit_test_badge_text(
+        java_test_case_count, "java-tests.yml"
+    )
+    python_unit_test_badge_text = _unit_test_badge_text(
+        python_test_case_count, "python-tests.yml"
+    )
 
     for file_path in ROOT_DIR.rglob("*"):
         if not file_path.is_file() or _is_excluded(file_path):
@@ -98,6 +183,10 @@ def collect_stats() -> dict:
         "top_language": top_language,
         "java_endpoint_count": java_endpoints,
         "python_endpoint_count": python_endpoints,
+        "java_test_case_count": java_test_case_count,
+        "python_test_case_count": python_test_case_count,
+        "java_unit_test_badge_text": java_unit_test_badge_text,
+        "python_unit_test_badge_text": python_unit_test_badge_text,
         "language_lines": sorted_language_lines,
     }
 
@@ -122,6 +211,8 @@ def build_stats_markdown(stats: dict) -> str:
             f"| 代码总行数（非空行） | {stats['total_lines']} |",
             f"| Java 接口数 | {stats['java_endpoint_count']} |",
             f"| Python 接口数 | {stats['python_endpoint_count']} |",
+            f"| Java 单元测试用例数 | {stats['java_test_case_count']} |",
+            f"| Python 单元测试用例数 | {stats['python_test_case_count']} |",
             "",
             "### 语言占比图",
             "",
@@ -150,7 +241,7 @@ def build_stats_markdown(stats: dict) -> str:
     )
 
 
-def update_readme(stats_md: str) -> None:
+def update_readme(stats_md: str, stats: dict) -> None:
     readme_content = README_PATH.read_text(encoding="utf-8")
     replacement = f"{SECTION_START}\n{stats_md}{SECTION_END}"
 
@@ -176,7 +267,7 @@ def main() -> None:
         encoding="utf-8",
     )
     STATS_MD_PATH.write_text(stats_md, encoding="utf-8")
-    update_readme(stats_md)
+    update_readme(stats_md, stats)
 
 
 if __name__ == "__main__":

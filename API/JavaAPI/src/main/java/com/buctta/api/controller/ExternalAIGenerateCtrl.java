@@ -3,7 +3,9 @@ package com.buctta.api.controller;
 import com.buctta.api.service.ExternalAIJudgeService;
 import com.buctta.api.utils.ApiResponse;
 import jakarta.annotation.Resource;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -18,29 +20,24 @@ public class ExternalAIGenerateCtrl {
     private final ExternalAIJudgeService aiGenerateService;
 
     @PostMapping("/generate/start")
-    public ApiResponse<Map<String, String>> startJudge(
-            @RequestParam List<String> extractedTexts,
-            @RequestParam List<String> fileNames,
-            @RequestParam int counts) {
-        if (counts == 1) {
-            List<String> tmp = new java.util.ArrayList<>();
-            StringBuilder t = new StringBuilder(extractedTexts.getFirst());
-            for (int i = 1; i < extractedTexts.size(); i++) {
-                t.append(extractedTexts.get(i));
-            }
-            tmp.add(t.toString());
+    public ApiResponse<Map<String, String>> startJudge(@RequestBody StartJudgeRequest request) {
+        List<String> extractedTexts = request.getExtractedTexts();
+        List<String> fileNames = request.getFileNames();
 
-            String id = aiGenerateService.submitTask(tmp, fileNames);
-            return ApiResponse.ok(Map.of("id", id, "status", "started"));
-        }
-        else {
-            String id = aiGenerateService.submitTask(extractedTexts, fileNames);
-            return ApiResponse.ok(Map.of("id", id, "status", "started"));
-        }
+        String id = aiGenerateService.submitTask(extractedTexts, fileNames);
+        return ApiResponse.ok(Map.of("id", id, "status", "started"));
     }
 
     @GetMapping("/generate/stream/{id}")
     public SseEmitter stream(@PathVariable String id) {
         return aiGenerateService.getEmitter(id);
+    }
+
+    @Getter
+    @Setter
+    public static class StartJudgeRequest {
+        private List<String> extractedTexts;
+        private List<String> fileNames;
+        private int counts;
     }
 }

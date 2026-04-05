@@ -1,0 +1,29 @@
+name: Python Backend Unit Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r API/PythonAPI/requirements.txt -r API/PythonAPI/requirements-dev.txt
+
+      - name: Run Python tests
+        working-directory: API/PythonAPI
+        run: pytest
