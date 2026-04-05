@@ -216,6 +216,16 @@ def build_stats_markdown(stats: dict) -> str:
     )
 
 
+def _build_unit_test_badge_json(label: str, message: str, color: str) -> dict:
+    return {
+        "schemaVersion": 1,
+        "label": label,
+        "message": message,
+        "color": color,
+        "labelColor": "0f172a",
+    }
+
+
 def update_readme(stats_md: str, stats: dict) -> None:
     readme_content = README_PATH.read_text(encoding="utf-8")
     replacement = f"{SECTION_START}\n{stats_md}{SECTION_END}"
@@ -244,13 +254,11 @@ def main() -> None:
     STATS_MD_PATH.write_text(stats_md, encoding="utf-8")
     JAVA_BADGE_JSON_PATH.write_text(
         json.dumps(
-            {
-                "schemaVersion": 1,
-                "label": "Java Unit Test",
-                "message": stats["java_unit_test_badge_text"],
-                "color": stats["java_unit_test_badge_color"],
-                "labelColor": "0f172a",
-            },
+            _build_unit_test_badge_json(
+                "Java Unit Test",
+                stats["java_unit_test_badge_text"],
+                stats["java_unit_test_badge_color"],
+            ),
             ensure_ascii=False,
             indent=2,
         )
@@ -259,13 +267,11 @@ def main() -> None:
     )
     PYTHON_BADGE_JSON_PATH.write_text(
         json.dumps(
-            {
-                "schemaVersion": 1,
-                "label": "Python Unit Test",
-                "message": stats["python_unit_test_badge_text"],
-                "color": stats["python_unit_test_badge_color"],
-                "labelColor": "0f172a",
-            },
+            _build_unit_test_badge_json(
+                "Python Unit Test",
+                stats["python_unit_test_badge_text"],
+                stats["python_unit_test_badge_color"],
+            ),
             ensure_ascii=False,
             indent=2,
         )
