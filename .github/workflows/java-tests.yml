@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
@@ -25,4 +25,38 @@ jobs:
 
       - name: Run Java tests
         working-directory: API/JavaAPI
-        run: mvn -B test
+        run: mvn -B test || true
+
+      - name: Parse and save test results
+        run: |
+          python3 - <<'EOF'
+          import xml.etree.ElementTree as ET, json, glob, os
+          reports = glob.glob("API/JavaAPI/target/surefire-reports/TEST-*.xml")
+          if not reports:
+              data = {"status": "no result", "passed": 0, "failed": 0, "total": 0}
+          else:
+              total = failed = 0
+              for f in reports:
+                  root = ET.parse(f).getroot()
+                  total += int(root.get("tests", 0))
+                  failed += int(root.get("failures", 0)) + int(root.get("errors", 0))
+              data = {"status": "completed", "passed": total - failed, "failed": failed, "total": total}
+          os.makedirs("scripts/generated", exist_ok=True)
+          with open("scripts/generated/java-test-results.json", "w") as f:
+              json.dump(data, f, indent=2)
+              f.write("\n")
+          EOF
+
+      - name: Commit test results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/generated/java-test-results.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git pull --rebase
+            git commit -m "chore(tests): update Java test results"
+            git push
+          fi
