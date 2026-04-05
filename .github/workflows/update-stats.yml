@@ -7,6 +7,10 @@ on:
   schedule:
     - cron: "0 2 * * *"
 
+concurrency:
+  group: badge-commit
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -35,6 +39,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md scripts/generated/stats.json scripts/generated/README_STATS.md scripts/generated/java-unit-test-badge.json scripts/generated/python-unit-test-badge.json
+          git add README.md scripts/generated/stats.json scripts/generated/README_STATS.md
           git commit -m "chore(stats): auto update README metrics"
           git push

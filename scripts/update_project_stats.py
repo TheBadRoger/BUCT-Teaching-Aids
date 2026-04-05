@@ -12,8 +12,6 @@ README_PATH = ROOT_DIR / "README.md"
 GENERATED_DIR = ROOT_DIR / "scripts" / "generated"
 STATS_JSON_PATH = GENERATED_DIR / "stats.json"
 STATS_MD_PATH = GENERATED_DIR / "README_STATS.md"
-JAVA_BADGE_JSON_PATH = GENERATED_DIR / "java-unit-test-badge.json"
-PYTHON_BADGE_JSON_PATH = GENERATED_DIR / "python-unit-test-badge.json"
 UTC_PLUS_8 = timezone(timedelta(hours=8))
 
 EXCLUDED_DIRS = {
@@ -57,8 +55,6 @@ PYTHON_TEST_CASE_PATTERN = re.compile(r"^\s*def\s+test_\w*\s*\(", re.MULTILINE)
 
 JAVA_TEST_DIR = ROOT_DIR / "API" / "JavaAPI" / "src" / "test" / "java"
 PYTHON_TEST_DIR = ROOT_DIR / "API" / "PythonAPI" / "tests"
-JAVA_TEST_RESULTS_PATH = GENERATED_DIR / "java-test-results.json"
-PYTHON_TEST_RESULTS_PATH = GENERATED_DIR / "python-test-results.json"
 
 SECTION_START = "<!-- STATS_SECTION_START -->"
 SECTION_END = "<!-- STATS_SECTION_END -->"
@@ -86,27 +82,6 @@ def _count_pattern_in_files(base_dir: Path, suffix: str, pattern: re.Pattern[str
     return total
 
 
-def _unit_test_badge_message_and_color(results_path: Path) -> tuple[str, str]:
-    try:
-        data = json.loads(results_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return "no result", "9ca3af"
-
-    if data.get("status") != "completed":
-        return "no result", "9ca3af"
-
-    total: int = data.get("total", 0)
-    failed: int = data.get("failed", 0)
-
-    if failed == 0:
-        passed = data.get("passed", total)
-        case_word = "case" if passed == 1 else "cases"
-        return f"{passed} {case_word} passing", "22c55e"
-
-    case_word = "case" if total == 1 else "cases"
-    return f"{failed} of {total} {case_word} failing", "ef4444"
-
-
 def collect_stats() -> dict:
     language_lines: dict[str, int] = defaultdict(int)
     java_endpoints = 0
@@ -116,12 +91,6 @@ def collect_stats() -> dict:
     )
     python_test_case_count = _count_pattern_in_files(
         PYTHON_TEST_DIR, ".py", PYTHON_TEST_CASE_PATTERN
-    )
-    java_unit_test_badge_text, java_unit_test_badge_color = (
-        _unit_test_badge_message_and_color(JAVA_TEST_RESULTS_PATH)
-    )
-    python_unit_test_badge_text, python_unit_test_badge_color = (
-        _unit_test_badge_message_and_color(PYTHON_TEST_RESULTS_PATH)
     )
 
     for file_path in ROOT_DIR.rglob("*"):
@@ -158,10 +127,6 @@ def collect_stats() -> dict:
         "python_endpoint_count": python_endpoints,
         "java_test_case_count": java_test_case_count,
         "python_test_case_count": python_test_case_count,
-        "java_unit_test_badge_text": java_unit_test_badge_text,
-        "java_unit_test_badge_color": java_unit_test_badge_color,
-        "python_unit_test_badge_text": python_unit_test_badge_text,
-        "python_unit_test_badge_color": python_unit_test_badge_color,
         "language_lines": sorted_language_lines,
     }
 
@@ -216,16 +181,6 @@ def build_stats_markdown(stats: dict) -> str:
     )
 
 
-def _build_unit_test_badge_json(label: str, message: str, color: str) -> dict:
-    return {
-        "schemaVersion": 1,
-        "label": label,
-        "message": message,
-        "color": color,
-        "labelColor": "0f172a",
-    }
-
-
 def update_readme(stats_md: str, stats: dict) -> None:
     readme_content = README_PATH.read_text(encoding="utf-8")
     replacement = f"{SECTION_START}\n{stats_md}{SECTION_END}"
@@ -252,32 +207,6 @@ def main() -> None:
         encoding="utf-8",
     )
     STATS_MD_PATH.write_text(stats_md, encoding="utf-8")
-    JAVA_BADGE_JSON_PATH.write_text(
-        json.dumps(
-            _build_unit_test_badge_json(
-                "Java Unit Test",
-                stats["java_unit_test_badge_text"],
-                stats["java_unit_test_badge_color"],
-            ),
-            ensure_ascii=False,
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    PYTHON_BADGE_JSON_PATH.write_text(
-        json.dumps(
-            _build_unit_test_badge_json(
-                "Python Unit Test",
-                stats["python_unit_test_badge_text"],
-                stats["python_unit_test_badge_color"],
-            ),
-            ensure_ascii=False,
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     update_readme(stats_md, stats)
 
 
