@@ -74,7 +74,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git pull --rebase
             git commit -m "chore(tests): update Java test results"
+            git pull --rebase
             git push
           fi
