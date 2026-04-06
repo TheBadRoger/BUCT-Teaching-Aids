@@ -18,19 +18,18 @@
   <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/java-build.yml"><img alt="Java Build" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/java-build.yml?branch=main&label=Java%20Build&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
   <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/java-tests.yml"><img alt="Java Unit Test" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fjava-unit-test-badge.json&style=flat-square" /></a>
   <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/python-build.yml"><img alt="Python Build" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/python-build.yml?branch=main&label=Python%20Build&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
-  <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/python-tests.yml"><img alt="Python Unit Test" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTheBadRoger%2FBUCT-Teaching-Aids%2Fmain%2Fscripts%2Fgenerated%2Fpython-unit-test-badge.json&style=flat-square" /></a>
 </p>
 
 <!-- STATS_SECTION_START -->
 ## 项目统计
 
-> 统计更新时间（UTC+8）：`2026-04-06 12:44:15`
+> 统计更新时间（UTC+8）：`2026-04-06 13:36:40`
 
 ### 核心统计
 
 | 指标 | 数值 |
 | :-- | --: |
-| 代码总行数（非空行） | 22690 |
+| 代码总行数（非空行） | 22697 |
 | Java 接口数 | 55 |
 | Python 接口数 | 27 |
 | Java 单元测试用例数 | 128 |
@@ -56,11 +55,11 @@
   'pie10': '#A855F7'
 }}}%%
 pie showData
-    "HTML (34.92%)" : 7923
-    "Java (28.74%)" : 6522
+    "HTML (34.91%)" : 7923
+    "Java (28.77%)" : 6529
     "CSS (12.50%)" : 2837
-    "Python (9.28%)" : 2105
-    "Markdown (8.14%)" : 1846
+    "Python (9.27%)" : 2105
+    "Markdown (8.13%)" : 1846
     "JavaScript (3.42%)" : 777
     "YAML (2.21%)" : 501
     "SQL (0.77%)" : 174
