@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -16,23 +17,24 @@ public class SecurityAuthorize {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         http
-                //授权规则
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/enter.html",
-                                "/register.html",
-                                "/error",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/api/aijudegment/login",
-                                "/api/aijudegment/register",
-                                "/api/user/auth/login",
-                                "/api/user/auth/register",
-                                "/api/user/auth/send-code"
-                        )
-                        .permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers(
+                                        "/enter.html",
+                                        "/register.html",
+                                        "/error",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/images/**",
+                                        "/api/aijudegment/login",
+                                        "/api/aijudegment/register",
+                                        "/api/user/auth/login",
+                                        "/api/user/auth/register",
+                                        "/api/user/auth/send-code"
+                                )
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 //关闭表单验证
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -40,13 +42,17 @@ public class SecurityAuthorize {
                 .securityContext(context -> context
                         .securityContextRepository(new HttpSessionSecurityContextRepository())
                 )
+                //会话策略：按会话空闲时间失效，失效后跳转登录页
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/enter.html")
+                )
                 //异常处理：未授权时自动跳转到登录页面
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/enter.html"))
                 )
                 //关闭 CSRF
                 .csrf(AbstractHttpConfigurer::disable);
-
         return http.build();
     }
 }

@@ -42,8 +42,8 @@ public class FileDownloadCtrl {
     private ResponseEntity<byte[]> buildDownloadResponse(String timeStamp, String text) throws IOException {
         if (!StringUtils.hasText(text)) {
             return ResponseEntity.badRequest()
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .body("text parameter is required".getBytes(StandardCharsets.UTF_8));
+                                 .contentType(MediaType.TEXT_PLAIN)
+                                 .body("text parameter is required".getBytes(StandardCharsets.UTF_8));
         }
 
         String fileName = "judgereport_" + timeStamp + ".xlsx";
@@ -53,13 +53,13 @@ public class FileDownloadCtrl {
 
         // 2. 构造下载头
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8)
-                .replace("+", "%20");  // 处理空格编码问题
+                                           .replace("+", "%20");  // 处理空格编码问题
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
         headers.setContentDispositionFormData("attachment", fileName);
         headers.set(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename*=utf-8''" + encodedFileName);
+                    "attachment; filename*=utf-8''" + encodedFileName);
 
         // 3. 返回 ResponseEntity
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
@@ -90,13 +90,13 @@ public class FileDownloadCtrl {
 
     //从单个文件的批改结果中提取行数据
     private String[] extractRowData(String text) {
-        String[] fields = {"姓名", "学号", "班级", "日期", "报告名称", "分数", "评判依据"};
+        String[] fields  = {"姓名", "学号", "班级", "日期", "报告名称", "分数", "评判依据"};
         String[] rowData = new String[7];
 
         for (int i = 0; i < fields.length; i++) {
             // 查找 "字段名：值" 的格式
-            String pattern = "^" + fields[i] + "：(.+)$";
-            String[] values = TextUtils.ExtractInfo(text, pattern);
+            String   pattern = "^" + fields[i] + "：(.+)$";
+            String[] values  = TextUtils.ExtractInfo(text, pattern);
             rowData[i] = (values.length > 0) ? values[0] : "";
         }
 
