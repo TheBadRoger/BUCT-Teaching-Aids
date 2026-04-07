@@ -20,7 +20,7 @@ sudo apt install redis-server
 
 ## **2. 配置项目环境变量**
 
-Java 后端单独部署时，请使用 `API/JavaAPI/.env`，不要使用根目录 `/.env`（根目录变量仅用于 Docker 编排）。
+Java 后端单独部署时，请使用 `API/JavaAPI/.env`，不要使用根目录 `/.env`。
 
 ```shell
 cd /path/to/BUCT-Teaching-Aids/API/JavaAPI

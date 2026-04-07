@@ -1,6 +1,19 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-MYSQL_PWD="${MYSQL_ROOT_PASSWORD}" mysql -uroot <<SQL
+JAVA_DB_PASS="${BUCTTA_JAVA_DB_PASSWORD:-replace_with_java_db_password}"
+PYTHON_DB_PASS="${BUCTTA_PYTHON_DB_PASSWORD:-replace_with_python_db_password}"
+
+mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" <<EOSQL
 CREATE DATABASE IF NOT EXISTS BUCTTA_DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-SQL
+
+CREATE USER IF NOT EXISTS 'java_springboot_buctta'@'%' IDENTIFIED BY '${JAVA_DB_PASS}';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
+    ON BUCTTA_DATABASE.* TO 'java_springboot_buctta'@'%';
+
+CREATE USER IF NOT EXISTS 'python_flask_buctta'@'%' IDENTIFIED BY '${PYTHON_DB_PASS}';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES
+    ON BUCTTA_DATABASE.* TO 'python_flask_buctta'@'%';
+
+FLUSH PRIVILEGES;
+EOSQL

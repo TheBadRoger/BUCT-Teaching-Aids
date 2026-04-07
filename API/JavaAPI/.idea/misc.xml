@@ -11,7 +11,6 @@
       <list>
         <option value="flyway" />
         <option value="native" />
-        <option value="docker" />
         <option value="nativeTest" />
       </list>
     </option>

@@ -1,47 +1,32 @@
-FROM maven:3.9-eclipse-temurin-25 AS builder
+FROM docker.m.daocloud.io/library/maven:3.9.9-eclipse-temurin-25 AS builder
 
 WORKDIR /build
 
-RUN sed -i 's|http://.*.ubuntu.com|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    sed -i 's|http://.*.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    sed -i 's|http://security.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    sed -i 's|http://deb.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates && \
-    update-ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /usr/share/maven/conf && \
-    cat > /usr/share/maven/conf/settings.xml <<'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
+# Prefer domestic Maven mirror to speed up dependency downloads.
+RUN mkdir -p /root/.m2 && cat > /root/.m2/settings.xml <<'EOF'
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
   <mirrors>
     <mirror>
       <id>aliyunmaven</id>
-      <name>阿里云公共仓库</name>
+      <mirrorOf>*</mirrorOf>
+      <name>aliyun maven</name>
       <url>https://maven.aliyun.com/repository/public</url>
-      <mirrorOf>central</mirrorOf>
-    </mirror>
-    <mirror>
-      <id>aliyunmaven-spring</id>
-      <name>阿里云Spring仓库</name>
-      <url>https://maven.aliyun.com/repository/spring</url>
-      <mirrorOf>spring*</mirrorOf>
     </mirror>
   </mirrors>
 </settings>
 EOF
 
-COPY API/JavaAPI/pom.xml /build/pom.xml
-COPY API/JavaAPI/src /build/src
-RUN mvn -B -DskipTests -Pdocker clean package
+COPY API/JavaAPI /build
+RUN mvn -s /root/.m2/settings.xml -f /build/pom.xml clean package -DskipTests && \
+    JAR_FILE=$(find /build/target -maxdepth 1 -type f -name '*.jar' ! -name '*.jar.original' | head -n 1) && \
+    test -n "$JAR_FILE" && cp "$JAR_FILE" /build/app.jar
 
-FROM eclipse-temurin:25-jre
+FROM docker.m.daocloud.io/library/eclipse-temurin:25-jre
 
 WORKDIR /app
+COPY --from=builder /build/app.jar /app/app.jar
 
-COPY --from=builder /build/target/japi-*.jar /app/japi.jar
 EXPOSE 80
-ENTRYPOINT ["java", "-jar", "/app/japi.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

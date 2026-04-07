@@ -1,5 +1,67 @@
 services:
-  java-backend:
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: buctta-mysql
+    restart: unless-stopped
     environment:
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: BUCTTA_DATABASE
+      BUCTTA_JAVA_DB_PASSWORD: ${BUCTTA_JAVA_DB_PASSWORD}
+      BUCTTA_PYTHON_DB_PASSWORD: ${BUCTTA_PYTHON_DB_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    ports:
+      - "${MYSQL_HOST_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: docker.m.daocloud.io/library/redis:7.2-alpine
+    container_name: buctta-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"]
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  java-app:
+    build:
+      context: ..
+      dockerfile: docker/java/Dockerfile
+    container_name: buctta-java
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_FLYWAY_ENABLED: "false"
+      SERVER_PORT: 80
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BUCTTA_DATABASE?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: java_springboot_buctta
+      BUCTTA_JAVA_DB_PASSWORD: ${BUCTTA_JAVA_DB_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${JAVA_HOST_PORT:-80}:80"
+
+volumes:
+  mysql_data:
+  redis_data:
