@@ -40,7 +40,7 @@ cp .env.example .env
 nano .env   # 或使用 vim .env
 ```
 
-> 说明：这里的 `.env` 是 `API/PythonAPI/.env`，仅用于 Python 后端单独部署；不要复用根目录 `/.env`（根目录变量用于 Docker Compose）。
+> 说明：这里的 `.env` 是 `API/PythonAPI/.env`，仅用于 Python 后端单独部署；不要复用根目录 `/.env`。
 
 需要修改的关键字段：
 
