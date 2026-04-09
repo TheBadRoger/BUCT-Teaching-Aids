@@ -52,3 +52,44 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 
 ---
 * 注意 开发环境中，应该将application.properties文件中的```spring.profiles.active```字段设置为```dev```；生产环境中则为```prod```
+
+## **6. 使用 Docker Compose 启动依赖服务（可选）**
+
+建议 Windows 用户在 WSL2 + Docker Desktop 环境下运行容器。仓库在 `API/JavaAPI/compose.yaml` 中提供了 MySQL 与 Redis 的配置，常用流程：
+
+```powershell
+# 推荐在 WSL 或具有 Docker CLI 的环境中运行
+cd \path\to\BUCT-Teaching-Aids\API\JavaAPI
+# 复制并编辑 .env（如未配置）
+cp .env.example .env
+# 启动 MySQL 与 Redis
+docker compose -f compose.yaml up -d --build
+# 或者使用 docker-compose.exe
+docker-compose -f compose.yaml up -d --build
+```
+
+说明：该 `compose.yaml` 仅包含 MySQL 与 Redis，Java 应用可以在 Windows/WSL 中通过 `mvn spring-boot:run` 连接到这些容器提供的服务。若希望把 Java 应用容器化，可参考仓库中的 `docker/java/Dockerfile` 来构建并运行 Java 镜像。
+
+停止并移除容器：
+
+```powershell
+docker compose -f compose.yaml down
+# 或 docker-compose -f compose.yaml down
+```
+
+## **7. Testcontainers 集成测试（说明）**
+
+项目在集成测试中使用 Testcontainers 自动启动临时容器（例如 MySQL、Redis）。Windows 环境注意事项：
+
+- **启用 Docker Desktop（建议使用 WSL2 后端）**，确保测试运行时 Docker 可访问。
+- **运行测试**（在 `API/JavaAPI` 下）：
+
+```powershell
+cd \path\to\BUCT-Teaching-Aids\API\JavaAPI
+mvn test
+```
+
+- **CI/权限**：在 CI 中确保 Runner 有 Docker 权限。如果无法使用 Ryuk，CI 中可设置 `TESTCONTAINERS_RYUK_DISABLED=true`（仅在受控环境使用）。
+- **调试**：若测试失败，检查 Docker Desktop 的日志与容器状态，确保端口和网络配置没有被本机防火墙或安全软件阻断。
+
+需要的话，我可以把一组示例命令和 CI 配置片段（比如 GitHub Actions）补充到文档中。
