@@ -470,6 +470,92 @@
 
 ---
 
+### PUT /api/course/update
+- **描述**：编辑已有课程的信息，根据 ID 进行更新。仅更新请求中提供的非 null 字段。
+
+- **请求方式**：PUT，application/json
+
+- **查询参数**：
+
+  | 参数名 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | id | long | 是 | 要更新的课程ID |
+
+- **请求体（JSON，Course 对象，所有字段均可选）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | courseName | string | 否 | 课程名称 |
+  | courseNumber | string | 否 | 课程编号（唯一） |
+  | courseIntroduction | string | 否 | 课程简介（支持长文本） |
+  | startDate | string | 否 | 开课日期 |
+  | teachingObjectives | string | 否 | 教学目标 |
+  | duration | string | 否 | 课程时长/学时 |
+  | teachingTeachers | string | 否 | 授课教师 |
+  | teachingClasses | string | 否 | 开课班级 |
+  | targetAudience | string | 否 | 适用对象 |
+  | classAddress | string | 否 | 上课地点 |
+  | coursePrice | double | 否 | 课程价格 |
+  | courseStatus | string | 否 | 课程状态（如"进行中"、"已结课"） |
+  | courseTags | string | 否 | 课程标签 |
+  | courseOutline | string | 否 | 课程大纲（支持超长文本） |
+  | courseImage | string | 否 | 课程封面图片 URL |
+
+- **返回**（成功）：data 字段为更新后的 Course 对象（结构同现有课程实体）
+
+- **返回**（失败）：code: 4042，课程不存在；code: 4091，课程编号已存在
+
+### DELETE /api/course/batch
+- **描述**：批量删除课程记录（物理删除）。接收课程 ID 列表。
+
+- **请求方式**：DELETE，application/json
+
+- **请求体（JSON，ID 列表）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | [0..n] | long | 是 | 课程ID数组 |
+
+- **请求示例**：
+
+```json
+[1, 2, 3]
+```
+- **返回**（成功）：
+
+```json
+{
+"code": 2000,
+"msg": "批量删除成功",
+"timestamp": 1700000000000,
+"data": "批量删除成功"
+}
+```
+- **返回**（失败）：code: 5000，删除失败
+
+### GET /api/course/export
+- **描述**：导出全部课程数据为 Excel（.xlsx）文件。返回文件流，浏览器自动触发下载。
+
+- **请求方式**：GET
+
+- **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
+
+- **响应头**：Content-Disposition: attachment; filename=courses.xlsx
+
+- **Excel 列结构**：
+
+  | 列名 | 说明 |
+  |--------|------|
+  | ID | 课程ID |
+  | 课程名称 | 课程名称 |
+  | 课程编号 | 课程编号 |
+  | 授课教师 | 授课教师 |
+  | 状态 | 课程状态 |
+
+- **注意**：该接口直接响应文件下载，无需解析 JSON。
+
+
+
 ## 课程访问量模块 `/api/course/view`
 
 > 基于 Redis 实现的课程访问量统计，定期同步到 MySQL。
@@ -676,6 +762,93 @@
 
 ---
 
+### PUT /api/teacher/update
+- **描述**：编辑已有教师的信息，根据 ID 进行更新。仅更新请求中提供的非 null 字段。
+
+- **请求方式**：PUT，application/json
+
+- **查询参数**：
+
+  | 参数名 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | id | long | 是 | 要更新的教师ID |
+
+- **请求体（JSON，Teacher 对象，所有字段均可选）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | name | string | 否 | 教师姓名 |
+  | organization | string | 否 | 所属单位/院系 |
+  | gender | string | 否 | 性别 |
+  | education | string | 否 | 最高学历 |
+  | jointime | string | 否 | 入职时间 |
+
+- **返回**（成功）：
+```json
+{
+"code": 2000,
+"msg": "Ok.",
+"timestamp": 1700000000000,
+"data": {
+"id": 1,
+"name": "张教授",
+"organization": "信息科学与技术学院",
+"gender": "男",
+"education": "博士",
+"jointime": "2020-09-01"
+}
+}
+```
+- **返回**（失败）：code: 4042，教师不存在；code: 4091，教师姓名已存在
+### DELETE /api/teacher/batch
+- **描述**：批量删除教师记录（物理删除）。接收教师 ID 列表，一次删除多条记录。
+
+- **请求方式**：DELETE，application/json
+
+- **请求体（JSON，ID 列表）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | [0..n] | long | 是 | 教师ID数组 |
+
+- **请求示例**：
+
+```json
+[1, 2, 3]
+```
+- **返回（成功）**：
+
+```json
+{
+  "code": 2000,
+  "msg": "批量删除成功",
+  "timestamp": 1700000000000,
+  "data": "批量删除成功"
+}
+```
+- **返回（失败）**：code: 5000，删除失败
+
+### GET /api/teacher/export
+- **描述**：导出全部教师数据为 Excel（.xlsx）文件。返回文件流，浏览器自动触发下载。
+
+- **请求方式**：GET
+
+- **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
+
+- **响应头**：Content-Disposition: attachment; filename=teachers.xlsx
+
+- **Excel 列结构**：
+
+  | 列名 | 说明 |
+  |------|------|
+  | ID | 教师ID |
+  | 姓名 | 教师姓名 |
+  | 单位 | 所属单位/院系 |
+  | 性别 | 性别 |
+  | 学历 | 最高学历 |
+  | 入职时间 | 入职时间 |
+
+- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 <a> 标签 download 属性触发下载。
 ## 学生管理模块 `/api/students`
 
 ### POST /api/students/add
@@ -716,6 +889,95 @@
 - **返回**（成功）：`data` 字段为分页对象（`Page<Student>`），结构同课程搜索
 
 ---
+
+### PUT /api/students/update
+- **描述**：编辑已有学生的信息，根据 ID 进行更新。仅更新请求中提供的非 null 字段。
+
+- **请求方式**：PUT，application/json
+
+  - **查询参数**：
+
+    | 参数名 | 类型 | 必填 | 说明 |
+    |--------|------|------|------|
+    | id | long | 是 | 要更新的学生ID |
+
+  - **请求体（JSON，Student 对象，所有字段均可选）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | name | string | 否 | 学生姓名 |
+  | studentNumber | string | 否 | 学号（唯一） |
+  | className | string | 否 | 班级名称 |
+  | gender | string | 否 | 性别 |
+  | admissionDate | string | 否 | 入学日期（格式 YYYY-MM-DD） |
+
+- **返回（成功）**：
+
+```json
+{
+  "code": 2000,
+  "msg": "Ok.",
+  "timestamp": 1700000000000,
+  "data": {
+  "id": 1,
+  "studentNumber": "2024001",
+  "name": "张三",
+  "className": "计算机2401",
+  "gender": "男",
+  "admissionDate": "2024-09-01"
+  }
+}
+```
+- **返回（失败）**：code: 4042，学生不存在；code: 4091，学号已存在
+
+### DELETE /api/students/batch
+- **描述**：批量删除学生记录（逻辑删除，将 deleted 字段标记为 true）。
+
+- **请求方式**：DELETE，application/json
+
+- **请求体（JSON，ID 列表）**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | [0..n] | long | 是 | 学生ID数组 |
+
+- **请求示例**：
+
+```json
+[1, 2, 3]
+```
+- **返回（成功）**：
+
+```json
+{
+  "code": 2000,
+  "msg": "批量删除成功",
+  "timestamp": 1700000000000,
+  "data": "批量删除成功"
+}
+```
+- **返回（失败）**：code: 5000，删除失败
+
+### GET /api/students/export
+- **描述**：导出全部学生数据为 Excel（.xlsx）文件。返回文件流，浏览器自动触发下载。
+
+- **请求方式**：GET
+
+- **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
+
+- **响应头**：Content-Disposition: attachment; filename=students.xlsx
+
+- **Excel 列结构**：
+
+  | 列名 | 说明 |
+  |--------|------|
+  | ID | 学生ID |
+  | 姓名 | 学生姓名 |
+  | 学号 | 学生学号 |
+  | 班级 | 所在班级 |
+  | 性别 | 性别 |
+
+- **注意**：该接口直接响应文件下载，无需解析 JSON。
 
 ## 学生选课模块 `/api/student-courses`
 

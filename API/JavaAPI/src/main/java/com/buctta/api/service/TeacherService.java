@@ -41,4 +41,6 @@ public interface TeacherService {
     TeacherResult deleteTeachers(List<Long> ids);
     byte[] exportTeachersToExcel(List<Teacher> teachers) throws IOException;
     List<Teacher> getAllTeachersForExport();
+
+    TeacherResult updateTeacher(Long id, Teacher teacherDetails);
 }

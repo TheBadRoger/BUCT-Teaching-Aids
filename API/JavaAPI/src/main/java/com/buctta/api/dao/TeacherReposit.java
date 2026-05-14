@@ -23,5 +23,4 @@ public interface TeacherReposit extends JpaRepository<Teacher, Long>, JpaSpecifi
     @Transactional
     @Query("DELETE FROM Teacher t WHERE t.id IN :ids")
     void deleteAllByIdIn(@Param("ids") List<Long> ids);
-
 }

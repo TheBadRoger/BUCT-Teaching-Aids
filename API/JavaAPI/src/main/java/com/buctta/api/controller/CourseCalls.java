@@ -81,4 +81,18 @@ public class CourseCalls {
         response.getOutputStream().write(excelBytes);
         response.getOutputStream().flush();
     }
+    /**
+     * 编辑课程信息
+     */
+    @PutMapping("/update")
+    public ApiResponse<Course> updateCourse(@RequestParam Long id,
+                                            @RequestBody Course courseDetails) {
+        CourseService.CourseResult result =
+                courseService.updateCourse(id, courseDetails);
+        if (result.success()) {
+            return ApiResponse.ok(result.course());
+        } else {
+            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+        }
+    }
 }

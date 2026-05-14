@@ -80,4 +80,18 @@ public class TeacherListCtrl {
         response.getOutputStream().write(excelBytes);
         response.getOutputStream().flush();
     }
+    /**
+     * 编辑教师信息
+     */
+    @PutMapping("/update")
+    public ApiResponse<Teacher> updateTeacher(@RequestParam Long id,
+                                              @RequestBody Teacher teacherDetails) {
+        TeacherService.TeacherResult result =
+                teacherService.updateTeacher(id, teacherDetails);
+        if (result.success()) {
+            return ApiResponse.ok(result.teacher());
+        } else {
+            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+        }
+    }
 }
