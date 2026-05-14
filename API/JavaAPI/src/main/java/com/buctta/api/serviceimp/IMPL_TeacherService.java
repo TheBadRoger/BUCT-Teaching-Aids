@@ -114,4 +114,46 @@ public class IMPL_TeacherService implements TeacherService {
     public List<Teacher> getAllTeachersForExport() {
         return teacherReposit.findAll();
     }
+    @Override
+    public TeacherResult updateTeacher(Long id, Teacher teacherDetails) {
+        Teacher existingTeacher = teacherReposit.findTeacherListById(id);
+        if (existingTeacher == null) {
+            return TeacherResult.fail("TEACHER_NOT_FOUND", "教师不存在，ID: " + id);
+        }
+
+        // 检查姓名是否重复（排除自己）
+        if (teacherDetails.getName() != null &&
+                !teacherDetails.getName().equals(existingTeacher.getName())) {
+            Teacher teacherWithSameName =
+                    teacherReposit.findTeacherListByName(teacherDetails.getName());
+            if (teacherWithSameName != null && teacherWithSameName.getId() != id) {
+                return TeacherResult.fail("TEACHER_NAME_EXISTS",
+                        "教师姓名已存在: " + teacherDetails.getName());
+            }
+        }
+
+        // 更新字段（null-safe）
+        if (teacherDetails.getName() != null) {
+            existingTeacher.setName(teacherDetails.getName());
+        }
+        if (teacherDetails.getOrganization() != null) {
+            existingTeacher.setOrganization(teacherDetails.getOrganization());
+        }
+        if (teacherDetails.getGender() != null) {
+            existingTeacher.setGender(teacherDetails.getGender());
+        }
+        if (teacherDetails.getEducation() != null) {
+            existingTeacher.setEducation(teacherDetails.getEducation());
+        }
+        if (teacherDetails.getJointime() != null) {
+            existingTeacher.setJointime(teacherDetails.getJointime());
+        }
+
+        try {
+            Teacher updatedTeacher = teacherReposit.save(existingTeacher);
+            return TeacherResult.success(updatedTeacher, "教师信息更新成功");
+        } catch (Exception e) {
+            return TeacherResult.fail("UPDATE_FAILED", "更新教师失败: " + e.getMessage());
+        }
+    }
 }

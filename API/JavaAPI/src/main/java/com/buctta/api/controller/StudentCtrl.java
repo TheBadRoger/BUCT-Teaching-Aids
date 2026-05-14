@@ -77,4 +77,18 @@ public class StudentCtrl {
         response.getOutputStream().write(excelBytes);
         response.getOutputStream().flush();
     }
+    /**
+     * 编辑学生信息
+     */
+    @PutMapping("/update")
+    public ApiResponse<Student> updateStudent(@RequestParam Long id,
+                                              @RequestBody Student studentDetails) {
+        StudentService.StudentResult result =
+                studentService.updateStudent(id, studentDetails);
+        if (result.success()) {
+            return ApiResponse.ok(result.student());
+        } else {
+            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+        }
+    }
 }
