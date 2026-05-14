@@ -5,12 +5,16 @@ import com.buctta.api.service.StudentService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -51,5 +55,26 @@ public class StudentCtrl {
             log.error("搜索学生时发生错误: {}", e.getMessage(), e);
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
+    }
+    // 批量删除
+    @DeleteMapping("/batch")
+    public ApiResponse<String> deleteStudents(@RequestBody List<Long> ids) {
+        StudentService.StudentResult result = studentService.deleteStudents(ids);
+        if (result.success()) {
+            return ApiResponse.ok(result.message());
+        } else {
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR, result.message());
+        }
+    }
+
+    // 导出Excel
+    @GetMapping("/export")
+    public void exportStudents(HttpServletResponse response) throws IOException {
+        List<Student> students = studentService.getAllStudentsForExport();
+        byte[] excelBytes = studentService.exportStudentsToExcel(students);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=students.xlsx");
+        response.getOutputStream().write(excelBytes);
+        response.getOutputStream().flush();
     }
 }
