@@ -5,11 +5,17 @@ import com.buctta.api.entities.Course;
 import com.buctta.api.service.CourseService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,5 +169,46 @@ public class IMPL_CourseService implements CourseService {
         catch (Exception e) {
             return CourseResult.fail("DELETE_FAILED", "删除课程失败: " + e.getMessage());
         }
+    }
+    @Override
+    public CourseResult deleteCourses(List<Long> ids) {
+        try {
+            if (ids == null || ids.isEmpty()) {
+                return CourseResult.fail("INVALID_IDS", "课程ID列表不能为空");
+            }
+            courseReposit.deleteAllByIdIn(ids);
+            return CourseResult.success(null, "批量删除成功");
+        } catch (Exception e) {
+            return CourseResult.fail("DELETE_FAILED", "批量删除失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] exportCoursesToExcel(List<Course> courses) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("课程列表");
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("ID");
+        header.createCell(1).setCellValue("课程名称");
+        header.createCell(2).setCellValue("课程编号");
+        header.createCell(3).setCellValue("授课教师");
+        header.createCell(4).setCellValue("状态");
+        int rowIdx = 1;
+        for (Course c : courses) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(c.getId());
+            row.createCell(1).setCellValue(c.getCourseName());
+            row.createCell(2).setCellValue(c.getCourseNumber());
+            row.createCell(3).setCellValue(c.getTeachingTeachers());
+            row.createCell(4).setCellValue(c.getCourseStatus());
+        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        workbook.close();
+        return bos.toByteArray();
+    }
+    @Override
+    public List<Course> getAllCourses() {
+        return courseReposit.findAll();
     }
 }
