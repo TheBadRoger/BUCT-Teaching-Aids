@@ -4,6 +4,9 @@ import com.buctta.api.entities.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.util.List;
+
 public interface TeacherService {
     /**
      * 添加教师
@@ -35,4 +38,9 @@ public interface TeacherService {
             return new TeacherResult(false, null, errorCode, message);
         }
     }
+    TeacherResult deleteTeachers(List<Long> ids);
+    byte[] exportTeachersToExcel(List<Teacher> teachers) throws IOException;
+    List<Teacher> getAllTeachersForExport();
+
+    TeacherResult updateTeacher(Long id, Teacher teacherDetails);
 }

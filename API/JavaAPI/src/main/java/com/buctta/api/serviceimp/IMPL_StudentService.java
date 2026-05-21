@@ -2,14 +2,21 @@ package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.StudentReposit;
 import com.buctta.api.entities.Student;
+import com.buctta.api.service.CourseService;
 import com.buctta.api.service.StudentService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,5 +173,47 @@ public class IMPL_StudentService implements StudentService {
                 criteriaBuilder.between(root.get("admissionDate"), startDate, endDate);
 
         return studentRepository.findAll(specification);
+    }
+    @Override
+    public StudentService.StudentResult deleteStudents(List<Long> ids) {
+        try {
+            if (ids == null || ids.isEmpty()) {
+                return StudentService.StudentResult.fail("INVALID_IDS", "课程ID列表不能为空");
+            }
+            studentRepository.deleteAllByIdIn(ids);
+            return StudentService.StudentResult.success(null, "批量删除成功");
+        } catch (Exception e) {
+            return StudentService.StudentResult.fail("DELETE_FAILED", "批量删除失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] exportStudentsToExcel(List<Student> students) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("学生名单");
+        // 表头
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("ID");
+        header.createCell(1).setCellValue("姓名");
+        header.createCell(2).setCellValue("学号");
+        header.createCell(3).setCellValue("班级");
+        header.createCell(4).setCellValue("性别");
+        int rowIdx = 1;
+        for (Student s : students) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(s.getId());
+            row.createCell(1).setCellValue(s.getName());
+            row.createCell(2).setCellValue(s.getStudentNumber());
+            row.createCell(3).setCellValue(s.getClassName());
+            row.createCell(4).setCellValue(s.getGender());
+        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        workbook.close();
+        return bos.toByteArray();
+    }
+    @Override
+    public List<Student> getAllStudentsForExport() {
+        return studentRepository.findAll();
     }
 }
