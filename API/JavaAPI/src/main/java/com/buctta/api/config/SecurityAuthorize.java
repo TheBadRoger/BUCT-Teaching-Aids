@@ -19,16 +19,17 @@ public class SecurityAuthorize {
                 //授权规则
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/enter.html",
-                                "/register.html",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/api/aijudegment/login",
-                                "/api/aijudegment/register",
-                                "/api/user/auth/login",
-                                "/api/user/auth/register",
-                                "/api/user/auth/send-code"
+                                "/**"
+                                // "/enter.html",
+                                // "/register.html",
+                                // "/css/**",
+                                // "/js/**",
+                                // "/images/**",
+                                // "/api/aijudegment/login",
+                                // "/api/aijudegment/register",
+                                // "/api/user/auth/login",
+                                // "/api/user/auth/register",
+                                // "/api/user/auth/send-code"
                         )
                         .permitAll()
                         .anyRequest().authenticated()
