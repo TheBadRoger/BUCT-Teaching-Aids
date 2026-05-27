@@ -1,0 +1,10 @@
+# Computer-vision and model dependencies
+numpy==1.26.1
+opencv-python==4.8.1.78
+Pillow==10.1.0
+imutils==0.5.4
+# Face recognition stack (requires system build tools / dlib prereqs)
+face-recognition==1.3.0
+face-recognition-models==0.3.0
+# Pose estimation
+ultralytics==8.4.33

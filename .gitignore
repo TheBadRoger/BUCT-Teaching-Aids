@@ -29,3 +29,20 @@ replay_pid*
 # Testing files
 /API/JavaAPI/temp/
 
+# Secret environment files
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python cache
+__pycache__/
+*.pyc
+
+# JetBrains local state (shared configs in .idea are intentionally versioned)
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/httpRequests/
+.idea/queries/
+.idea/dataSources/
+.idea/dataSources.local.xml

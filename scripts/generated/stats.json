@@ -1,0 +1,22 @@
+{
+  "updated_at_utc": "2026-05-27T06:19:20Z",
+  "updated_at_utc8": "2026-05-27 14:19:20",
+  "total_lines": 24044,
+  "language_count": 9,
+  "top_language": "HTML",
+  "java_endpoint_count": 85,
+  "python_endpoint_count": 27,
+  "java_test_case_count": 129,
+  "python_test_case_count": 28,
+  "language_lines": {
+    "HTML": 7923,
+    "Java": 7739,
+    "CSS": 2837,
+    "Python": 2053,
+    "Markdown": 2046,
+    "JavaScript": 777,
+    "YAML": 475,
+    "SQL": 180,
+    "Shell": 14
+  }
+}
