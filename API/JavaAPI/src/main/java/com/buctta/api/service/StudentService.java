@@ -4,6 +4,7 @@ import com.buctta.api.entities.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface StudentService {
@@ -77,4 +78,10 @@ public interface StudentService {
             return new StudentResult(false, null, errorCode, message);
         }
     }
+    // 批量删除
+    StudentResult deleteStudents(List<Long> ids);
+
+    List<Student> getAllStudentsForExport();
+    // 导出Excel
+    byte[] exportStudentsToExcel(List<Student> students) throws IOException;
 }

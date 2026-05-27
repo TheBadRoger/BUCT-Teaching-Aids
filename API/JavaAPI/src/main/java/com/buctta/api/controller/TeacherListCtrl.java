@@ -5,12 +5,16 @@ import com.buctta.api.service.TeacherService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 
@@ -53,6 +57,41 @@ public class TeacherListCtrl {
         catch (Exception e) {
             log.error("搜索教师时发生错误: {}", e.getMessage(), e);
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
+        }
+    }
+    // 批量删除
+    @DeleteMapping("/batch")
+    public ApiResponse<String> deleteTeachers(@RequestBody List<Long> ids) {
+        TeacherService.TeacherResult result = teacherService.deleteTeachers(ids);
+        if (result.success()) {
+            return ApiResponse.ok(result.message());
+        } else {
+            return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR, result.message());
+        }
+    }
+
+    // 导出Excel
+    @GetMapping("/export")
+    public void exportTeachers(HttpServletResponse response) throws IOException {
+        List<Teacher> teachers = teacherService.getAllTeachersForExport();
+        byte[] excelBytes = teacherService.exportTeachersToExcel(teachers);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=teachers.xlsx");
+        response.getOutputStream().write(excelBytes);
+        response.getOutputStream().flush();
+    }
+    /**
+     * 编辑教师信息
+     */
+    @PutMapping("/update")
+    public ApiResponse<Teacher> updateTeacher(@RequestParam Long id,
+                                              @RequestBody Teacher teacherDetails) {
+        TeacherService.TeacherResult result =
+                teacherService.updateTeacher(id, teacherDetails);
+        if (result.success()) {
+            return ApiResponse.ok(result.teacher());
+        } else {
+            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
         }
     }
 }

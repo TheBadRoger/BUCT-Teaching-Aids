@@ -7,11 +7,17 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,5 +70,90 @@ public class IMPL_TeacherService implements TeacherService {
         };
 
         return teacherReposit.findAll(specification, pageable);
+    }
+    @Override
+    public TeacherResult deleteTeachers(List<Long> ids) {
+        try {
+            if (ids == null || ids.isEmpty()) {
+                return TeacherResult.fail("INVALID_IDS", "教师ID列表不能为空");
+            }
+            teacherReposit.deleteAllByIdIn(ids);
+            return TeacherResult.success(null, "批量删除成功");
+        } catch (Exception e) {
+            return TeacherResult.fail("DELETE_FAILED", "批量删除失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] exportTeachersToExcel(List<Teacher> teachers) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("教师名单");
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("ID");
+        header.createCell(1).setCellValue("姓名");
+        header.createCell(2).setCellValue("单位");
+        header.createCell(3).setCellValue("性别");
+        header.createCell(4).setCellValue("学历");
+        header.createCell(5).setCellValue("入职时间");
+        int rowIdx = 1;
+        for (Teacher t : teachers) {
+            Row row = sheet.createRow(rowIdx++);
+            row.createCell(0).setCellValue(t.getId());
+            row.createCell(1).setCellValue(t.getName());
+            row.createCell(2).setCellValue(t.getOrganization());
+            row.createCell(3).setCellValue(t.getGender());
+            row.createCell(4).setCellValue(t.getEducation());
+            row.createCell(5).setCellValue(t.getJointime());
+        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        workbook.close();
+        return bos.toByteArray();
+    }
+    @Override
+    public List<Teacher> getAllTeachersForExport() {
+        return teacherReposit.findAll();
+    }
+    @Override
+    public TeacherResult updateTeacher(Long id, Teacher teacherDetails) {
+        Teacher existingTeacher = teacherReposit.findTeacherListById(id);
+        if (existingTeacher == null) {
+            return TeacherResult.fail("TEACHER_NOT_FOUND", "教师不存在，ID: " + id);
+        }
+
+        // 检查姓名是否重复（排除自己）
+        if (teacherDetails.getName() != null &&
+                !teacherDetails.getName().equals(existingTeacher.getName())) {
+            Teacher teacherWithSameName =
+                    teacherReposit.findTeacherListByName(teacherDetails.getName());
+            if (teacherWithSameName != null && teacherWithSameName.getId() != id) {
+                return TeacherResult.fail("TEACHER_NAME_EXISTS",
+                        "教师姓名已存在: " + teacherDetails.getName());
+            }
+        }
+
+        // 更新字段（null-safe）
+        if (teacherDetails.getName() != null) {
+            existingTeacher.setName(teacherDetails.getName());
+        }
+        if (teacherDetails.getOrganization() != null) {
+            existingTeacher.setOrganization(teacherDetails.getOrganization());
+        }
+        if (teacherDetails.getGender() != null) {
+            existingTeacher.setGender(teacherDetails.getGender());
+        }
+        if (teacherDetails.getEducation() != null) {
+            existingTeacher.setEducation(teacherDetails.getEducation());
+        }
+        if (teacherDetails.getJointime() != null) {
+            existingTeacher.setJointime(teacherDetails.getJointime());
+        }
+
+        try {
+            Teacher updatedTeacher = teacherReposit.save(existingTeacher);
+            return TeacherResult.success(updatedTeacher, "教师信息更新成功");
+        } catch (Exception e) {
+            return TeacherResult.fail("UPDATE_FAILED", "更新教师失败: " + e.getMessage());
+        }
     }
 }

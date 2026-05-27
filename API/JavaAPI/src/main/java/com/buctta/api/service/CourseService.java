@@ -4,6 +4,9 @@ import com.buctta.api.entities.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.util.List;
+
 public interface CourseService {
 
     /**
@@ -62,4 +65,7 @@ public interface CourseService {
             return new CourseResult(false, null, errorCode, message);
         }
     }
+    CourseResult deleteCourses(List<Long> ids);
+    byte[] exportCoursesToExcel(List<Course> courses) throws IOException;
+    List<Course> getAllCourses();
 }

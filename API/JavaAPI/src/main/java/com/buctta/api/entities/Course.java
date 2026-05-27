@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+
 @Table(name = "course_list")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +46,7 @@ public class Course {
     // ...existing code...
     @Column(name = "view_count", nullable = false)
     private Long viewCount = 0L;
+
 
 }
 

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>BUCT Teaching Aids - 错误页</title>
+  <link href="/css/judgecss.css" rel="stylesheet"/>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: min(640px, 100%);
+    }
+
+    .title {
+      font-size: 40px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .status {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 600;
+      margin: 0 auto 16px;
+    }
+
+    .desc {
+      margin: 0 0 12px;
+      color: #666;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-link {
+      display: inline-block;
+      flex: 1;
+      padding: 13px;
+      border-radius: 6px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: #2c82ff;
+    }
+
+    .btn-primary:hover {
+      background: #1867e0;
+    }
+
+    .btn-secondary {
+      color: #fff;
+      background: #5f6b7a;
+    }
+
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+  </style>
+</head>
+<body>
+<section class="container">
+  <h1 class="title">请求处理失败</h1>
+  <div class="status">状态码：{{STATUS_CODE}} - {{STATUS_TEXT}}</div>
+  <p class="desc">当前请求暂时无法完成，请检查输入信息后重试。</p>
+  <p class="desc">如果问题持续出现，请联系管理员并提供上方状态码。</p>
+  <div class="actions">
+    <a class="btn-link btn-primary" href="/index.html">返回首页</a>
+    <a class="btn-link btn-secondary" href="/enter.html">前往登录</a>
+  </div>
+</section>
+</body>
+</html>
+
+
+
