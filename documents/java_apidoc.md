@@ -743,8 +743,8 @@
 ---
 
 ### POST /api/teacher/search
-- **描述**：多条件分页搜索教师，所有条件均为可选。
-- **请求方式**：`POST`
+- **描述**：多条件分页搜索教师，所有条件均为可选。支持通过关联的 User 字段进行跨表过滤。
+- **请求方式**： POST
 - **查询参数**：
 
   | 参数名 | 类型 | 必填 | 说明 |
@@ -754,12 +754,41 @@
   | `jointime` | string | 否 | 按入职时间过滤 |
   | `gender` | string | 否 | 按性别过滤 |
   | `education` | string | 否 | 按学历过滤 |
+  | `username` | string | 否 | 按关联用户名模糊搜索（User 表） |
+  | `telephone` | string | 否 | 按关联电话模糊搜索（User 表） |
+  | `email` | string | 否 | 按关联邮箱模糊搜索（User 表） |
+  | `userType` | string | 否 | 按关联用户类型过滤（User 表，枚举值：TEACHER / STUDENT） |
   | `page` | int | 否 | 页码，从 0 开始，默认 `0` |
   | `size` | int | 否 | 每页条数，默认 `10` |
   | `sort` | string | 否 | 排序字段，默认 `id` |
-
-- **返回**（成功）：`data` 字段为分页对象（`Page<Teacher>`），结构同课程搜索
-
+返回（成功）： data 字段为分页对象（Page），content 数组中每条记录为 TeacherDTO 对象，已将关联的 User 字段展开为平铺结构。
+返回示例：
+```json
+{
+  "code": 2000,
+  "msg": "Ok.",
+  "timestamp": 1700000000000,
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "name": "张教授",
+        "organization": "信息科学与技术学院",
+        "gender": "男",
+        "education": "博士",
+        "jointime": "2020-09-01",
+        "username": "zhang_prof",
+        "telephone": "13800138000",
+        "email": "zhang@buct.edu.cn",
+        "userType": "TEACHER"
+      }
+    ],
+    "pageable": { ... },
+    "totalElements": 50,
+    "totalPages": 5
+  }
+}
+```
 ---
 
 ### PUT /api/teacher/update
@@ -829,26 +858,40 @@
 - **返回（失败）**：code: 5000，删除失败
 
 ### GET /api/teacher/export
-- **描述**：导出全部教师数据为 Excel（.xlsx）文件。返回文件流，浏览器自动触发下载。
-
+- **描述**：导出教师数据为 Excel（.xlsx）文件。支持通过可选查询参数按条件过滤导出，不传任何参数则导出全部教师。返回文件流，浏览器自动触发下载。
 - **请求方式**：GET
+- **查询参数**（均为可选）：
 
+  | 参数名 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | name | string | 否 | 按姓名过滤 |
+  | organization | string | 否 | 按单位过滤 |
+  | jointime | string | 否 | 按入职时间过滤 |
+  | gender | string | 否 | 按性别过滤 |
+  | education | string | 否 | 按学历过滤 |
+  | username | string | 否 | 按关联用户名过滤（User 表） |
+  | telephone | string | 否 | 按关联电话过滤（User 表） |
+  | email | string | 否 | 按关联邮箱过滤（User 表） |
+  | userType | string | 否 | 按关联用户类型过滤（User 表，枚举值：TEACHER / STUDENT） |
+  
 - **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
 
 - **响应头**：Content-Disposition: attachment; filename=teachers.xlsx
-
 - **Excel 列结构**：
 
   | 列名 | 说明 |
   |------|------|
-  | ID | 教师ID |
+  | ID | 教师 ID |
   | 姓名 | 教师姓名 |
   | 单位 | 所属单位/院系 |
   | 性别 | 性别 |
   | 学历 | 最高学历 |
   | 入职时间 | 入职时间 |
-
-- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 <a> 标签 download 属性触发下载。
+  | 用户名 | 关联用户名（来自 User 表） |
+  | 电话 | 关联电话（来自 User 表） |
+  | 邮箱 | 关联邮箱（来自 User 表） |
+  | 用户类型 | 关联用户类型（来自 User 表） |
+- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 <a> 标签 download 属性触发下载。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部教师
 ## 学生管理模块 `/api/students`
 
 ### POST /api/students/add
@@ -870,23 +913,49 @@
 ---
 
 ### GET /api/students/search
-- **描述**：多条件分页搜索学生，所有条件均为可选。
-- **请求方式**：`GET`
+- **描述**：多条件分页搜索学生，所有条件均为可选。支持通过关联的 User 字段进行跨表过滤。
+- **请求方式**： GET
 - **查询参数**：
 
   | 参数名 | 类型 | 必填 | 说明 |
   |--------|------|------|------|
-  | `name` | string | 否 | 按姓名模糊搜索 |
-  | `studentNumber` | string | 否 | 按学号模糊搜索 |
-  | `className` | string | 否 | 按班级过滤 |
-  | `gender` | string | 否 | 按性别过滤 |
-  | `telephone` | string | 否 | 按手机号过滤 |
-  | `email` | string | 否 | 按邮箱过滤 |
-  | `page` | int | 否 | 页码，从 0 开始，默认 `0` |
-  | `size` | int | 否 | 每页条数，默认 `10` |
-  | `sort` | string | 否 | 排序字段，默认 `id` |
-
-- **返回**（成功）：`data` 字段为分页对象（`Page<Student>`），结构同课程搜索
+  | name | string | 否 | 按姓名模糊搜索 |
+  | studentNumber | string | 否 | 按学号模糊搜索 |
+  | className | string | 否 | 按班级过滤 |
+  | gender | string | 否 | 按性别过滤 |
+  | telephone | string | 否 | 按关联电话模糊搜索（User 表） |
+  | email | string | 否 | 按关联邮箱模糊搜索（User 表） |
+  | page | int | 否 | 页码，从 0 开始，默认 0 |
+  | size | int | 否 | 每页条数，默认 10 |
+  | sort | string | 否 | 排序字段，默认 id |
+- **返回（成功）**： data 字段为分页对象（Page），content 数组中每条记录为 StudentDTO 对象，已将关联的 User 字段展开为平铺结构。
+- **返回示例**：
+```json
+{
+  "code": 2000,
+  "msg": "Ok.",
+  "timestamp": 1700000000000,
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "studentNumber": "2024001",
+        "name": "张三",
+        "className": "计算机2401",
+        "gender": "男",
+        "admissionDate": "2024-09-01",
+        "username": "zhangsan",
+        "telephone": "13900139000",
+        "email": "zhangsan@buct.edu.cn",
+        "userType": "STUDENT"
+      }
+    ],
+    "pageable": { ... },
+    "totalElements": 120,
+    "totalPages": 12
+  }
+}
+```
 
 ---
 
@@ -957,27 +1026,37 @@
 }
 ```
 - **返回（失败）**：code: 5000，删除失败
-
+---
 ### GET /api/students/export
-- **描述**：导出全部学生数据为 Excel（.xlsx）文件。返回文件流，浏览器自动触发下载。
-
+- **描述**：导出学生数据为 Excel（.xlsx）文件。支持通过可选查询参数按条件过滤导出，不传任何参数则导出全部学生。返回文件流，浏览器自动触发下载。
 - **请求方式**：GET
+- **查询参数（均为可选）**：
 
+  | 参数名 | 类型 | 必填 | 说明 |
+  |--------|------|------|------|
+  | name | string | 否 | 按姓名过滤 |
+  | studentNumber | string | 否 | 按学号过滤 |
+  | className | string | 否 | 按班级过滤 |
+  | gender | string | 否 | 按性别过滤 |
+  | telephone | string | 否 | 按关联电话过滤（User 表） |
+  | email | string | 否 | 按关联邮箱过滤（User 表） |
 - **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
-
 - **响应头**：Content-Disposition: attachment; filename=students.xlsx
-
 - **Excel 列结构**：
 
   | 列名 | 说明 |
-  |--------|------|
-  | ID | 学生ID |
+  |------|------|
+  | ID | 学生 ID |
   | 姓名 | 学生姓名 |
   | 学号 | 学生学号 |
   | 班级 | 所在班级 |
   | 性别 | 性别 |
+  | 用户名 | 关联用户名（来自 User 表） |
+  | 电话 | 关联电话（来自 User 表） |
+  | 邮箱 | 关联邮箱（来自 User 表） |
+  | 用户类型 | 关联用户类型（来自 User 表） |
 
-- **注意**：该接口直接响应文件下载，无需解析 JSON。
+- **注意**：该接口直接响应文件下载，无需解析 JSON。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部学生。
 
 ## 学生选课模块 `/api/student-courses`
 
