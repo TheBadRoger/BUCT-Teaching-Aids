@@ -1,5 +1,6 @@
 package com.buctta.api.controller;
 
+import com.buctta.api.dto.TeacherDTO;
 import com.buctta.api.entities.Teacher;
 import com.buctta.api.service.TeacherService;
 import com.buctta.api.utils.ApiResponse;
@@ -17,10 +18,10 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-
 @RestController
 @RequestMapping("/api/teacher")
 public class TeacherListCtrl {
+
     @Resource
     private TeacherService teacherService;
 
@@ -29,19 +30,23 @@ public class TeacherListCtrl {
         TeacherService.TeacherResult result = teacherService.addTeacher(newteacher);
         if (result.success()) {
             return ApiResponse.ok(result.teacher());
-        }
-        else {
+        } else {
             return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
         }
     }
 
+    //  搜索接口，新增 User 相关参数
     @PostMapping("/search")
-    public ApiResponse<Page<Teacher>> SearchTeacherCall(
+    public ApiResponse<Page<TeacherDTO>> SearchTeacherCall(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String organization,
             @RequestParam(required = false) String jointime,
             @RequestParam(required = false) String gender,
             @RequestParam(required = false) String education,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String telephone,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String userType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort) {
@@ -49,17 +54,16 @@ public class TeacherListCtrl {
         try {
             // 创建分页请求
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-            // 调用服务层进行搜索
-            Page<Teacher> teacherPage = teacherService.searchTeachers(name, organization, jointime, gender, education, pageable);
+            Page<TeacherDTO> teacherPage = teacherService.searchTeachers(
+                    name, organization, jointime, gender, education,
+                    username, telephone, email, userType, pageable);
             return ApiResponse.ok(teacherPage);
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("搜索教师时发生错误: {}", e.getMessage(), e);
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
     }
-    // 批量删除
+
     @DeleteMapping("/batch")
     public ApiResponse<String> deleteTeachers(@RequestBody List<Long> ids) {
         TeacherService.TeacherResult result = teacherService.deleteTeachers(ids);
@@ -70,11 +74,25 @@ public class TeacherListCtrl {
         }
     }
 
-    // 导出Excel
+    //  导出接口，同样支持 User 字段过滤
     @GetMapping("/export")
-    public void exportTeachers(HttpServletResponse response) throws IOException {
-        List<Teacher> teachers = teacherService.getAllTeachersForExport();
+    public void exportTeachers(HttpServletResponse response,
+                               @RequestParam(required = false) String name,
+                               @RequestParam(required = false) String organization,
+                               @RequestParam(required = false) String jointime,
+                               @RequestParam(required = false) String gender,
+                               @RequestParam(required = false) String education,
+                               @RequestParam(required = false) String username,
+                               @RequestParam(required = false) String telephone,
+                               @RequestParam(required = false) String email,
+                               @RequestParam(required = false) String userType)
+            throws IOException {
+
+        List<Teacher> teachers = teacherService.searchTeachersBySpec(
+                name, organization, jointime, gender, education,
+                username, telephone, email, userType);
         byte[] excelBytes = teacherService.exportTeachersToExcel(teachers);
+
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=teachers.xlsx");
         response.getOutputStream().write(excelBytes);

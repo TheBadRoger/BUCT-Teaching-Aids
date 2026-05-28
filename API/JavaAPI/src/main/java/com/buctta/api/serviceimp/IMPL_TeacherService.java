@@ -1,9 +1,12 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.TeacherReposit;
+import com.buctta.api.dto.TeacherDTO;
 import com.buctta.api.entities.Teacher;
+import com.buctta.api.entities.User;
 import com.buctta.api.service.TeacherService;
 import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,41 +39,102 @@ public class IMPL_TeacherService implements TeacherService {
         try {
             Teacher savedTeacher = teacherReposit.save(teacher);
             return TeacherResult.success(savedTeacher, "教师添加成功");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return TeacherResult.fail("SAVE_FAILED", "保存教师失败: " + e.getMessage());
         }
     }
 
-    @Override
-    public Page<Teacher> searchTeachers(String name, String organization, String jointime, String gender, String education, Pageable pageable) {
-        Specification<Teacher> specification = (root, query, criteriaBuilder) -> {
+    //构建 Specification，支持 User 字段过滤
+    private Specification<Teacher> buildTeacherSpec(
+            String name, String organization, String jointime, String gender, String education,
+            String username, String telephone, String email, String userType) {
+        return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // 教师自身字段
             if (name != null && !name.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
             }
-
             if (organization != null && !organization.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.like(root.get("organization"), "%" + organization + "%"));
             }
-
             if (jointime != null && !jointime.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("jointime"), jointime));
             }
             if (gender != null && !gender.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("gender"), gender));
             }
-
             if (education != null && !education.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("education"), education));
             }
 
+            //关联 User 字段（LEFT JOIN）
+            boolean hasUserCondition = (username != null && !username.trim().isEmpty()) ||
+                    (telephone != null && !telephone.trim().isEmpty()) ||
+                    (email != null && !email.trim().isEmpty()) ||
+                    (userType != null && !userType.trim().isEmpty());
+
+            if (hasUserCondition) {
+                var userJoin = root.join("user", JoinType.LEFT);
+                if (username != null && !username.trim().isEmpty()) {
+                    predicates.add(criteriaBuilder.like(userJoin.get("username"), "%" + username + "%"));
+                }
+                if (telephone != null && !telephone.trim().isEmpty()) {
+                    predicates.add(criteriaBuilder.like(userJoin.get("telephone"), "%" + telephone + "%"));
+                }
+                if (email != null && !email.trim().isEmpty()) {
+                    predicates.add(criteriaBuilder.like(userJoin.get("email"), "%" + email + "%"));
+                }
+                if (userType != null && !userType.trim().isEmpty()) {
+                    predicates.add(criteriaBuilder.equal(userJoin.get("userType"), userType));
+                }
+                // 避免因左连接导致分页计数重复
+                query.distinct(true);
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
-
-        return teacherReposit.findAll(specification, pageable);
     }
+
+    private TeacherDTO convertToDTO(Teacher teacher) {
+        TeacherDTO dto = new TeacherDTO();
+        dto.setId(teacher.getId());
+        dto.setName(teacher.getName());
+        dto.setOrganization(teacher.getOrganization());
+        dto.setGender(teacher.getGender());
+        dto.setEducation(teacher.getEducation());
+        dto.setJointime(teacher.getJointime());
+
+        User user = teacher.getUser();
+        if (user != null) {
+            dto.setUsername(user.getUsername());
+            dto.setTelephone(user.getTelephone());
+            dto.setEmail(user.getEmail());
+            dto.setUserType(user.getUserType() != null ? user.getUserType().name() : null);
+        }
+        return dto;
+    }
+
+    @Override
+    public Page<TeacherDTO> searchTeachers(
+            String name, String organization, String jointime, String gender, String education,
+            String username, String telephone, String email, String userType,
+            Pageable pageable) {
+        Specification<Teacher> spec = buildTeacherSpec(name, organization, jointime, gender, education,
+                username, telephone, email, userType);
+        Page<Teacher> teacherPage = teacherReposit.findAll(spec, pageable);
+        return teacherPage.map(this::convertToDTO);
+    }
+
+    @Override
+    public List<Teacher> searchTeachersBySpec(
+            String name, String organization, String jointime, String gender, String education,
+            String username, String telephone, String email, String userType) {
+        Specification<Teacher> spec = buildTeacherSpec(name, organization, jointime, gender, education,
+                username, telephone, email, userType);
+        return teacherReposit.findAll(spec);
+    }
+
     @Override
     public TeacherResult deleteTeachers(List<Long> ids) {
         try {
@@ -95,6 +159,11 @@ public class IMPL_TeacherService implements TeacherService {
         header.createCell(3).setCellValue("性别");
         header.createCell(4).setCellValue("学历");
         header.createCell(5).setCellValue("入职时间");
+        header.createCell(6).setCellValue("用户名");
+        header.createCell(7).setCellValue("电话");
+        header.createCell(8).setCellValue("邮箱");
+        header.createCell(9).setCellValue("用户类型");
+
         int rowIdx = 1;
         for (Teacher t : teachers) {
             Row row = sheet.createRow(rowIdx++);
@@ -104,16 +173,24 @@ public class IMPL_TeacherService implements TeacherService {
             row.createCell(3).setCellValue(t.getGender());
             row.createCell(4).setCellValue(t.getEducation());
             row.createCell(5).setCellValue(t.getJointime());
+            User user = t.getUser();
+            row.createCell(6).setCellValue(user != null ? user.getUsername() : "");
+            row.createCell(7).setCellValue(user != null ? user.getTelephone() : "");
+            row.createCell(8).setCellValue(user != null ? user.getEmail() : "");
+            row.createCell(9).setCellValue(user != null && user.getUserType() != null
+                    ? user.getUserType().name() : "");
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         workbook.write(bos);
         workbook.close();
         return bos.toByteArray();
     }
+
     @Override
     public List<Teacher> getAllTeachersForExport() {
         return teacherReposit.findAll();
     }
+
     @Override
     public TeacherResult updateTeacher(Long id, Teacher teacherDetails) {
         Teacher existingTeacher = teacherReposit.findTeacherListById(id);
@@ -124,8 +201,7 @@ public class IMPL_TeacherService implements TeacherService {
         // 检查姓名是否重复（排除自己）
         if (teacherDetails.getName() != null &&
                 !teacherDetails.getName().equals(existingTeacher.getName())) {
-            Teacher teacherWithSameName =
-                    teacherReposit.findTeacherListByName(teacherDetails.getName());
+            Teacher teacherWithSameName = teacherReposit.findTeacherListByName(teacherDetails.getName());
             if (teacherWithSameName != null && teacherWithSameName.getId() != id) {
                 return TeacherResult.fail("TEACHER_NAME_EXISTS",
                         "教师姓名已存在: " + teacherDetails.getName());
@@ -148,7 +224,6 @@ public class IMPL_TeacherService implements TeacherService {
         if (teacherDetails.getJointime() != null) {
             existingTeacher.setJointime(teacherDetails.getJointime());
         }
-
         try {
             Teacher updatedTeacher = teacherReposit.save(existingTeacher);
             return TeacherResult.success(updatedTeacher, "教师信息更新成功");
