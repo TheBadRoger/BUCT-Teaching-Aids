@@ -1,5 +1,6 @@
 package com.buctta.api.service;
 
+import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,9 +51,14 @@ public interface StudentService {
      */
     StudentResult deleteStudent(Long id);
 
-    Page<Student> searchStudents(String name, String studentNumber, String className,
-                                 String gender, String telephone, String email,
-                                 Pageable pageable);
+    // 修改返回类型为 Page<StudentDTO>
+    Page<StudentDTO> searchStudents(String name, String studentNumber, String className,
+                                    String gender, String telephone, String email,
+                                    Pageable pageable);
+
+    // 新增：按条件返回 List<Student>，用于导出
+    List<Student> searchStudentsBySpec(String name, String studentNumber, String className,
+                                       String gender, String telephone, String email);
 
     Page<Student> getAllStudents(Pageable pageable);
 
@@ -78,10 +84,10 @@ public interface StudentService {
             return new StudentResult(false, null, errorCode, message);
         }
     }
-    // 批量删除
+
     StudentResult deleteStudents(List<Long> ids);
 
     List<Student> getAllStudentsForExport();
-    // 导出Excel
+
     byte[] exportStudentsToExcel(List<Student> students) throws IOException;
 }
