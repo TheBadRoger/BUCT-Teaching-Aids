@@ -6,7 +6,7 @@
 
 ## 通用说明
 
-- **基础地址**：`http://<服务器IP>:8080`（默认端口，可通过配置文件修改）
+- **基础地址**：`http://<服务器IP>:80`（默认端口，由 `application.properties` 中 `server.port` 定义，默认 `80`，可通过环境变量 `SERVER_PORT` 修改）
 - **统一响应结构**（JSON）：
 
   | 字段 | 类型 | 说明 |
@@ -60,6 +60,8 @@
 - [教师管理模块](#教师管理模块-apiteacher)
 - [学生管理模块](#学生管理模块-apistudents)
 - [学生选课模块](#学生选课模块-apistudent-courses)
+- [笔记模块](#笔记模块-apinotes)
+- [评论模块](#评论模块-apicomments)
 - [文件提取模块](#文件提取模块-apifileextract)
 - [AI报告生成模块](#ai报告生成模块)
 
@@ -873,7 +875,7 @@
   | telephone | string | 否 | 按关联电话过滤（User 表） |
   | email | string | 否 | 按关联邮箱过滤（User 表） |
   | userType | string | 否 | 按关联用户类型过滤（User 表，枚举值：TEACHER / STUDENT） |
-  
+
 - **响应类型**：application/vnd.openxmlformats-officedocument.spreadsheetml.sheet（文件流）
 
 - **响应头**：Content-Disposition: attachment; filename=teachers.xlsx
@@ -1161,6 +1163,162 @@
 
 ---
 
+## 笔记模块 `/api/notes`
+
+> 提供课程笔记的创建、查询、点赞、搜索等功能。笔记关联学生与课程，支持公开/私有、点赞计数、评论计数。
+
+### Note 实体字段
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | long | 笔记ID |
+| `title` | string | 标题 |
+| `content` | string | Markdown 内容 |
+| `htmlContent` | string \| null | 渲染后的 HTML（可选） |
+| `isPublic` | boolean | 是否公开，默认 false |
+| `likeCount` | int | 点赞数 |
+| `commentCount` | int | 评论数 |
+| `student` | object | 关联学生 |
+| `course` | object | 关联课程 |
+| `createdAt` | string | 创建时间 |
+| `updatedAt` | string | 更新时间 |
+
+### POST /api/notes/create
+- **描述**：创建笔记。
+- **请求方式**：`POST`，`application/json`
+- **请求体**（Note 对象）：`title`（必填）、`content`（必填）、`isPublic`、`student`（含 id）、`course`（含 id）等字段
+- **返回**（成功）：`data` 为新建的 Note 对象
+- **返回**（失败）：`code: 4042`，关联实体不存在；`code: 5000`，服务器错误
+
+### PUT /api/notes/update/{id}
+- **描述**：更新笔记（仅作者可操作）。
+- **路径参数**：`id` (long) — 笔记ID
+- **请求体**（Note 对象，字段可选）
+- **返回**（成功）：`data` 为更新后的 Note 对象
+- **返回**（失败）：`code: 4042`，笔记不存在；`code: 4031`，无权限；`code: 5000`，服务器错误
+
+### GET /api/notes/{id}
+- **描述**：获取笔记详情。
+- **路径参数**：`id` (long)
+- **返回**（成功）：`data` 为 Note 对象
+- **返回**（失败）：`code: 4042`，笔记不存在
+
+### DELETE /api/notes/{noteId}
+- **描述**：删除笔记（仅作者可操作）。
+- **路径参数**：`noteId` (long)
+- **查询参数**：`studentId` (long, 必填) — 操作学生ID，用于权限校验
+- **返回**（成功）：`data: true`
+- **返回**（失败）：`code: 4042`，笔记不存在；`code: 4031`，无权限
+
+### GET /api/notes/course/{courseId}
+- **描述**：分页查询某课程下的笔记。
+- **路径参数**：`courseId` (long)
+- **查询参数**：`page`（默认 0）、`size`（默认 10）、`sort`（默认 `createdAt`）、`direction`（默认 `desc`）
+- **返回**（成功）：`data` 为 `Page<Note>`
+
+### GET /api/notes/student/{studentId}
+- **描述**：分页查询某学生写的笔记（按创建时间倒序）。
+- **路径参数**：`studentId` (long)
+- **查询参数**：`page`（默认 0）、`size`（默认 10）
+- **返回**（成功）：`data` 为 `Page<Note>`
+
+### GET /api/notes/public
+- **描述**：分页获取所有公开笔记。
+- **查询参数**：`page`（默认 0）、`size`（默认 10）、`sort`（默认 `createdAt`）、`direction`（默认 `desc`）
+- **返回**（成功）：`data` 为 `Page<Note>`
+
+### GET /api/notes/search
+- **描述**：搜索公开笔记（按标题/内容匹配）。
+- **查询参数**：`keyword`（可选）、`page`（默认 0）、`size`（默认 10）
+- **返回**（成功）：`data` 为 `Page<Note>`
+
+### POST /api/notes/{noteId}/like
+- **描述**：点赞/取消点赞（切换状态）。
+- **路径参数**：`noteId` (long)
+- **查询参数**：`studentId` (long, 必填)
+- **返回**（成功）：`data: true`（已点赞）/ `data: false`（已取消）
+- **返回**（失败）：`code: 4042`，笔记不存在
+
+### GET /api/notes/{noteId}/liked
+- **描述**：检查当前学生是否已点赞该笔记。
+- **路径参数**：`noteId` (long)
+- **查询参数**：`studentId` (long, 必填)
+- **返回**（成功）：`data: true` / `data: false`
+
+### GET /api/notes/popular
+- **描述**：获取热门笔记（按点赞数降序）。
+- **查询参数**：`page`（默认 0）、`size`（默认 10）
+- **返回**（成功）：`data` 为 `Page<Note>`
+
+---
+
+## 评论模块 `/api/comments`
+
+> 提供笔记评论的添加、回复、删除、查询等功能，支持两级评论结构（一级评论 + 回复）。
+
+### Comment 实体字段
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | long | 评论ID |
+| `content` | string | 评论内容 |
+| `note` | object | 关联笔记 |
+| `student` | object | 关联评论者（学生） |
+| `parentComment` | object \| null | 父评论（回复时设置） |
+| `createdAt` | string | 创建时间 |
+
+### POST /api/comments/add
+- **描述**：添加一级评论。
+- **请求方式**：`POST`，`application/json`
+- **请求体**（Comment 对象）：`content`（必填）、`note`（含 id）、`student`（含 id）
+- **返回**（成功）：`data` 为新建的 Comment 对象
+- **返回**（失败）：`code: 4042`，关联实体不存在；`code: 5000`，服务器错误
+
+### POST /api/comments/reply/{parentId}
+- **描述**：回复指定父评论。
+- **路径参数**：`parentId` (long) — 父评论ID
+- **请求体**（Comment 对象）：`content`（必填）、`note`（含 id）、`student`（含 id）
+- **返回**（成功）：`data` 为新建的回复 Comment 对象
+- **返回**（失败）：`code: 4042`，父评论不存在
+
+### DELETE /api/comments/{commentId}
+- **描述**：删除评论（仅作者可操作）。
+- **路径参数**：`commentId` (long)
+- **查询参数**：`studentId` (long, 必填) — 操作学生ID，用于权限校验
+- **返回**（成功）：`data: true`
+- **返回**（失败）：`code: 4042`，评论不存在；`code: 4031`，无权限
+
+### GET /api/comments/note/{noteId}
+- **描述**：获取指定笔记的所有评论（含回复，平铺列表，树形结构由前端处理）。
+- **路径参数**：`noteId` (long)
+- **返回**（成功）：`data` 为 Comment 列表
+
+### GET /api/comments/note/{noteId}/page
+- **描述**：分页获取笔记的一级评论（不包含回复，按创建时间升序）。
+- **路径参数**：`noteId` (long)
+- **查询参数**：`page`（默认 0）、`size`（默认 10）
+- **返回**（成功）：`data` 为 `Page<Comment>`
+
+### GET /api/comments/{id}
+- **描述**：获取单条评论详情。
+- **路径参数**：`id` (long)
+- **返回**（成功）：`data` 为 Comment 对象
+- **返回**（失败）：`code: 4042`，评论不存在
+
+### PUT /api/comments/{id}
+- **描述**：更新评论（仅作者可操作）。
+- **路径参数**：`id` (long)
+- **请求体**（Comment 对象，字段可选）
+- **返回**（成功）：`data` 为更新后的 Comment 对象
+- **返回**（失败）：`code: 4042`，评论不存在；`code: 4031`，无权限
+
+### GET /api/comments/{parentId}/replies
+- **描述**：获取某条评论下的所有回复。
+- **路径参数**：`parentId` (long)
+- **返回**（成功）：`data` 为 Comment 列表
+
+---
+
 ## 文件提取模块 `/api/fileextract`
 
 ### POST /api/fileextract/temp
@@ -1262,14 +1420,16 @@
 ---
 
 ### GET /api/generate/download/{timeStamp}
-- **描述**：根据 AI 批改生成的文本内容，生成并下载 Excel（`.xlsx`）格式的批改报告。
+- **描述**：根据 AI 批改生成的文本内容，生成并下载 Excel（`.xlsx`）格式的批改报告。同时支持别名路径 `/api/generate/judgereport/{timeStamp}`。
+- **请求方式**：`GET`（也可使用 `POST`，请求体为 `text/plain` 纯文本，适用于批改结果较长、超出 URL 长度限制的场景）
 - **路径参数**：`timeStamp` (string) — 文件名中的时间戳标识
-- **查询参数**：
+- **查询参数**（GET 方式）：
 
   | 参数名 | 类型 | 必填 | 说明 |
   |--------|------|------|------|
   | `text` | string | 是 | 完整的 AI 批改结果文本（由 SSE 流拼接得到） |
 
+- **请求体**（POST 方式）：`text/plain`，内容为完整的 AI 批改结果文本
 - **响应类型**：`application/octet-stream`（二进制文件流）
 - **响应头**：
   - `Content-Disposition: attachment; filename*=utf-8''judgereport_{timeStamp}.xlsx`
@@ -1285,4 +1445,4 @@
   | 分数 | AI评判分数 |
   | 评判依据 | AI评判理由说明 |
 
-- **注意**：该接口直接响应文件下载，无需解析 JSON，前端可直接通过 `<a href="...">` 触发下载。
+- **注意**：该接口直接响应文件下载，无需解析 JSON，前端可直接通过 `<a href="...">` 触发下载。当批改文本较长时建议使用 POST 方式提交。

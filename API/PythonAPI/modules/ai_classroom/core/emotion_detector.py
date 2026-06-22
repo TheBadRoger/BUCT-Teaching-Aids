@@ -13,7 +13,7 @@ Future upgrade path:
 """
 import logging
 import math
-from typing import Dict, List, Optional, Tuple
+from typing import Dict
 
 import numpy as np
 
@@ -180,4 +180,3 @@ def classify_emotion_category(emotion: str) -> str:
         if emotion in emotions:
             return category
     return 'neutral'
-
