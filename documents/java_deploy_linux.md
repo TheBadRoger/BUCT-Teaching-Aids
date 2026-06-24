@@ -97,7 +97,7 @@ docker-compose -f compose.yaml up -d --build
 ```bash
 # 在仓库根目录执行（或调整 Dockerfile 路径）
 docker build -t buctta-java:latest -f docker/java/Dockerfile .
-docker run --env-file API/JavaAPI/.env -p 8080:8080 --name buctta-java --link some_mysql_container:db buctta-java:latest
+docker run --env-file API/JavaAPI/.env -p 80:80 --name buctta-java --link some_mysql_container:db buctta-java:latest
 ```
 
 停止并移除容器：
