@@ -160,7 +160,7 @@ source venv/bin/activate
 python3 app.py
 ```
 
-启动成功后，访问 `http://服务器IP:5000/health`，应看到：
+启动成功后，访问 `http://服务器IP:8080/health`，应看到：
 
 ```json
 {"message": "BUCT Teaching Aids – Unified Python Backend", "status": "ok"}
@@ -170,13 +170,13 @@ python3 app.py
 
 ```bash
 # PBL 模块
-curl http://localhost:5000/api/pbl/templates
+curl http://localhost:8080/api/pbl/templates
 
 # 学情分析模块
-curl "http://localhost:5000/api/student/class_list?class_name=高材2304"
+curl "http://localhost:8080/api/student/class_list?class_name=高材2304"
 
 # 抬头率检测（POST，需传 JSON）
-curl -X POST http://localhost:5000/api/headup_rate/detect \
+curl -X POST http://localhost:8080/api/headup_rate/detect \
      -H "Content-Type: application/json" \
      -d '{"student_id":1001,"course_id":"math_101","course_name":"数学","data_type":"image","calculated_rate":85.5}'
 ```
@@ -242,4 +242,4 @@ sudo systemctl status buctta-python.service
 - **生产环境**：务必设置 `DEBUG=false`，并使用强随机 `SECRET_KEY`。
 - **YOLO 模型**：`headup_rate` 模块首次运行时，`ultralytics` 会自动下载 `yolov8n-pose.pt`（约 6 MB），请确保服务器能访问 GitHub/CDN。若无法访问，请手动下载后通过 `.env` 中的 `YOLO_MODEL_PATH` 指定本地路径。
 - **摄像头权限**：运行 `face_hand_up` 或 `headup_rate` 视频流接口时，需确保运行用户有摄像头设备访问权限（`sudo usermod -aG video <username>`）。
-- **端口**：默认端口为 `5000`，可在 `.env` 中通过 `PORT=<端口号>` 修改。
+- **端口**：默认端口为 `8080`（由 `config.py` 中 `Config.PORT` 定义）。如需修改，可在 `config.py` 中调整 `PORT` 值，或通过环境变量覆盖。

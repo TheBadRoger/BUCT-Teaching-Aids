@@ -6,7 +6,7 @@
 
 ## 通用说明
 
-- **基础地址**：`http://<服务器IP>:5000`（默认端口，可通过 `.env` 中 `PORT` 修改）
+- **基础地址**：`http://<服务器IP>:8080`（默认端口，由 `config.py` 中 `Config.PORT` 定义，可通过环境变量覆盖）
 - **成功响应结构**（JSON）：
   - `code` (int)：`200` 表示成功，`400` 参数错误，`404` 资源不存在，`500` 服务器内部错误
   - `msg` (string)：操作结果描述
@@ -121,76 +121,251 @@
 - **返回**：课堂状态对象，含 `id`、`teacher`、`subject`、`student_count`、`created_at` 等字段
 
 ### GET /api/classroom/`<classroom_id>`/analytics
-- **描述**：获取课堂整体学习分析数据（注意力均值、情感分布、互动统计等）。
+- **描述**：获取课堂整体学习分析数据（注意力均值、情感分布、互动统计等）。若课堂中没有学生则返回 `400`。
 - **路径参数**：`classroom_id` (string)
 - **返回**：
   ```json
   {
-    "classroom_id": "class_001",
-    "total_students": 30,
-    "avg_attention": 0.75,
-    "avg_engagement": 0.68,
     "emotion_distribution": { "positive": 18, "neutral": 9, "negative": 3 },
-    "activity_count": 5,
-    "timestamp": "2024-01-01T10:00:00"
+    "attention_metrics": {
+      "average_attention": 75.2,
+      "average_engagement": 68.1,
+      "attention_variance": 12.34,
+      "high_attention_count": 10,
+      "low_attention_count": 2
+    },
+    "attention_trend": [
+      { "timestamp": "2024-01-01T10:00:00", "avg_attention": 70.0, "avg_engagement": 65.0 }
+    ],
+    "total_students": 30
   }
   ```
 
 ### GET /api/student/`<student_id>`/analytics
 - **描述**：获取单个学生的课堂实时分析数据。
 - **路径参数**：`student_id` (string)
-- **返回**：含 `attention_score`、`engagement_score`、`focus_duration` 等字段的分析对象
+- **返回**：
+  ```json
+  {
+    "student_info": { "name": "张三", "id": "S001" },
+    "current_metrics": {
+      "attention_level": 85,
+      "engagement_level": 72,
+      "emotion": "focused"
+    },
+    "analysis": {
+      "insights": ["学生处于高度专注状态"],
+      "trends": { "attention_trend": "stable", "engagement_trend": "stable", "stability_score": 95.0 },
+      "learning_state": "excellent",
+      "recommendations": []
+    }
+  }
+  ```
 
 ### GET /api/analytics/student/`<student_id>`/detailed
-- **描述**：获取学生详细学习分析（含趋势数据）。
+- **描述**：获取学生详细学习分析（含趋势数据），同时将当前指标写入 SQLite 历史库。
 - **路径参数**：`student_id` (string)
-- **返回**：详细分析对象，含历史趋势、情感变化、注意力曲线等
+- **返回**：
+  ```json
+  {
+    "student_info": { "name": "张三", "id": "S001" },
+    "basic_analysis": { "insights": [...], "trends": {...}, "learning_state": "...", "recommendations": [...] },
+    "timestamp": "2024-01-01T10:00:00"
+  }
+  ```
 
 ### GET /api/analytics/classroom/`<classroom_id>`/summary
 - **描述**：获取课堂综合摘要（学生分组统计、活跃度排行等）。
 - **路径参数**：`classroom_id` (string)
-- **返回**：含学生列表详情、课堂统计摘要的综合对象
+- **返回**：
+  ```json
+  {
+    "classroom_overview": {
+      "total_students": 30,
+      "active_students": 25,
+      "avg_attention": 75.2,
+      "avg_engagement": 68.1
+    },
+    "performance_distribution": {
+      "excellent_students": 10,
+      "good_students": 15,
+      "needs_help_students": 5
+    },
+    "historical_data": []
+  }
+  ```
 
-### GET /api/analytics/student/`<student_id>`/history
-- **描述**：从 SQLite 数据库中获取学生历史指标记录。
+### GET /api/student/`<student_id>`/history
+- **描述**：从 SQLite 数据库中获取学生历史指标记录（默认最近 24 小时）。
 - **路径参数**：`student_id` (string)
-- **查询参数**：`limit` (int, 可选, 默认 50) — 返回最近记录条数
-- **返回**：`{ "student_id": "...", "records": [...], "count": 50 }`
+- **查询参数**：`hours` (int, 可选, 默认 24) — 历史数据时间范围（小时）
+- **返回**：
+  ```json
+  {
+    "student_id": "S001",
+    "time_range_hours": 24,
+    "data_points": 50,
+    "historical_data": [ { "id": 1, "attention_level": 80.0, "engagement_level": 70.0, "emotion": "focused", "timestamp": "..." } ]
+  }
+  ```
+- **返回**（无历史数据）：`{ "error": "无历史数据" }` HTTP 404
+
+### POST /api/classroom/`<classroom_id>`/analyze_frame
+- **描述**：分析课堂摄像头单帧，执行情感检测 + 注意力评估。若提供 `student_id` 且学生存在，会同步更新其指标并写入 SQLite。
+- **请求方式**：`POST`，`application/json`
+- **请求体**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | `student_id` | string | 否 | 关联学生ID |
+  | `frame` | string | 是 | base64 编码的图片 |
+  | `head_up_rate` | float | 否 | 前端已计算的抬头率，默认 50.0 |
+  | `hand_up` | boolean | 否 | 是否举手，默认 false |
+
+- **返回**（成功）：
+  ```json
+  {
+    "success": true,
+    "emotion": { "emotion": "focused", "features": {...} },
+    "attention_analysis": { "attention_level": 85.0, "engagement_level": 72.0, ... },
+    "timestamp": "2024-01-01T10:00:00"
+  }
+  ```
+- **返回**（课堂不存在）：`{ "error": "课堂不存在" }` HTTP 404
+- **返回**（缺少 frame）：`{ "error": "缺少 frame 参数" }` HTTP 400
+
+### POST /api/classroom/`<classroom_id>`/speech_recognize
+- **描述**：语音识别接口，转录音频并检测课堂互动关键词，计算参与度得分。
+- **请求方式**：`POST`，`application/json`
+- **请求体**：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | `student_id` | string | 否 | 关联学生ID |
+  | `audio` | string | 是 | base64 编码的音频（wav/aiff/flac） |
+  | `language` | string | 否 | 识别语言，默认 `zh-CN` |
+
+- **返回**：
+  ```json
+  {
+    "success": true,
+    "text": "转录文本...",
+    "keywords": { "question": 2, "answer": 1 },
+    "engagement_score": 75.0,
+    "error": null,
+    "timestamp": "2024-01-01T10:00:00"
+  }
+  ```
+
+### GET /api/classroom/`<classroom_id>`/report
+- **描述**：生成课堂互动报告。
+- **查询参数**：`save` (string, 可选, 默认 `false`) — 是否将报告保存到 SQLite 的 `classroom_activities` 表
+- **返回**：课堂报告对象（含整体摘要、学生表现分布等，由 `report_generator.generate_classroom_report` 生成）
+
+### GET /api/student/`<student_id>`/report
+- **描述**：生成学生个人课堂报告。
+- **查询参数**：`hours` (int, 可选, 默认 24) — 历史数据时间范围（小时）
+- **返回**：学生个人报告对象（由 `report_generator.generate_student_report` 生成）
+
+### GET /api/classroom/`<classroom_id>`/discussions
+- **描述**：获取课堂中所有分组讨论的摘要列表。
+- **返回**：`{ "discussions": [ { "discussion_id": "...", "topic": "...", "group_count": 4, "total_messages": 20, "group_summaries": [...] } ] }`
+
+### GET /api/classroom/`<classroom_id>`/discussions/`<discussion_id>`
+- **描述**：获取分组讨论详情（含所有小组消息）。
+- **返回**：讨论对象（含 `discussion_id`、`topic`、`groups`、`started_at`、`ended_at`）
+- **返回**（不存在）：`{ "error": "讨论不存在" }` HTTP 404
+
+### GET /api/classroom/`<classroom_id>`/quizzes
+- **描述**：获取课堂中所有实时测评的摘要列表。
+- **返回**：`{ "quizzes": [ { "quiz_id": "...", "question_count": 5, "submission_count": 30, "participation_rate": 100.0, "question_stats": [...] } ] }`
+
+### GET /api/classroom/`<classroom_id>`/quizzes/`<quiz_id>`
+- **描述**：获取实时测评详情（含所有学生提交）。
+- **返回**：
+  ```json
+  {
+    "quiz_id": "quiz_...",
+    "questions": [...],
+    "submissions": { "S001": { "q1": { "answer": "A", "timestamp": "..." } } },
+    "started_at": "...",
+    "ended_at": "...",
+    "summary": { "question_count": 5, "submission_count": 30, "participation_rate": 100.0, "question_stats": [...] }
+  }
+  ```
+- **返回**（不存在）：`{ "error": "测评不存在" }` HTTP 404
+
+### POST /api/classroom/`<classroom_id>`/snapshot
+- **描述**：批量分析课堂快照，一次性接收多个学生的帧数据并分析。
+- **请求方式**：`POST`，`application/json`
+- **请求体**：
+  ```json
+  {
+    "students": [
+      { "student_id": "s001", "frame": "<base64>", "head_up_rate": 85.0, "hand_up": false }
+    ]
+  }
+  ```
+- **返回**：
+  ```json
+  {
+    "success": true,
+    "analyzed_count": 1,
+    "results": [
+      { "student_id": "s001", "emotion": {...}, "attention_analysis": {...} }
+    ],
+    "timestamp": "2024-01-01T10:00:00"
+  }
+  ```
 
 ---
 
 ## AI 课堂模块 WebSocket
 
-连接地址：`ws://<服务器IP>:5000`，使用 Socket.IO 协议。
+连接地址：`ws://<服务器IP>:8080`，使用 Socket.IO 协议。
 
 ### 客户端 → 服务端事件
 
 #### `join_classroom`
-- **描述**：学生或教师加入课堂房间，开始接收实时推送。
+- **描述**：学生加入课堂房间，开始接收实时推送。加入后会向房间广播 `classroom_update` 和 `student_joined` 事件。
 - **数据**：
   ```json
   {
     "classroom_id": "class_001",
-    "user_id": "student_001",
-    "name": "张三",
-    "role": "student"
+    "student_id": "student_001",
+    "student_name": "张三"
   }
   ```
 
-#### `leave_classroom`
-- **描述**：离开课堂房间。
-- **数据**：`{ "classroom_id": "class_001", "user_id": "student_001" }`
+#### `teacher_join`
+- **描述**：教师加入课堂房间，用于接收课堂实时数据。
+- **数据**：`{ "classroom_id": "class_001", "teacher_id": "t001" }`
 
-#### `start_activity`
-- **描述**：教师发起课堂互动活动（提问等）。
-- **数据**：`{ "classroom_id": "class_001", "activity_type": "question", "question": "..." }`
+#### `start_quick_response`
+- **描述**：教师发起快速问答活动，向课堂广播 `new_question` 事件。
+- **数据**：
+  ```json
+  {
+    "classroom_id": "class_001",
+    "question": "下列哪个是正确的？",
+    "options": ["A. ...", "B. ..."]
+  }
+  ```
 
-#### `submit_answer`
-- **描述**：学生提交互动活动答案。
-- **数据**：`{ "classroom_id": "class_001", "student_id": "S001", "activity_id": "act_001", "answer": "..." }`
+#### `student_response`
+- **描述**：学生提交快速问答的答案，向课堂广播 `response_received` 事件。
+- **数据**：
+  ```json
+  {
+    "classroom_id": "class_001",
+    "student_id": "S001",
+    "activity_id": 0,
+    "response": "A"
+  }
+  ```
 
 #### `student_feedback`
-- **描述**：学生发送课堂反馈（理解/疑问/快/慢）。
+- **描述**：学生发送课堂反馈（理解/疑问/快/慢），向课堂广播 `student_feedback_received` 事件。
 - **数据**：
   ```json
   {
@@ -202,47 +377,133 @@
   - `feedback_type` 可选值：`understand`（理解了）、`confused`（有疑问）、`faster`（讲快点）、`slower`（讲慢点）
 
 #### `update_student_metrics`
-- **描述**：上报学生实时学习指标（由学生端 AI 分析后发送）。
+- **描述**：上报学生实时学习指标（由学生端 AI 分析后发送）。若 `source` 为 `real_ai_analysis` 则使用完整分析器，否则使用简化分析。指标会写入 SQLite 历史库。
 - **数据**：
   ```json
   {
     "student_id": "S001",
     "metrics": {
-      "attention_level": 0.85,
-      "engagement_level": 0.72,
+      "attention_level": 85,
+      "engagement_level": 72,
       "emotion": "focused",
-      "gaze_focus": 0.9,
-      "posture_engagement": 0.8
+      "detailed_metrics": {
+        "gaze_focus": 90,
+        "posture_engagement": 80,
+        "interaction_frequency": 50,
+        "facial_engagement": 50
+      }
     },
     "source": "real_ai_analysis"
   }
   ```
 
+#### `start_group_discussion`
+- **描述**：教师启动分组讨论，自动将课堂学生随机分组，向课堂广播 `group_discussion_started` 事件。
+- **数据**：
+  ```json
+  {
+    "classroom_id": "class_001",
+    "topic": "讨论主题",
+    "num_groups": 4
+  }
+  ```
+
+#### `group_discussion_message`
+- **描述**：学生在小组讨论中发送消息，向课堂广播 `group_message_received` 事件，并记录互动。
+- **数据**：
+  ```json
+  {
+    "discussion_id": "discussion_...",
+    "group_id": "group_1",
+    "student_id": "S001",
+    "message": "我的看法是..."
+  }
+  ```
+
+#### `end_group_discussion`
+- **描述**：教师结束分组讨论，向课堂广播 `group_discussion_ended` 事件（含讨论摘要）。
+- **数据**：`{ "discussion_id": "discussion_..." }`
+
+#### `start_quiz`
+- **描述**：教师启动实时测评，向课堂广播 `quiz_started` 事件（含题目列表）。
+- **数据**：
+  ```json
+  {
+    "classroom_id": "class_001",
+    "questions": [
+      { "id": "q1", "question": "1+1=?", "correct_answer": "2" }
+    ]
+  }
+  ```
+
+#### `submit_quiz_answer`
+- **描述**：学生提交测评某题答案，向课堂广播 `quiz_answer_received` 事件，并记录互动。
+- **数据**：
+  ```json
+  {
+    "quiz_id": "quiz_...",
+    "student_id": "S001",
+    "question_id": "q1",
+    "answer": "2"
+  }
+  ```
+
+#### `end_quiz`
+- **描述**：教师结束实时测评，向课堂广播 `quiz_ended` 事件（含结果摘要，含每题正确率等统计）。
+- **数据**：`{ "quiz_id": "quiz_..." }`
+
 ### 服务端 → 客户端事件
+
+#### `classroom_update`
+- **描述**：课堂状态变化时（如学生加入）向房间广播完整课堂对象。
 
 #### `student_joined`
 - **描述**：有新学生加入课堂时广播。
-- **数据**：`{ "student_id": "S001", "name": "张三", "student_count": 15, "timestamp": "..." }`
+- **数据**：学生信息对象（含 `id`、`name`、`socket_id`、初始指标 `attention_level: 50` 等）
 
-#### `student_left`
-- **描述**：学生离开课堂时广播。
-- **数据**：`{ "student_id": "S001", "student_count": 14, "timestamp": "..." }`
+#### `new_question`
+- **描述**：教师发起快速问答时广播。
+- **数据**：`{ "question": "...", "options": [...], "activity_id": 0 }`
 
-#### `activity_started`
-- **描述**：课堂活动开始时广播给所有学生。
-- **数据**：`{ "activity_id": "...", "activity_type": "question", "question": "...", "timestamp": "..." }`
-
-#### `activity_completed`
-- **描述**：课堂活动结束时广播。
-- **数据**：含活动摘要和响应统计
+#### `response_received`
+- **描述**：学生提交快速问答答案时广播。
+- **数据**：`{ "activity_id": 0, "response": { "student_id": "...", "student_name": "...", "response": "A", "timestamp": "..." }, "total_responses": 5 }`
 
 #### `student_metrics_updated`
-- **描述**：某学生指标更新时向课堂教师广播。
-- **数据**：`{ "student_id": "S001", "metrics": {...}, "analytics": {...}, "timestamp": "..." }`
+- **描述**：某学生指标更新时向课堂广播。
+- **数据**：`{ "student_id": "S001", "metrics": {...}, "analytics": {...}, "data_source": "real_ai_analysis", "timestamp": "..." }`
 
 #### `student_feedback_received`
-- **描述**：学生反馈到达时向教师广播。
+- **描述**：学生反馈到达时向课堂广播。
 - **数据**：`{ "student_id": "S001", "student_name": "张三", "feedback_type": "confused", "feedback_message": "有疑问需要解答", "timestamp": "..." }`
+
+#### `group_discussion_started`
+- **描述**：分组讨论启动时广播。
+- **数据**：`{ "discussion_id": "...", "topic": "...", "groups": { "group_1": { "group_id": "...", "students": [...], "student_names": [...], "messages": [] } } }`
+
+#### `group_message_received`
+- **描述**：小组讨论收到新消息时广播。
+- **数据**：`{ "discussion_id": "...", "group_id": "...", "message": { "student_id": "...", "student_name": "...", "message": "...", "timestamp": "..." } }`
+
+#### `group_discussion_ended`
+- **描述**：分组讨论结束时广播。
+- **数据**：`{ "discussion_id": "...", "summary": { "group_count": 4, "total_messages": 20, "group_summaries": [...] } }`
+
+#### `quiz_started`
+- **描述**：实时测评启动时广播。
+- **数据**：`{ "quiz_id": "...", "questions": [...] }`
+
+#### `quiz_answer_received`
+- **描述**：学生提交测评答案时广播。
+- **数据**：`{ "quiz_id": "...", "student_id": "...", "student_name": "...", "question_id": "...", "total_submissions": 5 }`
+
+#### `quiz_ended`
+- **描述**：实时测评结束时广播。
+- **数据**：`{ "quiz_id": "...", "result": { "question_count": 5, "submission_count": 30, "participation_rate": 100.0, "question_stats": [...] } }`
+
+#### `error`
+- **描述**：SocketIO 操作出错时返回（如课堂/讨论/测评不存在）。
+- **数据**：`{ "message": "课堂不存在" }`
 
 ---
 
@@ -344,7 +605,7 @@
 - 建议在不需要查看画面时销毁 img 标签以释放资源
 - 如果摄像头初始化失败，视频流将无法显示
 - 画面处理包括：人脸识别、举手检测、标记绘制，会有一帧的延迟
-  
+
 ### 数据库表结构 (hand_up_record)
 
 | 字段名 | 类型 | 描述 |
