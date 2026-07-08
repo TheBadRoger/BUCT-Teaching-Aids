@@ -64,7 +64,7 @@
 - [评论模块](#评论模块-apicomments)
 - [文件提取模块](#文件提取模块-apifileextract)
 - [AI报告生成模块](#ai报告生成模块)
-
+- [机构管理模块](#机构管理模块-apiorganization)
 ---
 
 ## 管理员认证模块 `/api/admin`
@@ -1446,3 +1446,87 @@
   | 评判依据 | AI评判理由说明 |
 
 - **注意**：该接口直接响应文件下载，无需解析 JSON，前端可直接通过 `<a href="...">` 触发下载。当批改文本较长时建议使用 POST 方式提交。
+
+## 机构管理模块 `/api/organization`
+### POST /api/organization/add
+
+- **描述**：新增一条机构记录。
+- **请求方式**：POST，application/json
+- **请求体**（JSON，Organization 对象）：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 是 | 机构名称 |
+| logo | string | 否 | 机构 logo 图片地址 |
+| bannerUrl | string | 否 | 机构自定义 banner 图片地址 |
+| info | string | 否 | 机构信息描述（支持长文本） |
+| honorCertUrl | string | 否 | 荣誉证书图片地址 |
+
+- **返回**（成功）：
+
+```json
+{
+  "code": 2000,
+  "msg": "Ok.",
+  "timestamp": 1700000000000,
+  "data": {
+    "id": 1,
+    "name": "信息科学与技术学院",
+    "logo": "/static/logo.png",
+    "bannerUrl": "/static/banner.png",
+    "info": "学院简介...",
+    "honorCertUrl": "/static/cert.png",
+    "createdTime": "2026-05-06T10:00:00",
+    "updatedTime": "2026-05-06T10:00:00"
+  }
+}
+```
+
+- **返回**（失败）：code: 4091，机构名称已存在
+
+### DELETE /api/organization/{id}
+
+- **描述**：根据 ID 删除单条机构记录（物理删除）。
+- **路径参数**：id (long) — 机构ID
+- **返回**（成功）：data 字段为 null，msg 为 "机构删除成功"
+- **返回**（失败）：code: 4042，机构不存在
+
+### PUT /api/organization/{id}
+
+- **描述**：编辑已有机构的信息，根据 ID 进行更新。仅更新请求中提供的非 null 字段。
+- **路径参数**：id (long) — 要更新的机构ID
+- **请求体**（JSON，Organization 对象，所有字段均可选）：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 否 | 机构名称 |
+| logo | string | 否 | 机构 logo 图片地址 |
+| bannerUrl | string | 否 | 机构自定义 banner 图片地址 |
+| info | string | 否 | 机构信息描述 |
+| honorCrtUrl | string | 否 | 荣誉证书图片地址 |
+
+- **返回**（成功）：data 字段为更新后的 Organization 对象（结构同新增）
+- **返回**（失败）：code: 4042，机构不存在；code: 4091，机构名称已存在
+
+### GET /api/organization/{id}
+
+- **描述**：根据 ID 获取指定机构的详细信息。
+- **路径参数**：id (long) — 机构ID
+- **返回**（成功）：data 字段为 Organization 对象（结构同新增，含 createdTime 和 updatedTime）
+- **返回**（失败）：code: 4042，机构不存在
+
+### GET /api/organization/search
+
+- **描述**：按机构名称模糊搜索，分页返回结果。
+- **查询参数**：
+
+| 参数名 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 否 | 按机构名称模糊搜索 |
+| page | int | 否 | 页码，从 0 开始，默认 0 |
+| size | int | 否 | 每页条数，默认 10 |
+| sort | string | 否 | 排序字段，默认 id |
+
+- **返回**（成功）：data 字段为 Spring Data 分页对象（Page<Organization>），包含 content、totalElements、totalPages、size、number 等字段
+
+---
