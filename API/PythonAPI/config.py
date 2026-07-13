@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(dotenv_path=os.path.join(_BASE_DIR, '.env'))
 
 # Read database connection parameters at module level so they can be
 # referenced when building DATABASE_URL without duplicating os.environ calls.
@@ -37,7 +38,7 @@ class BaseConfig:
     # Face Recognition (face_hand_up module)
     FACE_DB_PATH = os.environ.get(
         'FACE_DB_PATH',
-        os.path.join(os.path.dirname(__file__), 'face_database', 'face_db')
+        os.path.join(_BASE_DIR, 'face_database', 'face_db')
     )
     TOLERANCE = 0.6
     FACE_ENCODINGS_CACHE: dict = {}
@@ -57,14 +58,21 @@ class BaseConfig:
     # PBL module
     UPLOAD_DIR = os.environ.get(
         'UPLOAD_DIR',
-        os.path.join(os.path.dirname(__file__), 'uploads')
+        os.path.join(_BASE_DIR, 'uploads')
     )
 
     # AI Classroom module – SQLite fallback for classroom live data
     CLASSROOM_DB_PATH = os.environ.get(
         'CLASSROOM_DB_PATH',
-        os.path.join(os.path.dirname(__file__), 'classroom_data.db')
+        os.path.join(_BASE_DIR, 'classroom_data.db')
     )
+
+    # AI Classroom – Speech Recognition
+    SPEECH_LANGUAGE = os.environ.get('SPEECH_LANGUAGE', 'zh-CN')
+
+    # AI Classroom – Attention Analyzer
+    ATTENTION_WINDOW_SIZE = int(os.environ.get('ATTENTION_WINDOW_SIZE', 30))
+    INTERACTION_WINDOW_SECONDS = int(os.environ.get('INTERACTION_WINDOW_SECONDS', 300))
 
 
 Config = BaseConfig

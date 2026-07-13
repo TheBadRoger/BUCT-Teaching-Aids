@@ -1,10 +1,14 @@
 """AI Classroom blueprint and SocketIO event handlers.
 
 Adapted from API/PythonAPI/ai课堂/backend/app.py (Flask + Flask-SocketIO).
+
+Extended with:
+  - Emotion detection, attention analysis, speech recognition core engines
+  - Group discussion, real-time quiz, classroom report generation
+  - Computer-vision frame analysis endpoint
 """
 import logging
 import sqlite3
-from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Dict, List
 
@@ -16,6 +20,10 @@ from flask import Blueprint, request, jsonify, render_template
 from flask_socketio import SocketIO, emit
 
 from config import Config
+from modules.ai_classroom.core.emotion_detector import detect_emotion_from_frame
+from modules.ai_classroom.core.attention_analyzer import analyzer as attention_analyzer
+from modules.ai_classroom.core.speech_recognizer import analyze_speech
+from modules.ai_classroom.core.report_generator import generate_classroom_report, generate_student_report
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +32,12 @@ ai_classroom_bp = Blueprint('ai_classroom', __name__)
 # ── 内存数据存储 ────────────────────────────────────────────────────────────────
 classrooms: Dict = {}
 students: Dict = {}
+
+# ── 分组讨论数据 ────────────────────────────────────────────────────────────────
+group_discussions: Dict = {}  # discussion_id -> {classroom_id, groups: {group_id: {students, messages}}}
+
+# ── 实时测评数据 ────────────────────────────────────────────────────────────────
+quizzes: Dict = {}  # quiz_id -> {classroom_id, questions, submissions, started_at, ended_at}
 
 EMOTION_CATEGORIES = {
     'positive': ['focused', 'happy', 'engaged', 'excited'],
@@ -98,7 +112,7 @@ class StudentDataManager:
             threshold = datetime.now() - timedelta(hours=hours)
             df = pd.read_sql_query(
                 'SELECT * FROM student_metrics WHERE student_id=? AND timestamp>? ORDER BY timestamp',
-                conn, params=[student_id, threshold]
+                conn, params=[str(student_id), str(threshold)]
             )
             conn.close()
             return df
@@ -118,7 +132,7 @@ class StudentDataManager:
                 FROM student_metrics
                 WHERE classroom_id=? AND DATE(timestamp)=?
                 GROUP BY emotion
-            ''', conn, params=[classroom_id, today])
+            ''', conn, params=[str(classroom_id), str(today)])
             conn.close()
             return df
         except Exception as e:
@@ -175,7 +189,7 @@ class RealStudentAnalyzer:
         return {
             'attention_trend': att_trend,
             'engagement_trend': eng_trend,
-            'stability_score': round(max(0, 100 - np.var(recent_att) * 2), 1)
+            'stability_score': round(max(0.0, 100.0 - float(np.var(recent_att)) * 2), 1)
         }
 
     def _assess_state(self, metrics) -> str:
@@ -378,7 +392,7 @@ def get_classroom_detailed_summary(classroom_id):
     })
 
 
-@ai_classroom_bp.route('/api/analytics/student/<student_id>/history')
+@ai_classroom_bp.route('/api/student/<student_id>/history')
 def get_student_historical_data(student_id):
     hours = request.args.get('hours', 24, type=int)
     history = data_manager.get_student_history(student_id, hours)
@@ -387,7 +401,7 @@ def get_student_historical_data(student_id):
     return jsonify({
         'student_id': student_id,
         'time_range_hours': hours,
-        'data_points': len(history),
+        'data_points': len(history.index),
         'historical_data': history.to_dict('records')
     })
 
@@ -536,3 +550,532 @@ def register_socketio_events(socketio: SocketIO):
                     if len(rt) > 20:
                         rt.pop(0)
                     break
+
+    # ── 分组讨论 SocketIO 事件 ───────────────────────────────────────
+    @socketio.on('start_group_discussion')
+    def handle_start_group_discussion(data):
+        classroom_id = data['classroom_id']
+        topic = data.get('topic', '')
+        num_groups = data.get('num_groups', 4)
+        discussion_id = f"discussion_{int(time.time())}"
+
+        if classroom_id not in classrooms:
+            emit('error', {'message': '课堂不存在'})
+            return
+
+        classroom_students = classrooms[classroom_id]['students']
+        # Shuffle and split into groups
+        shuffled = list(classroom_students)
+        import random
+        random.shuffle(shuffled)
+        groups = {}
+        group_size = max(1, len(shuffled) // num_groups)
+        for i in range(num_groups):
+            start = i * group_size
+            end = start + group_size if i < num_groups - 1 else len(shuffled)
+            group_members = shuffled[start:end]
+            groups[f'group_{i+1}'] = {
+                'group_id': f'group_{i+1}',
+                'students': [s['id'] for s in group_members],
+                'student_names': [s['name'] for s in group_members],
+                'messages': []
+            }
+
+        group_discussions[discussion_id] = {
+            'discussion_id': discussion_id,
+            'classroom_id': classroom_id,
+            'topic': topic,
+            'groups': groups,
+            'started_at': datetime.now().isoformat(),
+            'ended_at': None
+        }
+        # Record as classroom activity
+        classrooms[classroom_id]['activities'].append({
+            'type': 'group_discussion',
+            'topic': topic,
+            'discussion_id': discussion_id,
+            'started_at': datetime.now().isoformat(),
+            'responses': []
+        })
+        emit('group_discussion_started', {
+            'discussion_id': discussion_id,
+            'topic': topic,
+            'groups': groups
+        }, room=classroom_id)
+        logger.info("课堂 %s 启动分组讨论: %s", classroom_id, discussion_id)
+
+    @socketio.on('group_discussion_message')
+    def handle_group_message(data):
+        discussion_id = data['discussion_id']
+        group_id = data['group_id']
+        student_id = data['student_id']
+        message = data['message']
+
+        if discussion_id not in group_discussions:
+            emit('error', {'message': '讨论不存在'})
+            return
+        discussion = group_discussions[discussion_id]
+        if group_id not in discussion['groups']:
+            emit('error', {'message': '小组不存在'})
+            return
+
+        msg = {
+            'student_id': student_id,
+            'student_name': students.get(student_id, {}).get('name', student_id),
+            'message': message,
+            'timestamp': datetime.now().isoformat()
+        }
+        discussion['groups'][group_id]['messages'].append(msg)
+        # Record interaction for attention analysis
+        attention_analyzer.record_interaction(student_id)
+
+        classroom_id = discussion['classroom_id']
+        emit('group_message_received', {
+            'discussion_id': discussion_id,
+            'group_id': group_id,
+            'message': msg
+        }, room=classroom_id)
+
+    @socketio.on('end_group_discussion')
+    def handle_end_group_discussion(data):
+        discussion_id = data['discussion_id']
+        if discussion_id in group_discussions:
+            group_discussions[discussion_id]['ended_at'] = datetime.now().isoformat()
+            classroom_id = group_discussions[discussion_id]['classroom_id']
+            emit('group_discussion_ended', {
+                'discussion_id': discussion_id,
+                'summary': _summarize_discussion(group_discussions[discussion_id])
+            }, room=classroom_id)
+            logger.info("分组讨论结束: %s", discussion_id)
+
+    # ── 实时测评 SocketIO 事件 ───────────────────────────────────────
+    @socketio.on('start_quiz')
+    def handle_start_quiz(data):
+        classroom_id = data['classroom_id']
+        questions = data.get('questions', [])
+        quiz_id = f"quiz_{int(time.time())}"
+
+        if classroom_id not in classrooms:
+            emit('error', {'message': '课堂不存在'})
+            return
+
+        quizzes[quiz_id] = {
+            'quiz_id': quiz_id,
+            'classroom_id': classroom_id,
+            'questions': questions,
+            'submissions': {},  # student_id -> {question_id: answer}
+            'started_at': datetime.now().isoformat(),
+            'ended_at': None
+        }
+        classrooms[classroom_id]['activities'].append({
+            'type': 'quiz',
+            'quiz_id': quiz_id,
+            'question_count': len(questions),
+            'started_at': datetime.now().isoformat(),
+            'responses': []
+        })
+        emit('quiz_started', {
+            'quiz_id': quiz_id,
+            'questions': questions
+        }, room=classroom_id)
+        logger.info("课堂 %s 启动实时测评: %s (%d题)", classroom_id, quiz_id, len(questions))
+
+    @socketio.on('submit_quiz_answer')
+    def handle_submit_quiz_answer(data):
+        quiz_id = data['quiz_id']
+        student_id = data['student_id']
+        question_id = data['question_id']
+        answer = data['answer']
+
+        if quiz_id not in quizzes:
+            emit('error', {'message': '测评不存在'})
+            return
+        quiz = quizzes[quiz_id]
+        if student_id not in quiz['submissions']:
+            quiz['submissions'][student_id] = {}
+        quiz['submissions'][student_id][question_id] = {
+            'answer': answer,
+            'timestamp': datetime.now().isoformat()
+        }
+        attention_analyzer.record_interaction(student_id)
+
+        classroom_id = quiz['classroom_id']
+        emit('quiz_answer_received', {
+            'quiz_id': quiz_id,
+            'student_id': student_id,
+            'student_name': students.get(student_id, {}).get('name', student_id),
+            'question_id': question_id,
+            'total_submissions': len(quiz['submissions'])
+        }, room=classroom_id)
+
+    @socketio.on('end_quiz')
+    def handle_end_quiz(data):
+        quiz_id = data['quiz_id']
+        if quiz_id in quizzes:
+            quiz = quizzes[quiz_id]
+            quiz['ended_at'] = datetime.now().isoformat()
+            classroom_id = quiz['classroom_id']
+            result = _summarize_quiz(quiz)
+            emit('quiz_ended', {
+                'quiz_id': quiz_id,
+                'result': result
+            }, room=classroom_id)
+            logger.info("实时测评结束: %s", quiz_id)
+
+
+# ── 辅助函数：讨论/测评总结 ─────────────────────────────────────────────────────
+def _summarize_discussion(discussion: Dict) -> Dict:
+    groups = discussion['groups']
+    return {
+        'discussion_id': discussion['discussion_id'],
+        'topic': discussion['topic'],
+        'group_count': len(groups),
+        'total_messages': sum(len(g['messages']) for g in groups.values()),
+        'group_summaries': [
+            {
+                'group_id': gid,
+                'member_count': len(g['students']),
+                'message_count': len(g['messages']),
+                'active_members': len(set(m['student_id'] for m in g['messages']))
+            }
+            for gid, g in groups.items()
+        ]
+    }
+
+
+def _summarize_quiz(quiz: Dict) -> Dict:
+    questions = quiz['questions']
+    submissions = quiz['submissions']
+    total_students = len(students) if students else 0
+    submission_count = len(submissions)
+
+    question_stats = []
+    for q in questions:
+        qid = q.get('id') or q.get('question_id')
+        correct_answer = q.get('correct_answer')
+        answers = [s.get(qid, {}).get('answer') for s in submissions.values() if qid in s]
+        correct_count = sum(1 for a in answers if correct_answer is not None and a == correct_answer)
+        question_stats.append({
+            'question_id': qid,
+            'question': q.get('question', ''),
+            'response_count': len(answers),
+            'correct_count': correct_count,
+            'correct_rate': round(correct_count / len(answers) * 100, 1) if answers else 0
+        })
+
+    return {
+        'quiz_id': quiz['quiz_id'],
+        'question_count': len(questions),
+        'submission_count': submission_count,
+        'participation_rate': round(submission_count / total_students * 100, 1) if total_students else 0,
+        'question_stats': question_stats
+    }
+
+
+# ── 新增 HTTP 路由：CV帧分析 ─────────────────────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/analyze_frame', methods=['POST'])
+def analyze_frame(classroom_id):
+    """分析课堂摄像头帧：情感检测 + 注意力评估。
+
+    JSON body:
+    {
+        "student_id": "s001",          # 可选，关联到具体学生
+        "frame": "<base64>",           # base64编码的图片
+        "head_up_rate": 85.0,          # 可选，前端已计算的抬头率
+        "hand_up": false               # 可选，是否举手
+    }
+    """
+    if classroom_id not in classrooms:
+        return jsonify({"error": "课堂不存在"}), 404
+
+    data = request.json or {}
+    frame_b64 = data.get('frame')
+    student_id = data.get('student_id')
+    head_up_rate = data.get('head_up_rate', 50.0)
+    hand_up = data.get('hand_up', False)
+
+    if not frame_b64:
+        return jsonify({"error": "缺少 frame 参数"}), 400
+
+    # Decode base64 image
+    try:
+        import base64
+        import cv2
+        img_bytes = base64.b64decode(str(frame_b64))
+        img_np = np.frombuffer(img_bytes, dtype=np.uint8)
+        frame = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
+        if frame is None:
+            return jsonify({"error": "图片解码失败"}), 400
+    except Exception as e:
+        return jsonify({"error": f"图片解码异常: {e}"}), 400
+
+    # Emotion detection
+    emotion_result = detect_emotion_from_frame(frame)
+    emotion = emotion_result['emotion']
+
+    # Attention analysis
+    face_detected = emotion_result.get('features', {}) != {}
+    analysis = attention_analyzer.analyze(
+        student_id=student_id or 'anonymous',
+        head_up_rate=head_up_rate,
+        face_detected=face_detected,
+        emotion=emotion,
+        hand_up=hand_up
+    )
+
+    # If student_id is provided and exists, update their metrics
+    if student_id and student_id in students:
+        students[student_id].update(analysis)
+        students[student_id]['last_updated'] = datetime.now().isoformat()
+        students[student_id]['data_source'] = 'real_ai_analysis'
+        classroom_id_found = _find_student_classroom(student_id)
+        if classroom_id_found:
+            data_manager.save_student_metrics(student_id, classroom_id_found, analysis)
+
+    return jsonify({
+        "success": True,
+        "emotion": emotion_result,
+        "attention_analysis": analysis,
+        "timestamp": datetime.now().isoformat()
+    })
+
+
+# ── 新增 HTTP 路由：语音识别 ─────────────────────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/speech_recognize', methods=['POST'])
+def speech_recognize(classroom_id):
+    """语音识别：转录音频并检测课堂互动关键词。
+
+    JSON body:
+    {
+        "student_id": "s001",       # 可选
+        "audio": "<base64>",        # base64编码的音频(wav/aiff/flac)
+        "language": "zh-CN"         # 可选，默认中文
+    }
+    """
+    if classroom_id not in classrooms:
+        return jsonify({"error": "课堂不存在"}), 404
+
+    data = request.json or {}
+    audio_b64 = data.get('audio')
+    student_id = data.get('student_id')
+    language = data.get('language', 'zh-CN')
+
+    if not audio_b64:
+        return jsonify({"error": "缺少 audio 参数"}), 400
+
+    result = analyze_speech(str(audio_b64), language=language)
+
+    # Record interaction if student is identified and speech was successful
+    if result['success'] and student_id:
+        attention_analyzer.record_interaction(student_id)
+        if student_id in students:
+            # Update facial_engagement metric with speech engagement score
+            dm = students[student_id].get('detailed_metrics', {})
+            dm['interaction_frequency'] = result['engagement_score']
+            students[student_id]['detailed_metrics'] = dm
+            students[student_id]['last_updated'] = datetime.now().isoformat()
+
+    return jsonify({
+        "success": result['success'],
+        "text": result['text'],
+        "keywords": result.get('keywords', {}),
+        "engagement_score": result.get('engagement_score', 0),
+        "error": result.get('error'),
+        "timestamp": datetime.now().isoformat()
+    })
+
+
+# ── 新增 HTTP 路由：课堂互动报告 ─────────────────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/report')
+def get_classroom_report(classroom_id):
+    """生成课堂互动报告。
+
+    Query params:
+    - save: 是否保存到数据库 (true/false, 默认 false)
+    """
+    if classroom_id not in classrooms:
+        return jsonify({"error": "课堂不存在"}), 404
+
+    classroom = classrooms[classroom_id]
+    report = generate_classroom_report(classroom)
+
+    # Optionally save report as a classroom activity
+    if request.args.get('save', 'false').lower() == 'true':
+        try:
+            conn = sqlite3.connect(Config.CLASSROOM_DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO classroom_activities
+                (classroom_id, activity_type, question, responses_count, start_time, end_time)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                classroom_id,
+                'report',
+                report.get('report_meta', {}).get('generated_at', ''),
+                report.get('overall_summary', {}).get('total_students', 0) if 'total_students' in report.get('overall_summary', {}) else 0,
+                classroom.get('created_at'),
+                datetime.now().isoformat()
+            ))
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            logger.warning("报告保存到数据库失败: %s", e)
+
+    return jsonify(report)
+
+
+@ai_classroom_bp.route('/api/student/<student_id>/report')
+def get_student_report_route(student_id):
+    """生成学生个人课堂报告。
+
+    Query params:
+    - hours: 历史数据时间范围（默认24小时）
+    """
+    if student_id not in students:
+        return jsonify({"error": "学生不存在"}), 404
+
+    hours = request.args.get('hours', 24, type=int)
+    history_df = data_manager.get_student_history(student_id, hours)
+    if not isinstance(history_df, pd.DataFrame):
+        history_df = pd.DataFrame()
+    report = generate_student_report(students[student_id], history_df)
+    return jsonify(report)
+
+
+# ── 新增 HTTP 路由：分组讨论管理 ─────────────────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/discussions')
+def list_discussions(classroom_id):
+    """获取课堂中的所有分组讨论记录。"""
+    result = []
+    for did, disc in group_discussions.items():
+        if disc['classroom_id'] == classroom_id:
+            result.append(_summarize_discussion(disc))
+    return jsonify({"discussions": result})
+
+
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/discussions/<discussion_id>')
+def get_discussion_detail(classroom_id, discussion_id):
+    """获取分组讨论详情（含所有小组消息）。"""
+    if discussion_id not in group_discussions:
+        return jsonify({"error": "讨论不存在"}), 404
+    disc = group_discussions[discussion_id]
+    if disc['classroom_id'] != classroom_id:
+        return jsonify({"error": "讨论不属于该课堂"}), 404
+    return jsonify(disc)
+
+
+# ── 新增 HTTP 路由：实时测评管理 ─────────────────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/quizzes')
+def list_quizzes(classroom_id):
+    """获取课堂中的所有实时测评记录。"""
+    result = []
+    for qid, quiz in quizzes.items():
+        if quiz['classroom_id'] == classroom_id:
+            result.append(_summarize_quiz(quiz))
+    return jsonify({"quizzes": result})
+
+
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/quizzes/<quiz_id>')
+def get_quiz_detail(classroom_id, quiz_id):
+    """获取实时测评详情（含所有提交）。"""
+    if quiz_id not in quizzes:
+        return jsonify({"error": "测评不存在"}), 404
+    quiz = quizzes[quiz_id]
+    if quiz['classroom_id'] != classroom_id:
+        return jsonify({"error": "测评不属于该课堂"}), 404
+    return jsonify({
+        'quiz_id': quiz['quiz_id'],
+        'questions': quiz['questions'],
+        'submissions': quiz['submissions'],
+        'started_at': quiz['started_at'],
+        'ended_at': quiz['ended_at'],
+        'summary': _summarize_quiz(quiz)
+    })
+
+
+# ── 新增 HTTP 路由：批量CV分析（整堂课快照） ─────────────────────────────────────
+@ai_classroom_bp.route('/api/classroom/<classroom_id>/snapshot', methods=['POST'])
+def classroom_snapshot(classroom_id):
+    """批量分析课堂快照：接收多个学生的帧数据，一次性分析。
+
+    JSON body:
+    {
+        "students": [
+            {
+                "student_id": "s001",
+                "frame": "<base64>",
+                "head_up_rate": 85.0,
+                "hand_up": false
+            },
+            ...
+        ]
+    }
+    """
+    if classroom_id not in classrooms:
+        return jsonify({"error": "课堂不存在"}), 404
+
+    data = request.json or {}
+    student_frames = data.get('students', [])
+    if not student_frames:
+        return jsonify({"error": "缺少 students 数据"}), 400
+
+    import base64
+    import cv2
+
+    results = []
+    for sf in student_frames:
+        sid = sf.get('student_id')
+        frame_b64 = sf.get('frame')
+        head_up_rate = sf.get('head_up_rate', 50.0)
+        hand_up = sf.get('hand_up', False)
+
+        if not frame_b64:
+            results.append({
+                'student_id': sid,
+                'error': '缺少 frame 参数'
+            })
+            continue
+
+        try:
+            img_bytes = base64.b64decode(frame_b64)
+            img_np = np.frombuffer(img_bytes, dtype=np.uint8)
+            frame = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
+            if frame is None:
+                results.append({'student_id': sid, 'error': '图片解码失败'})
+                continue
+        except Exception as e:
+            results.append({'student_id': sid, 'error': f'解码异常: {e}'})
+            continue
+
+        emotion_result = detect_emotion_from_frame(frame)
+        emotion = emotion_result['emotion']
+        face_detected = emotion_result.get('features', {}) != {}
+        analysis = attention_analyzer.analyze(
+            student_id=sid or 'anonymous',
+            head_up_rate=head_up_rate,
+            face_detected=face_detected,
+            emotion=emotion,
+            hand_up=hand_up
+        )
+
+        if sid and sid in students:
+            students[sid].update(analysis)
+            students[sid]['last_updated'] = datetime.now().isoformat()
+            students[sid]['data_source'] = 'real_ai_analysis'
+            cid = _find_student_classroom(sid)
+            if cid:
+                data_manager.save_student_metrics(sid, cid, analysis)
+
+        results.append({
+            'student_id': sid,
+            'emotion': emotion_result,
+            'attention_analysis': analysis
+        })
+
+    return jsonify({
+        "success": True,
+        "analyzed_count": len(results),
+        "results": results,
+        "timestamp": datetime.now().isoformat()
+    })
+

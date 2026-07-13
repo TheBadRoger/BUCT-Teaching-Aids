@@ -10,6 +10,9 @@ python-dotenv==1.0.0
 pandas==2.0.3
 Jinja2==3.1.6
 
+# Speech recognition (lightweight, uses Google free API)
+SpeechRecognition==3.10.1
+
 # Optional transport package for SocketIO production deployments
 eventlet==0.33.3
 bidict==0.23.1

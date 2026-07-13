@@ -1,5 +1,6 @@
 package com.buctta.api.controller;
 
+import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
 import com.buctta.api.service.StudentService;
 import com.buctta.api.utils.ApiResponse;
@@ -29,14 +30,14 @@ public class StudentCtrl {
         StudentService.StudentResult result = studentService.addStudent(student);
         if (result.success()) {
             return ApiResponse.ok(result.student());
-        }
-        else {
+        } else {
             return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
         }
     }
 
+    // 搜索接口，telephone 和 email 已改为查询 User 表
     @GetMapping("/search")
-    public ApiResponse<Page<Student>> searchStudents(
+    public ApiResponse<Page<StudentDTO>> searchStudents(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String studentNumber,
             @RequestParam(required = false) String className,
@@ -48,10 +49,10 @@ public class StudentCtrl {
             @RequestParam(defaultValue = "id") String sort) {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-            Page<Student> studentPage = studentService.searchStudents(name, studentNumber, className, gender, telephone, email, pageable);
+            Page<StudentDTO> studentPage = studentService.searchStudents(
+                    name, studentNumber, className, gender, telephone, email, pageable);
             return ApiResponse.ok(studentPage);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("搜索学生时发生错误: {}", e.getMessage(), e);
             return ApiResponse.fail(BusinessStatus.INTERNAL_ERROR);
         }
@@ -67,10 +68,19 @@ public class StudentCtrl {
         }
     }
 
-    // 导出Excel
+    // 导出接口，telephone 和 email 查询 User 表
     @GetMapping("/export")
-    public void exportStudents(HttpServletResponse response) throws IOException {
-        List<Student> students = studentService.getAllStudentsForExport();
+    public void exportStudents(HttpServletResponse response,
+                               @RequestParam(required = false) String name,
+                               @RequestParam(required = false) String studentNumber,
+                               @RequestParam(required = false) String className,
+                               @RequestParam(required = false) String gender,
+                               @RequestParam(required = false) String telephone,
+                               @RequestParam(required = false) String email)
+            throws IOException {
+
+        List<Student> students = studentService.searchStudentsBySpec(
+                name, studentNumber, className, gender, telephone, email);
         byte[] excelBytes = studentService.exportStudentsToExcel(students);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=students.xlsx");
