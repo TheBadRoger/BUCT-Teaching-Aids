@@ -893,7 +893,29 @@
   | 电话 | 关联电话（来自 User 表） |
   | 邮箱 | 关联邮箱（来自 User 表） |
   | 用户类型 | 关联用户类型（来自 User 表） |
-- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 <a> 标签 download 属性触发下载。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部教师
+- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 \<a\> 标签 download 属性触发下载。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部教师 
+
+### POST /api/teacher/add-with-user
+
+- **描述**：新增一名教师记录，同时自动创建一个系统登录用户并绑定该教师身份，用户可直接使用分配的用户名和密码登录。
+- **请求方式**：POST，application/json
+- **请求体**（JSON）：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | teacher | object | 是 | 教师基本信息对象 |
+  | teacher.name | string | 是 | 教师姓名 |
+  | teacher.organization | string | 否 | 所属单位/院系 |
+  | teacher.gender | string | 否 | 性别 |
+  | teacher.education | string | 否 | 最高学历 |
+  | teacher.jointime | string | 否 | 入职时间 |
+  | username | string | 否 | 登录用户名，不传则自动生成（格式：T + 时间戳） |
+  | password | string | 否 | 登录密码，不传则默认为 123456 |
+  | telephone | string | 否 | 手机号 |
+  | email | string | 否 | 邮箱 |
+- **返回**（成功）：data 字段包含新创建的 teacher 和 user 对象，其中 user 不返回密码字段。
+- **返回**（失败）：code: 4091，实体已存在（如教师姓名、用户名、手机号、邮箱重复等）。
+
 ## 学生管理模块 `/api/students`
 
 ### POST /api/students/add
@@ -1059,6 +1081,29 @@
   | 用户类型 | 关联用户类型（来自 User 表） |
 
 - **注意**：该接口直接响应文件下载，无需解析 JSON。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部学生。
+
+### POST /api/students/add-with-user
+
+- **描述**：新增一名学生记录，同时自动创建一个系统登录用户并绑定该学生身份，用户可直接使用分配的用户名和密码登录。
+  - **请求方式**：POST，application/json
+    **请求体**（JSON）：
+
+    | 字段 | 类型 | 必填 | 说明 |
+          |------|------|----|------|
+    | student | object | 是  | 学生基本信息对象 |
+    | student.name | string | 是  | 学生姓名 |
+    | student.studentNumber | string | 是  | 学号 |
+    | student.className | string | 否  | 班级 |
+    | student.gender | string | 否  | 性别 |
+    | student.admissionDate | string | 否  | 入学日期（格式：yyyy-MM-dd） |
+    | username | string | 否  | 登录用户名，不传则默认使用学号 |
+    | password | string | 否  | 登录密码，不传则默认为 123456 |
+    | telephone | string | 否  | 手机号 |
+    | email | string | 否  | 邮箱 |
+
+- **返回**（成功）：data 字段包含新创建的 student 和 user 对象，其中 user 不返回密码字段。
+- **返回**（失败）：code: 4091，实体已存在（如学号、用户名、手机号、邮箱重复等）。
+---
 
 ## 学生选课模块 `/api/student-courses`
 
