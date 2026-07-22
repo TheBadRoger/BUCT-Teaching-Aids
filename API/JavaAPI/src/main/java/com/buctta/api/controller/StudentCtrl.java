@@ -1,6 +1,7 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.dto.StudentDTO;
+import com.buctta.api.dto.StudentWithUserRequest;
 import com.buctta.api.entities.Student;
 import com.buctta.api.service.StudentService;
 import com.buctta.api.utils.ApiResponse;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -99,6 +102,29 @@ public class StudentCtrl {
             return ApiResponse.ok(result.student());
         } else {
             return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+        }
+    }
+    /**
+     * 新增学生并创建绑定用户
+     */
+    @PostMapping("/add-with-user")
+    public ApiResponse<Map<String, Object>> addStudentWithUser(
+            @RequestBody StudentWithUserRequest request) {
+        StudentService.AddWithUserResult result = studentService.addStudentWithUser(
+                request.getStudent(),
+                request.getUsername(),
+                request.getPassword(),
+                request.getTelephone(),
+                request.getEmail()
+        );
+
+        if (result.success()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("student", result.student());
+            data.put("user", result.user());
+            return ApiResponse.ok(data);
+        } else {
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
         }
     }
 }

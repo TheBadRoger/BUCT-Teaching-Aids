@@ -1,6 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.TeacherReposit;
+import com.buctta.api.dao.UserReposit;
 import com.buctta.api.dto.TeacherDTO;
 import com.buctta.api.entities.Teacher;
 import com.buctta.api.entities.User;
@@ -8,6 +9,7 @@ import com.buctta.api.service.TeacherService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,6 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -30,6 +33,10 @@ import java.util.List;
 public class IMPL_TeacherService implements TeacherService {
     @Resource
     private TeacherReposit teacherReposit;
+    @Resource
+    private UserReposit userReposit;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public TeacherResult addTeacher(Teacher teacher) {
@@ -229,6 +236,57 @@ public class IMPL_TeacherService implements TeacherService {
             return TeacherResult.success(updatedTeacher, "教师信息更新成功");
         } catch (Exception e) {
             return TeacherResult.fail("UPDATE_FAILED", "更新教师失败: " + e.getMessage());
+        }
+    }
+    @Override
+    @Transactional
+    public AddWithUserResult addTeacherWithUser(Teacher teacher, String username, String password, String telephone, String email) {
+        // 检查教师姓名是否已存在（可根据实际业务调整，这里只做简单姓名查重）
+        if (teacherReposit.findTeacherListByName(teacher.getName()) != null) {
+            return AddWithUserResult.fail("TEACHER_NAME_EXISTS", "教师姓名已存在");
+        }
+
+        // 生成默认用户名（用工号或姓名拼音，此处用工号）
+        if (username == null || username.trim().isEmpty()) {
+            username = "T" + System.currentTimeMillis(); // 简单防重
+        }
+
+        if (userReposit.existsByUsername(username)) {
+            return AddWithUserResult.fail("USERNAME_EXISTS", "用户名已存在");
+        }
+        if (telephone != null && !telephone.isEmpty() && userReposit.existsByTelephone(telephone)) {
+            return AddWithUserResult.fail("PHONE_EXISTS", "手机号已被注册");
+        }
+        if (email != null && !email.isEmpty() && userReposit.existsByEmail(email)) {
+            return AddWithUserResult.fail("EMAIL_EXISTS", "邮箱已被注册");
+        }
+
+        if (password == null || password.isEmpty()) {
+            password = "123456";
+        }
+
+        try {
+            Teacher savedTeacher = teacherReposit.save(teacher);
+
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setTelephone(telephone);
+            user.setEmail(email);
+            user.setTeacher(savedTeacher);
+            user.setUserType(User.UserType.TEACHER);
+            User savedUser = userReposit.save(user);
+            //savedUser.setPassword(null);
+            User responseUser = new User();
+            responseUser.setId(savedUser.getId());
+            responseUser.setUsername(savedUser.getUsername());
+            responseUser.setTelephone(savedUser.getTelephone());
+            responseUser.setEmail(savedUser.getEmail());
+            responseUser.setUserType(savedUser.getUserType());
+            //responseUser.setStudent(savedUser.getStudent());
+            return AddWithUserResult.success(savedTeacher, responseUser);
+        } catch (Exception e) {
+            return AddWithUserResult.fail("CREATE_FAILED", "创建失败: " + e.getMessage());
         }
     }
 }
