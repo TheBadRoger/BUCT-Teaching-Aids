@@ -2,6 +2,7 @@ package com.buctta.api.service;
 
 import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
+import com.buctta.api.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -90,4 +91,23 @@ public interface StudentService {
     List<Student> getAllStudentsForExport();
 
     byte[] exportStudentsToExcel(List<Student> students) throws IOException;
+    /**
+     * 新增学生，同时创建对应用户并绑定
+     * @param student    学生基本信息
+     * @param username   用户名（可选，默认使用学号）
+     * @param password   密码（可选，不传则随机生成）
+     * @param telephone  手机号（可选）
+     * @param email      邮箱（可选）
+     * @return 创建结果，包含学生和用户信息
+     */
+    AddWithUserResult addStudentWithUser(Student student, String username, String password, String telephone, String email);
+
+    record AddWithUserResult(boolean success, Student student, User user, String errorCode, String message) {
+        public static AddWithUserResult success(Student student, User user) {
+            return new AddWithUserResult(true, student, user, null, "创建成功");
+        }
+        public static AddWithUserResult fail(String errorCode, String message) {
+            return new AddWithUserResult(false, null, null, errorCode, message);
+        }
+    }
 }

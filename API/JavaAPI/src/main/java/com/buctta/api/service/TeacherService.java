@@ -2,6 +2,7 @@ package com.buctta.api.service;
 
 import com.buctta.api.dto.TeacherDTO;
 import com.buctta.api.entities.Teacher;
+import com.buctta.api.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -46,4 +47,23 @@ public interface TeacherService {
     List<Teacher> getAllTeachersForExport();
 
     TeacherResult updateTeacher(Long id, Teacher teacherDetails);
+    /**
+     * 新增教师，同时创建对应用户并绑定
+     * @param teacher    教师基本信息
+     * @param username   用户名（可选，默认使用工号）
+     * @param password   密码（可选，不传则随机生成）
+     * @param telephone  手机号（可选）
+     * @param email      邮箱（可选）
+     * @return 创建结果，包含教师和用户信息
+     */
+    AddWithUserResult addTeacherWithUser(Teacher teacher, String username, String password, String telephone, String email);
+
+    record AddWithUserResult(boolean success, Teacher teacher, User user, String errorCode, String message) {
+        public static AddWithUserResult success(Teacher teacher, User user) {
+            return new AddWithUserResult(true, teacher, user, null, "创建成功");
+        }
+        public static AddWithUserResult fail(String errorCode, String message) {
+            return new AddWithUserResult(false, null, null, errorCode, message);
+        }
+    }
 }
