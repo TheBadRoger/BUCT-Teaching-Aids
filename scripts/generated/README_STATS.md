@@ -40,5 +40,3 @@ pie showData
     "JavaScript (2.90%)" : 777
     "YAML (1.77%)" : 475
     "SQL (0.67%)" : 180
-    "Shell (0.05%)" : 14
-```
