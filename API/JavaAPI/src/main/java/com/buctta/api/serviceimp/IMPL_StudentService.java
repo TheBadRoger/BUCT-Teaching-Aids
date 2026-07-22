@@ -1,6 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.StudentReposit;
+import com.buctta.api.dao.UserReposit;
 import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
 import com.buctta.api.entities.User;
@@ -8,6 +9,7 @@ import com.buctta.api.service.StudentService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -29,6 +32,10 @@ public class IMPL_StudentService implements StudentService {
 
     @Resource
     private StudentReposit studentRepository;
+    @Resource
+    private UserReposit userReposit;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public StudentResult addStudent(Student student) {
@@ -265,5 +272,65 @@ public class IMPL_StudentService implements StudentService {
     @Override
     public List<Student> getAllStudentsForExport() {
         return studentRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public AddWithUserResult addStudentWithUser(Student student, String username, String password, String telephone, String email) {
+        // 检查学号是否已存在
+        if (studentRepository.findByStudentNumber(student.getStudentNumber()).isPresent()) {
+            return AddWithUserResult.fail("STUDENT_NUMBER_EXISTS", "学号已存在");
+        }
+
+        // 生成默认用户名
+        if (username == null || username.trim().isEmpty()) {
+            username = student.getStudentNumber();
+        }
+
+        // 检查用户名是否已存在
+        if (userReposit.existsByUsername(username)) {
+            return AddWithUserResult.fail("USERNAME_EXISTS", "用户名已存在");
+        }
+
+        // 检查手机号、邮箱唯一性（如果提供）
+        if (telephone != null && !telephone.isEmpty() && userReposit.existsByTelephone(telephone)) {
+            return AddWithUserResult.fail("PHONE_EXISTS", "手机号已被注册");
+        }
+        if (email != null && !email.isEmpty() && userReposit.existsByEmail(email)) {
+            return AddWithUserResult.fail("EMAIL_EXISTS", "邮箱已被注册");
+        }
+
+        // 生成随机密码（如果未提供）
+        if (password == null || password.isEmpty()) {
+            password = "123456";
+        }
+
+        try {
+            // 保存学生
+            Student savedStudent = studentRepository.save(student);
+
+            // 创建用户并绑定
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setTelephone(telephone);
+            user.setEmail(email);
+            user.setStudent(savedStudent);
+            user.setUserType(User.UserType.STUDENT);
+            User savedUser = userReposit.save(user);
+
+            // 清除密码敏感信息
+            //savedUser.setPassword(null);
+            User responseUser = new User();
+            responseUser.setId(savedUser.getId());
+            responseUser.setUsername(savedUser.getUsername());
+            responseUser.setTelephone(savedUser.getTelephone());
+            responseUser.setEmail(savedUser.getEmail());
+            responseUser.setUserType(savedUser.getUserType());
+            //responseUser.setStudent(savedUser.getStudent());
+            return AddWithUserResult.success(savedStudent, responseUser);
+        } catch (Exception e) {
+            return AddWithUserResult.fail("CREATE_FAILED", "创建失败: " + e.getMessage());
+        }
     }
 }

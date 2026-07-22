@@ -1,6 +1,7 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.dto.TeacherDTO;
+import com.buctta.api.dto.TeacherWithUserRequest;
 import com.buctta.api.entities.Teacher;
 import com.buctta.api.service.TeacherService;
 import com.buctta.api.utils.ApiResponse;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -110,6 +113,29 @@ public class TeacherListCtrl {
             return ApiResponse.ok(result.teacher());
         } else {
             return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+        }
+    }
+    /**
+     * 新增教师并创建绑定用户
+     */
+    @PostMapping("/add-with-user")
+    public ApiResponse<Map<String, Object>> addTeacherWithUser(
+            @RequestBody TeacherWithUserRequest request) {
+        TeacherService.AddWithUserResult result = teacherService.addTeacherWithUser(
+                request.getTeacher(),
+                request.getUsername(),
+                request.getPassword(),
+                request.getTelephone(),
+                request.getEmail()
+        );
+
+        if (result.success()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("teacher", result.teacher());
+            data.put("user", result.user());
+            return ApiResponse.ok(data);
+        } else {
+            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
         }
     }
 }
