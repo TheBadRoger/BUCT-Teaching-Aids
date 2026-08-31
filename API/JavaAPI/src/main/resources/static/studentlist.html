@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>学生列表 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-bar">
+            学生列表
+            <div class="breadcrumb">首页 &gt; 学生列表</div>
+        </div>
+
+        <div class="filter-area">
+            <div class="filter-item">
+                <label>学生姓名</label>
+                <input id="f-name" placeholder="请输入学生姓名">
+            </div>
+            <div class="filter-item">
+                <label>学号</label>
+                <input id="f-number" placeholder="请输入学号">
+            </div>
+            <div class="filter-item">
+                <label>班级</label>
+                <input id="f-class" placeholder="请输入班级">
+            </div>
+            <div class="filter-item">
+                <label>性别</label>
+                <select id="f-gender">
+                    <option value="">全部</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn-primary" id="queryBtn">查询</button>
+            <button class="btn-default" id="resetBtn">重置</button>
+            <button class="btn-info" id="addBtn">新增学生</button>
+            <button class="btn-danger" id="deleteBtn">批量删除</button>
+            <button class="btn-default" id="exportBtn">导出</button>
+        </div>
+
+        <div class="data-count" id="dataCount">共查询到 0 条数据</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th><input id="selectAll" type="checkbox"> 全选</th>
+                    <th>ID</th>
+                    <th>学号</th>
+                    <th>学生姓名</th>
+                    <th>班级</th>
+                    <th>性别</th>
+                    <th>入学日期</th>
+                    <th>用户名</th>
+                    <th>联系电话</th>
+                    <th>电子邮件</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("student");
+        if (!requireAdminLogin()) return;
+
+        let currentPage = 0, totalPages = 0;
+
+        function collectFilter() {
+            return {
+                name: document.getElementById("f-name").value.trim(),
+                studentNumber: document.getElementById("f-number").value.trim(),
+                className: document.getElementById("f-class").value.trim(),
+                gender: document.getElementById("f-gender").value
+            };
+        }
+
+        function load(page) {
+            currentPage = page || 0;
+            const params = Object.assign({ page: currentPage, size: 10, sort: "id" }, collectFilter());
+            // 学生搜索为 GET + 查询参数
+            apiGet("/students/search", params)
+                .then(function (res) {
+                    const pageData = res.data || { content: [], totalElements: 0, totalPages: 0 };
+                    totalPages = pageData.totalPages || 0;
+                    renderTable(pageData.content || []);
+                    document.getElementById("dataCount").textContent = "共查询到 " + (pageData.totalElements || 0) + " 条数据";
+                    renderPagination(document.getElementById("pagination"), currentPage, totalPages, load);
+                })
+                .catch(function (err) { toast("加载学生列表失败：" + err.message, "error"); });
+        }
+
+        function renderTable(list) {
+            const tbody = document.getElementById("tbody");
+            if (!list.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="11">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function (s) {
+                return '<tr>' +
+                    '<td><input type="checkbox" class="row-check" value="' + s.id + '"></td>' +
+                    '<td>' + escapeHtml(s.id) + '</td>' +
+                    '<td>' + escapeHtml(s.studentNumber) + '</td>' +
+                    '<td>' + escapeHtml(s.name) + '</td>' +
+                    '<td>' + escapeHtml(s.className) + '</td>' +
+                    '<td>' + escapeHtml(s.gender) + '</td>' +
+                    '<td>' + escapeHtml(s.admissionDate) + '</td>' +
+                    '<td>' + escapeHtml(s.username) + '</td>' +
+                    '<td>' + escapeHtml(s.telephone) + '</td>' +
+                    '<td>' + escapeHtml(s.email) + '</td>' +
+                    '<td>' +
+                        '<a data-action="view" data-num="' + escapeHtml(s.studentNumber) + '">查看</a>' +
+                        '<a data-action="edit" data-num="' + escapeHtml(s.studentNumber) + '">编辑</a>' +
+                    '</td>' +
+                    '</tr>';
+            }).join("");
+            tbody.querySelectorAll("a[data-action]").forEach(function (a) {
+                a.addEventListener("click", function () {
+                    const num = a.dataset.num;
+                    if (a.dataset.action === "edit") location.href = "edit-student.html?studentNumber=" + encodeURIComponent(num);
+                    else location.href = "student-detail.html?studentNumber=" + encodeURIComponent(num);
+                });
+            });
+        }
+
+        document.getElementById("selectAll").addEventListener("change", function () {
+            document.querySelectorAll(".row-check").forEach(function (c) { c.checked = this.checked; }, this);
+        });
+
+        function getCheckedIds() {
+            return Array.prototype.slice.call(document.querySelectorAll(".row-check:checked"))
+                .map(function (c) { return parseInt(c.value, 10); });
+        }
+
+        document.getElementById("queryBtn").addEventListener("click", function () { load(0); });
+        document.getElementById("resetBtn").addEventListener("click", function () {
+            ["f-name", "f-number", "f-class", "f-gender"].forEach(function (id) {
+                document.getElementById(id).value = "";
+            });
+            load(0);
+        });
+        document.getElementById("addBtn").addEventListener("click", function () { location.href = "add-student.html"; });
+
+        document.getElementById("deleteBtn").addEventListener("click", function () {
+            const ids = getCheckedIds();
+            if (!ids.length) { toast("请至少勾选一名学生", "warn"); return; }
+            if (!confirm("确定删除选中的 " + ids.length + " 名学生吗？")) return;
+            apiDelete("/students/batch", ids)
+                .then(function () { toast("删除成功"); load(currentPage); })
+                .catch(function (err) { toast("删除失败：" + err.message, "error"); });
+        });
+
+        document.getElementById("exportBtn").addEventListener("click", function () {
+            const qs = buildQuery(collectFilter());
+            location.href = API_BASE + "/students/export" + (qs ? qs : "");
+        });
+
+        load(0);
+    });
+</script>
+</body>
+</html>
