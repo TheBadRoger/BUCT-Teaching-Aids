@@ -22,12 +22,15 @@ public class SecurityAuthorize {
                                 .requestMatchers(
                                         "/enter.html",
                                         "/register.html",
+                                        "/login.html",
                                         "/error",
                                         "/css/**",
                                         "/js/**",
                                         "/images/**",
                                         "/api/aijudegment/login",
                                         "/api/aijudegment/register",
+                                        "/api/admin/login",
+                                        "/api/admin/register",
                                         "/api/user/auth/login",
                                         "/api/user/auth/register",
                                         "/api/user/auth/send-code"
