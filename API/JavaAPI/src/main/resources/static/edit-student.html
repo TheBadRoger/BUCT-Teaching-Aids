@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>编辑学生 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-bar">
+            编辑学生
+            <button class="back-btn" onclick="location.href='studentlist.html'">返回列表</button>
+        </div>
+
+        <div class="section-title">学生基本信息</div>
+        <form id="studentForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="required" for="studentNumber">学号</label>
+                    <input id="studentNumber" placeholder="请输入学号">
+                    <div class="error-message" id="numErr"></div>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="name">学生姓名</label>
+                    <input id="name" placeholder="请输入学生姓名">
+                    <div class="error-message" id="nameErr"></div>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="className">班级</label>
+                    <input id="className" placeholder="请输入班级">
+                    <div class="error-message" id="classErr"></div>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="gender">性别</label>
+                    <select id="gender">
+                        <option value="">请选择</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                    <div class="error-message" id="genderErr"></div>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="admissionDate">入学日期</label>
+                    <input id="admissionDate" type="date">
+                    <div class="error-message" id="admissionErr"></div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top:22px">关联账号（只读，由系统维护）</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input id="username" disabled>
+                </div>
+                <div class="form-group">
+                    <label>联系电话</label>
+                    <input id="telephone" disabled>
+                </div>
+                <div class="form-group">
+                    <label>电子邮件</label>
+                    <input id="email" disabled>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="cancel" type="button" onclick="location.href='studentlist.html'">取消</button>
+                <button class="save" type="button" id="saveBtn">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("student");
+        if (!requireAdminLogin()) return;
+
+        const studentNumber = getParam("studentNumber");
+        if (!studentNumber) { toast("缺少学号", "error"); setTimeout(function () { location.href = "studentlist.html"; }, 1000); return; }
+
+        let currentId = null;
+
+        function loadStudent() {
+            // 按学号（唯一）查询，取第一条
+            apiGet("/students/search", { studentNumber: studentNumber, page: 0, size: 1 })
+                .then(function (res) {
+                    const list = (res.data && res.data.content) || [];
+                    if (!list.length) { toast("未找到该学生", "error"); return; }
+                    const s = list[0];
+                    currentId = s.id;
+                    document.getElementById("studentNumber").value = s.studentNumber || "";
+                    document.getElementById("name").value = s.name || "";
+                    document.getElementById("className").value = s.className || "";
+                    document.getElementById("gender").value = s.gender || "";
+                    document.getElementById("admissionDate").value = (s.admissionDate || "").slice(0, 10);
+                    document.getElementById("username").value = s.username || "";
+                    document.getElementById("telephone").value = s.telephone || "";
+                    document.getElementById("email").value = s.email || "";
+                })
+                .catch(function (err) { toast("加载学生信息失败：" + err.message, "error"); });
+        }
+
+        function showErr(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg; el.style.display = msg ? "block" : "none";
+            return !msg;
+        }
+
+        function validate() {
+            let ok = true;
+            ok = showErr("numErr", document.getElementById("studentNumber").value.trim() ? "" : "请填写学号") && ok;
+            ok = showErr("nameErr", document.getElementById("name").value.trim() ? "" : "请填写学生姓名") && ok;
+            ok = showErr("classErr", document.getElementById("className").value.trim() ? "" : "请填写班级") && ok;
+            ok = showErr("genderErr", document.getElementById("gender").value ? "" : "请选择性别") && ok;
+            ok = showErr("admissionErr", document.getElementById("admissionDate").value ? "" : "请选择入学日期") && ok;
+            return ok;
+        }
+
+        document.getElementById("saveBtn").addEventListener("click", function () {
+            if (!currentId) { toast("学生尚未加载完成", "warn"); return; }
+            if (!validate()) { toast("请完善必填信息", "warn"); return; }
+
+            const body = {
+                studentNumber: document.getElementById("studentNumber").value.trim(),
+                name: document.getElementById("name").value.trim(),
+                className: document.getElementById("className").value.trim(),
+                gender: document.getElementById("gender").value,
+                admissionDate: document.getElementById("admissionDate").value
+            };
+            const btn = document.getElementById("saveBtn");
+            btn.disabled = true;
+            apiPut("/students/update", body, { id: currentId })
+                .then(function () { toast("保存成功"); setTimeout(function () { location.href = "studentlist.html"; }, 700); })
+                .catch(function (err) { toast("保存失败：" + err.message, "error"); btn.disabled = false; });
+        });
+
+        loadStudent();
+    });
+</script>
+</body>
+</html>
