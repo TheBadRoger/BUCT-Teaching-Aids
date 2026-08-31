@@ -239,6 +239,16 @@ public class IMPL_TeacherService implements TeacherService {
         }
     }
     @Override
+    public TeacherDTO getTeacherById(Long id) {
+        if (id == null) {
+            return null;
+        }
+        Teacher teacher = teacherReposit.findTeacherListById(id);
+        // @OneToOne 关联默认 EAGER，此处可直接访问 user 字段
+        return teacher == null ? null : convertToDTO(teacher);
+    }
+
+    @Override
     @Transactional
     public AddWithUserResult addTeacherWithUser(Teacher teacher, String username, String password, String telephone, String email) {
         // 检查教师姓名是否已存在（可根据实际业务调整，这里只做简单姓名查重）
