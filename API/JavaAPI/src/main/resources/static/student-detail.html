@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>学生详情 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-bar">
+            学生详情
+            <button class="back-btn" onclick="location.href='studentlist.html'">返回列表</button>
+        </div>
+
+        <div class="section-title">基本信息</div>
+        <table class="detail-table">
+            <tbody>
+            <tr><th>ID</th><td id="d-id"></td></tr>
+            <tr><th>学号</th><td id="d-number"></td></tr>
+            <tr><th>学生姓名</th><td id="d-name"></td></tr>
+            <tr><th>班级</th><td id="d-class"></td></tr>
+            <tr><th>性别</th><td id="d-gender"></td></tr>
+            <tr><th>入学日期</th><td id="d-admission"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="section-title" style="margin-top:22px">关联账号</div>
+        <table class="detail-table">
+            <tbody>
+            <tr><th>用户名</th><td id="d-username"></td></tr>
+            <tr><th>联系电话</th><td id="d-telephone"></td></tr>
+            <tr><th>电子邮件</th><td id="d-email"></td></tr>
+            <tr><th>用户类型</th><td id="d-userType"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="form-actions">
+            <button class="cancel" type="button" onclick="location.href='studentlist.html'">返回列表</button>
+            <button class="save" type="button" id="editBtn">编辑</button>
+        </div>
+    </div>
+</div>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("student");
+        if (!requireAdminLogin()) return;
+
+        const studentNumber = getParam("studentNumber");
+        if (!studentNumber) { toast("缺少学号", "error"); setTimeout(function () { location.href = "studentlist.html"; }, 1000); return; }
+
+        apiGet("/students/search", { studentNumber: studentNumber, page: 0, size: 1 })
+            .then(function (res) {
+                const list = (res.data && res.data.content) || [];
+                if (!list.length) { toast("未找到该学生", "error"); return; }
+                const s = list[0];
+                document.getElementById("d-id").textContent = s.id;
+                document.getElementById("d-number").textContent = s.studentNumber || "-";
+                document.getElementById("d-name").textContent = s.name || "-";
+                document.getElementById("d-class").textContent = s.className || "-";
+                document.getElementById("d-gender").textContent = s.gender || "-";
+                document.getElementById("d-admission").textContent = s.admissionDate || "-";
+                document.getElementById("d-username").textContent = s.username || "-";
+                document.getElementById("d-telephone").textContent = s.telephone || "-";
+                document.getElementById("d-email").textContent = s.email || "-";
+                document.getElementById("d-userType").textContent = s.userType || "-";
+            })
+            .catch(function (err) { toast("加载学生信息失败：" + err.message, "error"); });
+
+        document.getElementById("editBtn").addEventListener("click", function () {
+            location.href = "edit-student.html?studentNumber=" + encodeURIComponent(studentNumber);
+        });
+    });
+</script>
+</body>
+</html>

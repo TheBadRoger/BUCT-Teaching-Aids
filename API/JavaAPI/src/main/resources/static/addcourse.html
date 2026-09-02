@@ -3,260 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>新增课程</title>
-    <style>
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-        }
-
-        .page-wrapper {
-            padding: 20px;
-        }
-
-        .header-bar {
-            background-color: #fff;
-            padding: 15px 20px;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-bar .back-btn {
-            background-color: #ffcccc;
-            color: #cc0000;
-            border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #333;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            background-color: #fff;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #40a9ff;
-            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-        }
-
-        .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .image-upload {
-            margin-top: 10px;
-        }
-
-        .image-upload img {
-            max-width: 100px;
-            height: auto;
-            margin-bottom: 10px;
-            border: 1px solid #eee;
-            border-radius: 4px;
-        }
-
-        .image-upload button {
-            padding: 8px 16px;
-            background-color: #2f5496;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .image-upload button:hover {
-            background-color: #22406d;
-        }
-
-        .image-upload p {
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        .form-actions {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .form-actions button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .form-actions .cancel {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .form-actions .cancel:hover {
-            background-color: #e0e0e0;
-        }
-
-        .form-actions .save {
-            background-color: #003366;
-            color: #fff;
-        }
-
-        .form-actions .save:hover {
-            background-color: #002244;
-        }
-    </style>
+    <title>新增课程 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
 </head>
 <body>
 <div class="page-wrapper">
-    <div class="header-bar">
-        新增课程
-        <button class="back-btn">返回</button>
-    </div>
-
     <div class="container">
-        <div class="section-title">课程详情</div>
+        <div class="header-bar">
+            新增课程
+            <button class="back-btn" onclick="location.href='courselist.html'">返回列表</button>
+        </div>
 
-        <form>
+        <div class="section-title">课程信息</div>
+        <form id="courseForm">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>课程名称</label>
-                    <input placeholder="课程名称" type="text">
+                    <label class="required" for="courseName">课程名称</label>
+                    <input id="courseName" placeholder="请输入课程名称">
+                    <div class="error-message" id="courseNameErr"></div>
                 </div>
                 <div class="form-group">
-                    <label>课程编号</label>
-                    <input placeholder="课程编号" type="text">
+                    <label class="required" for="courseNumber">课程编号</label>
+                    <input id="courseNumber" placeholder="请输入课程编号">
+                    <div class="error-message" id="courseNumberErr"></div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="courseIntroduction">课程介绍</label>
+                    <textarea id="courseIntroduction" placeholder="请输入课程介绍"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>课程介绍</label>
-                    <textarea placeholder="课程介绍"></textarea>
+                    <label for="startDate">开课日期</label>
+                    <input id="startDate" type="date">
                 </div>
                 <div class="form-group">
-                    <label>开课日期</label>
-                    <input placeholder="选择日期" type="date">
+                    <label for="duration">课程时长/学时</label>
+                    <input id="duration" placeholder="如：32学时 / 8周">
+                </div>
+                <div class="form-group full-width">
+                    <label for="teachingObjectives">教学目标</label>
+                    <textarea id="teachingObjectives" placeholder="请输入教学目标"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>教学目标</label>
-                    <textarea placeholder="教学目标"></textarea>
+                    <label for="teachingTeachers">授课教师</label>
+                    <input id="teachingTeachers" placeholder="请输入授课教师">
                 </div>
                 <div class="form-group">
-                    <label>持续时间</label>
-                    <input placeholder="持续时间" type="text">
+                    <label for="teachingClasses">开课班级</label>
+                    <input id="teachingClasses" placeholder="请输入开课班级">
                 </div>
                 <div class="form-group">
-                    <label>授课老师</label>
-                    <select>
-                        <option>选择老师</option>
+                    <label for="targetAudience">适用对象</label>
+                    <input id="targetAudience" placeholder="请输入适用对象">
+                </div>
+                <div class="form-group">
+                    <label for="classAddress">上课地点</label>
+                    <input id="classAddress" placeholder="请输入上课地点">
+                </div>
+                <div class="form-group">
+                    <label for="coursePrice">课程价格</label>
+                    <input id="coursePrice" placeholder="请输入课程价格" type="number" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="courseStatus">课程状态</label>
+                    <select id="courseStatus">
+                        <option value="">请选择</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已结课">已结课</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>授课班级</label>
-                    <select>
-                        <option>选择班级</option>
-                    </select>
+                    <label for="courseTags">课程标签</label>
+                    <input id="courseTags" placeholder="多个标签以逗号分隔">
                 </div>
                 <div class="form-group">
-                    <label>适用人群</label>
-                    <input placeholder="适用人群" type="text">
+                    <label for="courseImage">课程封面图片 URL</label>
+                    <input id="courseImage" placeholder="请输入图片地址">
                 </div>
-                <div class="form-group">
-                    <label>上课地址</label>
-                    <input placeholder="上课地址" type="text">
-                </div>
-                <div class="form-group">
-                    <label>课程价格</label>
-                    <input placeholder="课程价格" type="text">
-                </div>
-                <div class="form-group">
-                    <label>课程状态</label>
-                    <select>
-                        <option>请选择</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>课程标签</label>
-                    <input placeholder="课程标签" type="text">
-                </div>
-                <div class="form-group">
-                    <label>课程大纲</label>
-                    <textarea placeholder="课程大纲"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>课程图片</label>
-                <div class="image-upload">
-                    < img src="picture" alt="课程图片">
-                    <button>选择图片</button>
-                    <p>单文件大小请在1M以内,仅支持JPG、JPEG、PNG格式</p>
+                <div class="form-group full-width">
+                    <label for="courseOutline">课程大纲</label>
+                    <textarea id="courseOutline" placeholder="请输入课程大纲（支持长文本）"></textarea>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button class="cancel" type="button">取消</button>
-                <button class="save" type="submit">保存</button>
+                <button class="cancel" type="button" onclick="location.href='courselist.html'">取消</button>
+                <button class="save" type="button" id="saveBtn">保存</button>
             </div>
         </form>
     </div>
 </div>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("add-course");
+        if (!requireAdminLogin()) return;
+
+        document.getElementById("saveBtn").addEventListener("click", function () {
+            const courseName = document.getElementById("courseName").value.trim();
+            const courseNumber = document.getElementById("courseNumber").value.trim();
+            if (!courseName) { toast("课程名称为必填", "warn"); return; }
+            if (!courseNumber) { toast("课程编号为必填", "warn"); return; }
+
+            const price = document.getElementById("coursePrice").value;
+            const body = {
+                courseName: courseName,
+                courseNumber: courseNumber,
+                courseIntroduction: document.getElementById("courseIntroduction").value.trim(),
+                startDate: document.getElementById("startDate").value,
+                teachingObjectives: document.getElementById("teachingObjectives").value.trim(),
+                duration: document.getElementById("duration").value.trim(),
+                teachingTeachers: document.getElementById("teachingTeachers").value.trim(),
+                teachingClasses: document.getElementById("teachingClasses").value.trim(),
+                targetAudience: document.getElementById("targetAudience").value.trim(),
+                classAddress: document.getElementById("classAddress").value.trim(),
+                coursePrice: price === "" ? null : parseFloat(price),
+                courseStatus: document.getElementById("courseStatus").value,
+                courseTags: document.getElementById("courseTags").value.trim(),
+                courseImage: document.getElementById("courseImage").value.trim(),
+                courseOutline: document.getElementById("courseOutline").value.trim()
+            };
+
+            const btn = document.getElementById("saveBtn");
+            btn.disabled = true;
+            // POST /api/course/add
+            apiPost("/course/add", body)
+                .then(function () {
+                    toast("新增课程成功");
+                    setTimeout(function () { location.href = "courselist.html"; }, 700);
+                })
+                .catch(function (err) { toast("新增失败：" + err.message, "error"); btn.disabled = false; });
+        });
+    });
+</script>
 </body>
 </html>

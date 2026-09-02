@@ -102,6 +102,18 @@ public class TeacherListCtrl {
         response.getOutputStream().flush();
     }
     /**
+     * 按 ID 获取教师详情（用于编辑/详情页前端加载回填）
+     */
+    @GetMapping("/{id}")
+    public ApiResponse<TeacherDTO> getTeacherById(@PathVariable Long id) {
+        TeacherDTO teacher = teacherService.getTeacherById(id);
+        if (teacher == null) {
+            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND);
+        }
+        return ApiResponse.ok(teacher);
+    }
+
+    /**
      * 编辑教师信息
      */
     @PutMapping("/update")

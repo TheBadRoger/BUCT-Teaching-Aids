@@ -47,6 +47,9 @@ public interface TeacherService {
     List<Teacher> getAllTeachersForExport();
 
     TeacherResult updateTeacher(Long id, Teacher teacherDetails);
+
+    // 新增：按 ID 获取教师详情（含关联 User 字段），用于编辑/详情页
+    TeacherDTO getTeacherById(Long id);
     /**
      * 新增教师，同时创建对应用户并绑定
      * @param teacher    教师基本信息

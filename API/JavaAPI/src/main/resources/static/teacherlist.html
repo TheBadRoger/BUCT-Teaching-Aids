@@ -3,89 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>教师列表</title>
-    <link href="./css/teacherlist.css" rel="stylesheet">
+    <title>教师列表 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <!-- 页面头部导航 -->
-    <div class="header">
-        <h1>教师列表</h1>
-        <div class="breadcrumbs">首页 &gt; 教师列表</div>
-    </div>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-bar">
+            教师列表
+            <div class="breadcrumb">首页 &gt; 教师列表</div>
+        </div>
 
-    <!-- 筛选条件区域 -->
-    <div class="filter-area">
-        <div class="filter-item">
-            <label for="teacherName">教师姓名</label>
-            <input id="teacherName" placeholder="请输入教师姓名" type="text">
+        <div class="filter-area">
+            <div class="filter-item">
+                <label>教师姓名</label>
+                <input id="f-name" placeholder="请输入教师姓名">
+            </div>
+            <div class="filter-item">
+                <label>机构</label>
+                <input id="f-org" placeholder="请输入机构名称">
+            </div>
+            <div class="filter-item">
+                <label>性别</label>
+                <select id="f-gender">
+                    <option value="">全部</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>学历</label>
+                <select id="f-education">
+                    <option value="">全部</option>
+                    <option value="博士">博士</option>
+                    <option value="硕士">硕士</option>
+                    <option value="本科">本科</option>
+                    <option value="专科">专科</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>入职时间</label>
+                <input id="f-jointime" type="date">
+            </div>
         </div>
-        <div class="filter-item">
-            <label for="institution">机构</label>
-            <input id="institution" placeholder="请输入机构名称" type="text">
+        <div class="btn-group">
+            <button class="btn-primary" id="queryBtn">查询</button>
+            <button class="btn-default" id="resetBtn">重置</button>
+            <button class="btn-info" id="addBtn">新增教师</button>
+            <button class="btn-danger" id="deleteBtn">批量删除</button>
+            <button class="btn-default" id="exportBtn">导出</button>
         </div>
-        <div class="filter-item">
-            <label>加入时间</label>
-            <input id="startDate" type="date"> 至 <input id="endDate" type="date">
-        </div>
-        <div class="filter-item">
-            <label for="gender">性别</label>
-            <select id="gender">
-                <option value="">请选择</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label for="education">教育</label>
-            <select id="education">
-                <option value="">请选择</option>
-                <option value="博士学位">博士学位</option>
-                <option value="硕士学位">硕士学位</option>
-                <option value="本科学历">本科学历</option>
-            </select>
-        </div>
-        <div class="filter-btn-group">
-            <button id="queryBtn">查询</button>
-            <button id="resetBtn">重置</button>
-            <button id="addBtn">新增教师</button>
-            <button id="deleteBtn">删除</button>
-            <button id="exportBtn">导出</button>
-        </div>
-    </div>
 
-    <!-- 数据统计与列表区域 -->
-    <div class="data-area">
-        <div class="data-count">共查询到XX条数据</div>
-        <table class="teacher-table">
-            <thead>
-            <tr>
-                <th>
-                    <input id="selectAll" type="checkbox"> 全选
-                </th>
-                <th>教师姓名</th>
-                <th>机构</th>
-                <th>性别</th>
-                <th>教育</th>
-                <th>联系电话</th>
-                <th>电子邮件</th>
-                <th>加入时间</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody id="teacherTbody">
-            <!-- 表格数据由JS动态生成 -->
-            </tbody>
-        </table>
-        <div class="pagination">
-            <button>上一页</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>下一页</button>
+        <div class="data-count" id="dataCount">共查询到 0 条数据</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th><input id="selectAll" type="checkbox"> 全选</th>
+                    <th>ID</th>
+                    <th>教师姓名</th>
+                    <th>机构</th>
+                    <th>性别</th>
+                    <th>学历</th>
+                    <th>入职时间</th>
+                    <th>用户名</th>
+                    <th>联系电话</th>
+                    <th>电子邮件</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
         </div>
+        <div class="pagination" id="pagination"></div>
     </div>
 </div>
-<script src="./js/teacherlist.js"></script>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("teacher");
+        if (!requireAdminLogin()) return;
+
+        let currentPage = 0, totalPages = 0;
+
+        function collectFilter() {
+            return {
+                name: document.getElementById("f-name").value.trim(),
+                organization: document.getElementById("f-org").value.trim(),
+                gender: document.getElementById("f-gender").value,
+                education: document.getElementById("f-education").value,
+                jointime: document.getElementById("f-jointime").value
+            };
+        }
+
+        function load(page) {
+            currentPage = page || 0;
+            const params = Object.assign({ page: currentPage, size: 10, sort: "id" }, collectFilter());
+            // 教师搜索为 POST + @RequestParam（form-urlencoded）
+            apiPostForm("/teacher/search", params)
+                .then(function (res) {
+                    const pageData = res.data || { content: [], totalElements: 0, totalPages: 0 };
+                    totalPages = pageData.totalPages || 0;
+                    renderTable(pageData.content || []);
+                    document.getElementById("dataCount").textContent = "共查询到 " + (pageData.totalElements || 0) + " 条数据";
+                    renderPagination(document.getElementById("pagination"), currentPage, totalPages, load);
+                })
+                .catch(function (err) { toast("加载教师列表失败：" + err.message, "error"); });
+        }
+
+        function renderTable(list) {
+            const tbody = document.getElementById("tbody");
+            if (!list.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="11">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function (t) {
+                return '<tr>' +
+                    '<td><input type="checkbox" class="row-check" value="' + t.id + '"></td>' +
+                    '<td>' + escapeHtml(t.id) + '</td>' +
+                    '<td>' + escapeHtml(t.name) + '</td>' +
+                    '<td>' + escapeHtml(t.organization) + '</td>' +
+                    '<td>' + escapeHtml(t.gender) + '</td>' +
+                    '<td>' + escapeHtml(t.education) + '</td>' +
+                    '<td>' + escapeHtml(t.jointime) + '</td>' +
+                    '<td>' + escapeHtml(t.username) + '</td>' +
+                    '<td>' + escapeHtml(t.telephone) + '</td>' +
+                    '<td>' + escapeHtml(t.email) + '</td>' +
+                    '<td>' +
+                        '<a data-action="view" data-id="' + t.id + '">查看</a>' +
+                        '<a data-action="edit" data-id="' + t.id + '">编辑</a>' +
+                    '</td>' +
+                    '</tr>';
+            }).join("");
+            // 绑定行操作
+            tbody.querySelectorAll("a[data-action]").forEach(function (a) {
+                a.addEventListener("click", function () {
+                    const id = a.dataset.id;
+                    if (a.dataset.action === "edit") location.href = "edit-teacher.html?id=" + id;
+                    else location.href = "teacher-detail.html?id=" + id;
+                });
+            });
+        }
+
+        // 全选
+        document.getElementById("selectAll").addEventListener("change", function () {
+            document.querySelectorAll(".row-check").forEach(function (c) { c.checked = this.checked; }, this);
+        });
+
+        function getCheckedIds() {
+            return Array.prototype.slice.call(document.querySelectorAll(".row-check:checked"))
+                .map(function (c) { return parseInt(c.value, 10); });
+        }
+
+        // 查询 / 重置
+        document.getElementById("queryBtn").addEventListener("click", function () { load(0); });
+        document.getElementById("resetBtn").addEventListener("click", function () {
+            ["f-name", "f-org", "f-gender", "f-education", "f-jointime"].forEach(function (id) {
+                document.getElementById(id).value = "";
+            });
+            load(0);
+        });
+        document.getElementById("addBtn").addEventListener("click", function () { location.href = "add-teacher.html"; });
+
+        // 批量删除
+        document.getElementById("deleteBtn").addEventListener("click", function () {
+            const ids = getCheckedIds();
+            if (!ids.length) { toast("请至少勾选一名教师", "warn"); return; }
+            if (!confirm("确定删除选中的 " + ids.length + " 名教师吗？")) return;
+            apiDelete("/teacher/batch", ids)
+                .then(function () { toast("删除成功"); load(currentPage); })
+                .catch(function (err) { toast("删除失败：" + err.message, "error"); });
+        });
+
+        // 导出（GET 可直接下载）
+        document.getElementById("exportBtn").addEventListener("click", function () {
+            const params = collectFilter();
+            const qs = Object.keys(params).filter(function (k) { return params[k] !== ""; })
+                .map(function (k) { return k + "=" + encodeURIComponent(params[k]); }).join("&");
+            location.href = API_BASE + "/teacher/export" + (qs ? "?" + qs : "");
+        });
+
+        load(0);
+    });
+</script>
 </body>
 </html>

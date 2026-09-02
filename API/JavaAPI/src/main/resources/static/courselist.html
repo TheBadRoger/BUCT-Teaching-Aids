@@ -3,391 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>评价管理/评价列表</title>
-    <style>
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-        }
-
-        .page-wrapper {
-            padding: 20px;
-        }
-
-        .header-bar {
-            background-color: #fff;
-            padding: 15px 20px;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-bar .breadcrumb {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .search-form {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            background-color: #fff;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #40a9ff;
-            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .action-buttons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .action-buttons .search {
-            background-color: #2f5496;
-            color: #fff;
-        }
-
-        .action-buttons .reset {
-            background-color: #1890ff;
-            color: #fff;
-        }
-
-        .action-buttons .add {
-            background-color: #2f5496;
-            color: #fff;
-        }
-
-        .action-buttons .delete {
-            background-color: #2f5496;
-            color: #fff;
-        }
-
-        .action-buttons .export {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .table-container {
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th, table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-
-        table td a {
-            color: #1890ff;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-
-        .pagination {
-            margin-top: 20px;
-            text-align: right;
-        }
-
-        .pagination a {
-            padding: 5px 10px;
-            margin: 0 2px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .pagination a.active {
-            background-color: #1890ff;
-            color: #fff;
-            border-color: #1890ff;
-        }
-
-        .pagination a:hover:not(.active) {
-            background-color: #f0f0f0;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .modal-header {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .modal-footer button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .modal-footer .confirm {
-            background-color: #1890ff;
-            color: #fff;
-        }
-
-        .modal-footer .cancel {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-    </style>
+    <title>课程列表 - 后台管理</title>
+    <link href="./css/admin.css" rel="stylesheet">
 </head>
 <body>
 <div class="page-wrapper">
-    <div class="header-bar">
-        评价管理/评价列表
-        <div class="breadcrumb">首页 > 消息列表</div>
-    </div>
-
     <div class="container">
-        <form class="search-form">
-            <div class="form-group">
+        <div class="header-bar">
+            课程列表
+            <div class="breadcrumb">首页 &gt; 课程列表</div>
+        </div>
+
+        <div class="filter-area">
+            <div class="filter-item">
                 <label>课程名称</label>
-                <input placeholder="请输入课程名称" type="text">
+                <input id="f-coursename" placeholder="请输入课程名称">
             </div>
-            <div class="form-group">
-                <label>课程老师</label>
-                <input placeholder="请输入课程老师" type="text">
+            <div class="filter-item">
+                <label>课程编号</label>
+                <input id="f-coursenumber" placeholder="请输入课程编号">
             </div>
-            <div class="form-group">
-                <label>发布时间</label>
-                <div style="display: flex; gap: 5px;">
-                    <input placeholder="开始日期" type="date">
-                    <span>至</span>
-                    <input placeholder="结束日期" type="date">
-                </div>
+            <div class="filter-item">
+                <label>授课教师</label>
+                <input id="f-teacher" placeholder="请输入授课教师">
             </div>
-            <div class="form-group">
-                <label>审核状态</label>
-                <select>
-                    <option>请选择</option>
+            <div class="filter-item">
+                <label>课程状态</label>
+                <select id="f-status">
+                    <option value="">全部</option>
+                    <option value="进行中">进行中</option>
+                    <option value="已结课">已结课</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>状态</label>
-                <select>
-                    <option>请选择</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>报名截至时间</label>
-                <div style="display: flex; gap: 5px;">
-                    <input placeholder="开始日期" type="date">
-                    <span>至</span>
-                    <input placeholder="结束日期" type="date">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>发布人员</label>
-                <input placeholder="请输入发布人员" type="text">
-            </div>
-            <div class="action-buttons">
-                <button class="search" type="button">查询</button>
-                <button class="reset" type="button">重置</button>
-                <button class="add" type="button">新增教师</button>
-                <button class="delete" type="button">删除</button>
-                <button class="export" type="button">导出</button>
-            </div>
-        </form>
+        </div>
+        <div class="btn-group">
+            <button class="btn-primary" id="queryBtn">查询</button>
+            <button class="btn-default" id="resetBtn">重置</button>
+            <button class="btn-info" id="addBtn">新增课程</button>
+            <button class="btn-danger" id="deleteBtn">批量删除</button>
+            <button class="btn-default" id="exportBtn">导出</button>
+        </div>
 
+        <div class="data-count" id="dataCount">共查询到 0 条数据</div>
         <div class="table-container">
-            <div style="margin-bottom: 10px;">
-                <input id="select-all" type="checkbox">
-                <label for="select-all">全选</label>
-                <span style="margin-left: 10px;">共查询到XX条数据</span>
-            </div>
-
             <table>
                 <thead>
                 <tr>
-                    <
-                    <th>课程名称</
-                    </th>
-                    <
-                    <th>课程老师</
-                    </th>
-                    <
-                    <th>报名截至时间</
-                    </th>
-                    <
-                    <th>课程时长</
-                    </th>
-                    <
-                    <th>招生状态</
-                    </th>
-                    <
-                    <th>发布时间</
-                    </th>
-                    <
-                    <th>发布人员</
-                    </th>
-                    <
-                    <th>阅读情况</
-                    </th>
-                    <
-                    <th>审核状态</
-                    </th>
-                    <
-                    <th>操作</
-                    </th>
+                    <th><input id="selectAll" type="checkbox"> 全选</th>
+                    <th>ID</th>
+                    <th>课程名称</th>
+                    <th>课程编号</th>
+                    <th>授课教师</th>
+                    <th>开课日期</th>
+                    <th>课程时长</th>
+                    <th>课程价格</th>
+                    <th>状态</th>
+                    <th>访问量</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>为什么早期教育是必要的？</td>
-                    <td>杰克·罗南</td>
-                    <td>2020-12-09</td>
-                    <td>1周</td>
-                    <td>杰克·罗南</td>
-                    <td>2020-12-09</td>
-                    <td>杰克·罗南</td>
-                    <td>10000人</td>
-                    <td>10000人</td>
-                    <td>
-                        <a href=" ">查看</a>
-                        <a href="#">编辑</a>
-                    </td>
-                </tr>
-                <!-- 重复的表格行可以根据需要添加 -->
-                </tbody>
+                <tbody id="tbody"></tbody>
             </table>
-
-            <div class="pagination">
-                <a href="#">上一页</a>
-                <a class="active" href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">下一页</a>
-            </div>
         </div>
+        <div class="pagination" id="pagination"></div>
     </div>
 </div>
 
-<!-- 导出确认弹窗 -->
-<div class="modal" id="export-modal">
-    <div class="modal-content">
-        <div class="modal-header">导出确认</div>
-        <div class="modal-body">
-            <p>共查询到XX条数据，您确定要导出吗？</p>
-        </div>
-        <div class="modal-footer">
-            <button class="cancel">取消</button>
-            <button class="confirm">确定</button>
-        </div>
-    </div>
-</div>
-
+<script src="./js/admin-common.js"></script>
 <script>
-    // 导出按钮点击事件
-    document.querySelector('.export').addEventListener('click', function () {
-        document.getElementById('export-modal').style.display = 'flex';
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        renderAdminNav("course");
+        if (!requireAdminLogin()) return;
 
-    // 弹窗取消按钮
-    document.querySelector('#export-modal .cancel').addEventListener('click', function () {
-        document.getElementById('export-modal').style.display = 'none';
-    });
+        let currentPage = 0, totalPages = 0;
 
-    // 弹窗确认按钮
-    document.querySelector('#export-modal .confirm').addEventListener('click', function () {
-        alert('导出功能已触发，实际项目中可以在这里添加导出逻辑');
-        document.getElementById('export-modal').style.display = 'none';
+        function collectFilter() {
+            return {
+                courseName: document.getElementById("f-coursename").value.trim(),
+                courseNumber: document.getElementById("f-coursenumber").value.trim(),
+                teachingTeachers: document.getElementById("f-teacher").value.trim(),
+                courseStatus: document.getElementById("f-status").value
+            };
+        }
+
+        function load(page) {
+            currentPage = page || 0;
+            const params = Object.assign({ page: currentPage, size: 10, sort: "id" }, collectFilter());
+            apiGet("/course/search", params)
+                .then(function (res) {
+                    const pageData = res.data || { content: [], totalElements: 0, totalPages: 0 };
+                    totalPages = pageData.totalPages || 0;
+                    renderTable(pageData.content || []);
+                    document.getElementById("dataCount").textContent = "共查询到 " + (pageData.totalElements || 0) + " 条数据";
+                    renderPagination(document.getElementById("pagination"), currentPage, totalPages, load);
+                })
+                .catch(function (err) { toast("加载课程列表失败：" + err.message, "error"); });
+        }
+
+        function renderTable(list) {
+            const tbody = document.getElementById("tbody");
+            if (!list.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="11">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(function (c) {
+                return '<tr>' +
+                    '<td><input type="checkbox" class="row-check" value="' + c.id + '"></td>' +
+                    '<td>' + escapeHtml(c.id) + '</td>' +
+                    '<td>' + escapeHtml(c.courseName) + '</td>' +
+                    '<td>' + escapeHtml(c.courseNumber) + '</td>' +
+                    '<td>' + escapeHtml(c.teachingTeachers) + '</td>' +
+                    '<td>' + escapeHtml(c.startDate) + '</td>' +
+                    '<td>' + escapeHtml(c.duration) + '</td>' +
+                    '<td>' + escapeHtml(c.coursePrice) + '</td>' +
+                    '<td>' + escapeHtml(c.courseStatus) + '</td>' +
+                    '<td>' + escapeHtml(c.viewCount) + '</td>' +
+                    '<td>' +
+                        '<a data-action="view" data-num="' + escapeHtml(c.courseNumber) + '">查看</a>' +
+                        '<a data-action="edit" data-num="' + escapeHtml(c.courseNumber) + '">编辑</a>' +
+                    '</td>' +
+                    '</tr>';
+            }).join("");
+            tbody.querySelectorAll("a[data-action]").forEach(function (a) {
+                a.addEventListener("click", function () {
+                    const num = a.dataset.num;
+                    if (a.dataset.action === "edit") location.href = "editcourse.html?courseNumber=" + encodeURIComponent(num);
+                    else location.href = "course-detail.html?courseNumber=" + encodeURIComponent(num);
+                });
+            });
+        }
+
+        document.getElementById("selectAll").addEventListener("change", function () {
+            document.querySelectorAll(".row-check").forEach(function (c) { c.checked = this.checked; }, this);
+        });
+
+        function getCheckedIds() {
+            return Array.prototype.slice.call(document.querySelectorAll(".row-check:checked"))
+                .map(function (c) { return parseInt(c.value, 10); });
+        }
+
+        document.getElementById("queryBtn").addEventListener("click", function () { load(0); });
+        document.getElementById("resetBtn").addEventListener("click", function () {
+            ["f-coursename", "f-coursenumber", "f-teacher", "f-status"].forEach(function (id) {
+                document.getElementById(id).value = "";
+            });
+            load(0);
+        });
+        document.getElementById("addBtn").addEventListener("click", function () { location.href = "addcourse.html"; });
+
+        document.getElementById("deleteBtn").addEventListener("click", function () {
+            const ids = getCheckedIds();
+            if (!ids.length) { toast("请至少勾选一门课程", "warn"); return; }
+            if (!confirm("确定删除选中的 " + ids.length + " 门课程吗？")) return;
+            apiDelete("/course/batch", ids)
+                .then(function () { toast("删除成功"); load(currentPage); })
+                .catch(function (err) { toast("删除失败：" + err.message, "error"); });
+        });
+
+        document.getElementById("exportBtn").addEventListener("click", function () {
+            location.href = API_BASE + "/course/export";
+        });
+
+        load(0);
     });
 </script>
 </body>
