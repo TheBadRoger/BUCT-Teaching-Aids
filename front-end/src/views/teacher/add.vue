@@ -17,7 +17,11 @@ const form = ref({
 
 // 表单规则
 const rules = {
-  name: [{ required: true, message: '请输入教师姓名', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入教师姓名', trigger: 'blur' }],
+  organization: [{ required: true, message: '请输入所属单位/院系', trigger: 'blur' }],
+  gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
+  education: [{ required: true, message: '请选择学历', trigger: 'change' }],
+  jointime: [{ required: true, message: '请选择入职时间', trigger: 'change' }]
 }
 
 const formRef = ref()
@@ -63,33 +67,34 @@ const handleReset = () => {
     >
 
       <el-form-item label="姓名" prop="name">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.name" clearable />
       </el-form-item>
 
-      <el-form-item label="所属单位/院系">
-        <el-input v-model="form.organization" />
+      <el-form-item label="所属单位/院系" prop="organization">
+        <el-input v-model="form.organization" clearable />
       </el-form-item>
 
-      <el-form-item label="性别">
-        <el-select v-model="form.gender">
+      <el-form-item label="性别" prop="gender">
+        <el-select v-model="form.gender" clearable>
           <el-option label="男" value="男" />
           <el-option label="女" value="女" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="学历">
-        <el-select v-model="form.education">
+      <el-form-item label="学历" prop="education">
+        <el-select v-model="form.education" clearable>
           <el-option label="本科" value="本科" />
           <el-option label="硕士" value="硕士" />
           <el-option label="博士" value="博士" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="入职时间">
+      <el-form-item label="入职时间" prop="jointime">
         <el-date-picker
           v-model="form.jointime"
           type="date"
           value-format="YYYY-MM-DD"
+          clearable
         />
       </el-form-item>
 

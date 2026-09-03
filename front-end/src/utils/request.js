@@ -17,7 +17,10 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.code !== 2000) {
-      ElMessage.error(res.msg || '请求失败')
+      const message = res.code === 4091 && response.config.url?.includes('/api/course')
+        ? '课程编号已存在，请换一个课程编号'
+        : (res.msg || '请求失败')
+      ElMessage.error(message)
 
       // 登录过期
       if (res.code === 4012 || res.code === 4013) {
@@ -32,7 +35,8 @@ service.interceptors.response.use(
     return res.data
   },
   error => {
-    ElMessage.error('网络错误')
+    const message = error.response?.data?.msg || error.message || '网络错误'
+    ElMessage.error(message)
     return Promise.reject(error)
   }
 )
