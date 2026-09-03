@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教师AI全能助手 - 知识点手册 & 智能教案</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- 图标库 (Feather Icons via CDN) -->
+  <script src="https://unpkg.com/feather-icons" defer></script>
+</head>
+<body>
+  <!-- ============================================================ -->
+  <!--  顶部导航栏                                                    -->
+  <!-- ============================================================ -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">教师AI全能助手</span>
+      </div>
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-btn active" data-tab="knowledge">
+          <i data-feather="book-open" class="nav-icon"></i>
+          <span>知识点手册</span>
+        </button>
+        <button class="nav-btn" data-tab="lesson-plan">
+          <i data-feather="file-text" class="nav-icon"></i>
+          <span>智能教案</span>
+        </button>
+      </nav>
+      <div class="header-status" id="headerStatus">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-text" id="statusText">检查连接...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!--  主内容区                                                      -->
+  <!-- ============================================================ -->
+  <main class="app-main">
+    <!-- ───────── 知识点手册 ───────── -->
+    <section class="tab-panel active" id="panel-knowledge">
+      <div class="panel-layout">
+
+        <!-- 左侧：输入区 -->
+        <aside class="panel-sidebar">
+          <h2 class="sidebar-title">
+            <i data-feather="settings" class="section-icon"></i>
+            生成设置
+          </h2>
+
+          <div class="form-group">
+            <label for="k-subject">学科 <span class="required">*</span></label>
+            <select id="k-subject" class="form-input">
+              <option value="">请选择学科</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="k-grade">年级 <span class="required">*</span></label>
+            <select id="k-grade" class="form-input">
+              <option value="">请选择年级</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="k-topic">章节/主题 <span class="required">*</span></label>
+            <input type="text" id="k-topic" class="form-input" placeholder="例如：一次函数的图像与性质">
+          </div>
+
+          <div class="form-group">
+            <label for="k-focus">重点关注（可选）</label>
+            <input type="text" id="k-focus" class="form-input" placeholder="例如：函数图像的平移变换">
+          </div>
+
+          <button id="btnGenerateKnowledge" class="btn btn-primary btn-full">
+            <i data-feather="zap" class="btn-icon"></i>
+            生成知识点手册
+          </button>
+
+          <div class="sidebar-footer">
+            <p class="hint-text">💡 提示：填写学科、年级和章节后点击生成，AI 将自动梳理该章节的知识点体系。</p>
+          </div>
+        </aside>
+
+        <!-- 右侧：结果区 -->
+        <section class="panel-content">
+          <div class="content-placeholder" id="knowledgePlaceholder">
+            <div class="placeholder-icon">📖</div>
+            <h3>知识点手册</h3>
+            <p>填写左侧信息后点击"生成知识点手册"，AI 将为您梳理结构化的知识点体系。</p>
+            <div class="placeholder-features">
+              <div class="feature-item">✨ 结构化知识点</div>
+              <div class="feature-item">🎯 难度分级标注</div>
+              <div class="feature-item">⚠️ 常见误区提醒</div>
+              <div class="feature-item">📊 重要性分类</div>
+            </div>
+          </div>
+          <div class="content-result" id="knowledgeResult" style="display:none;">
+            <div class="result-header">
+              <h2 id="k-chapterTitle"></h2>
+              <button class="btn btn-sm btn-outline" id="btnCopyKnowledge">
+                <i data-feather="copy"></i> 复制
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnExportKnowledge">
+                <i data-feather="download"></i> 导出文本
+              </button>
+            </div>
+            <p class="result-overview" id="k-overview"></p>
+            <div class="knowledge-points" id="k-points"></div>
+          </div>
+          <div class="content-loading" id="knowledgeLoading" style="display:none;">
+            <div class="spinner"></div>
+            <p>AI 正在梳理知识点...</p>
+          </div>
+          <div class="content-error" id="knowledgeError" style="display:none;">
+            <p class="error-message"></p>
+            <button class="btn btn-outline retry-btn">重试</button>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- ───────── 智能教案 ───────── -->
+    <section class="tab-panel" id="panel-lesson-plan">
+      <div class="panel-layout">
+
+        <!-- 左侧：输入区 -->
+        <aside class="panel-sidebar">
+          <h2 class="sidebar-title">
+            <i data-feather="settings" class="section-icon"></i>
+            教案设置
+          </h2>
+
+          <div class="form-group">
+            <label for="l-subject">学科 <span class="required">*</span></label>
+            <select id="l-subject" class="form-input">
+              <option value="">请选择学科</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="l-grade">年级 <span class="required">*</span></label>
+            <select id="l-grade" class="form-input">
+              <option value="">请选择年级</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="l-topic">课题 <span class="required">*</span></label>
+            <input type="text" id="l-topic" class="form-input" placeholder="例如：浮力">
+          </div>
+
+          <div class="form-group">
+            <label for="l-lessonType">课型</label>
+            <select id="l-lessonType" class="form-input">
+              <option value="新授课">新授课</option>
+              <option value="复习课">复习课</option>
+              <option value="习题课">习题课</option>
+              <option value="实验课">实验课</option>
+              <option value="讲评课">讲评课</option>
+              <option value="活动课">活动课</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="l-duration">课时（分钟）</label>
+            <input type="number" id="l-duration" class="form-input" value="45" min="30" max="90" step="5">
+          </div>
+
+          <div class="form-group">
+            <label for="l-teachingStyle">教学风格偏好</label>
+            <select id="l-teachingStyle" class="form-input">
+              <option value="">默认</option>
+              <option value="探究式教学">探究式教学</option>
+              <option value="启发式教学">启发式教学</option>
+              <option value="合作学习">合作学习</option>
+              <option value="翻转课堂">翻转课堂</option>
+              <option value="项目式学习">项目式学习（PBL）</option>
+              <option value="情境教学">情境教学</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="l-extra">额外要求（可选）</label>
+            <textarea id="l-extra" class="form-input form-textarea" rows="3" placeholder="例如：要有分组实验环节、加入思政元素..."></textarea>
+          </div>
+
+          <button id="btnGenerateLesson" class="btn btn-primary btn-full">
+            <i data-feather="zap" class="btn-icon"></i>
+            生成智能教案
+          </button>
+
+          <div class="sidebar-footer">
+            <p class="hint-text">💡 提示：教案包含教学目标、重难点、教学过程、板书设计、分层作业等完整结构。</p>
+          </div>
+        </aside>
+
+        <!-- 右侧：结果区 -->
+        <section class="panel-content">
+          <div class="content-placeholder" id="lessonPlaceholder">
+            <div class="placeholder-icon">📝</div>
+            <h3>智能教案生成</h3>
+            <p>填写左侧信息后点击"生成智能教案"，AI 将生成一份完整的课堂教学方案。</p>
+            <div class="placeholder-features">
+              <div class="feature-item">🎯 三维教学目标</div>
+              <div class="feature-item">📋 完整教学过程</div>
+              <div class="feature-item">📊 分层作业设计</div>
+              <div class="feature-item">🖊️ 板书设计模板</div>
+            </div>
+          </div>
+          <div class="content-result" id="lessonResult" style="display:none;">
+            <div class="result-header">
+              <h2 id="l-title"></h2>
+              <button class="btn btn-sm btn-outline" id="btnCopyLesson">
+                <i data-feather="copy"></i> 复制
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnExportLesson">
+                <i data-feather="download"></i> 导出文本
+              </button>
+            </div>
+            <div class="lesson-content" id="l-content"></div>
+          </div>
+          <div class="content-loading" id="lessonLoading" style="display:none;">
+            <div class="spinner"></div>
+            <p>AI 正在生成教案...</p>
+            <p class="loading-sub">这可能需要 15-30 秒，请耐心等待</p>
+          </div>
+          <div class="content-error" id="lessonError" style="display:none;">
+            <p class="error-message"></p>
+            <button class="btn btn-outline retry-btn">重试</button>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!--  Toast 通知                                                    -->
+  <!-- ============================================================ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============================================================ -->
+  <!--  Scripts                                                     -->
+  <!-- ============================================================ -->
+  <script src="/js/app.js"></script>
+  <script src="/js/knowledge-handbook.js"></script>
+  <script src="/js/smart-lesson-plan.js"></script>
+</body>
+</html>

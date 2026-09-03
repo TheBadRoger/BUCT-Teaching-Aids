@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>管理员登录 - 北化教学辅助系统</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #2f5496 0%, #1e3a73 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            width: 380px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 36px 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .2);
+        }
+        .login-card h1 { font-size: 22px; text-align: center; color: #2c3e50; margin-bottom: 6px; }
+        .login-card .sub { text-align: center; color: #999; font-size: 13px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 14px; color: #555; }
+        .form-group input {
+            width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 4px;
+            font-size: 14px; outline: none;
+        }
+        .form-group input:focus { border-color: #40a9ff; box-shadow: 0 0 0 2px rgba(24,144,255,.2); }
+        .error-msg { color: #e74c3c; font-size: 13px; margin-bottom: 12px; min-height: 18px; }
+        button.login {
+            width: 100%; padding: 11px; background-color: #2f5496; color: #fff; border: none;
+            border-radius: 4px; font-size: 15px; cursor: pointer; font-weight: 600;
+        }
+        button.login:hover { background-color: #1e3a73; }
+        .foot { margin-top: 18px; text-align: center; font-size: 12px; color: #999; }
+        .foot a { color: #1890ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <h1>后台管理系统</h1>
+    <p class="sub">北化教学辅助系统 · 管理员登录</p>
+
+    <div class="form-group">
+        <label for="username">用户名</label>
+        <input id="username" placeholder="请输入管理员用户名" type="text" autocomplete="username">
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input id="password" placeholder="请输入密码" type="password" autocomplete="current-password">
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="login" id="loginBtn">登 录</button>
+    <p class="foot">如无管理员账号，请先注册（见项目 API /api/admin/register）</p>
+</div>
+
+<script src="./js/admin-common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+        const errorMsg = document.getElementById("errorMsg");
+
+        function doLogin() {
+            errorMsg.textContent = "";
+            if (!username.value.trim()) { errorMsg.textContent = "请输入用户名"; return; }
+            if (!password.value) { errorMsg.textContent = "请输入密码"; return; }
+
+            document.getElementById("loginBtn").disabled = true;
+            document.getElementById("loginBtn").textContent = "登录中...";
+
+            // 后端 @RequestParam 接收，使用 form-urlencoded
+            request(API_BASE + "/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ username: username.value.trim(), password: password.value }).toString()
+            })
+            .then(function (res) {
+                // 登录成功：会话由服务端 Session 保存（JSESSIONID 通过 Cookie 自动携带）
+                localStorage.setItem("admin_logged_in", "true");
+                localStorage.setItem("admin_username", res.data && res.data.username || username.value.trim());
+                toast("登录成功，正在跳转...");
+                setTimeout(function () { location.href = "teacherlist.html"; }, 600);
+            })
+            .catch(function (err) {
+                errorMsg.textContent = err.message || "登录失败";
+                document.getElementById("loginBtn").disabled = false;
+                document.getElementById("loginBtn").textContent = "登 录";
+            });
+        }
+
+        document.getElementById("loginBtn").addEventListener("click", doLogin);
+        username.addEventListener("keydown", function (e) { if (e.key === "Enter") doLogin(); });
+        password.addEventListener("keydown", function (e) { if (e.key === "Enter") doLogin(); });
+    });
+</script>
+</body>
+</html>
