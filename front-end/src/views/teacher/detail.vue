@@ -1,10 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { getTeacherDetail } from '@/api/teacher'
 
+const route = useRoute()
 const router = useRouter()
 
 const teacher = ref(JSON.parse(localStorage.getItem('currentTeacherDetail') || 'null'))
+const loading = ref(false)
 
 const userTypeLabel = computed(() => {
   if (teacher.value?.userType === 'TEACHER') return '教师'
@@ -17,10 +20,28 @@ const displayValue = (value) => value || '暂无'
 const goBack = () => {
   router.push('/teacher/list')
 }
+
+const fetchTeacherDetail = async () => {
+  if (!route.query.id) return
+
+  loading.value = true
+  try {
+    teacher.value = await getTeacherDetail(route.query.id)
+    localStorage.setItem('currentTeacherDetail', JSON.stringify(teacher.value))
+  } catch (err) {
+    console.log(err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchTeacherDetail()
+})
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="page-container" v-loading="loading">
     <div class="page-header">
       <span class="title">教师详情</span>
       <el-button @click="goBack">返回列表</el-button>

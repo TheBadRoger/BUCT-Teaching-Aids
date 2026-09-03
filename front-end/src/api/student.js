@@ -12,7 +12,7 @@ export const getStudentList = (params) => {
 // 新增学生
 export const addStudent = (data) => {
   return request({
-    url: '/api/students/add',
+    url: '/api/students/add-with-user',
     method: 'post',
     data
   })
