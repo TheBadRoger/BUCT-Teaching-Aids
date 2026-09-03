@@ -64,7 +64,7 @@
 - [评论模块](#评论模块-apicomments)
 - [文件提取模块](#文件提取模块-apifileextract)
 - [AI报告生成模块](#ai报告生成模块)
-
+- [机构管理模块](#机构管理模块-apiorganization)
 ---
 
 ## 管理员认证模块 `/api/admin`
@@ -893,7 +893,29 @@
   | 电话 | 关联电话（来自 User 表） |
   | 邮箱 | 关联邮箱（来自 User 表） |
   | 用户类型 | 关联用户类型（来自 User 表） |
-- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 <a> 标签 download 属性触发下载。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部教师
+- **注意**：该接口直接响应文件下载，前端可通过 window.open() 或 \<a\> 标签 download 属性触发下载。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部教师 
+
+### POST /api/teacher/add-with-user
+
+- **描述**：新增一名教师记录，同时自动创建一个系统登录用户并绑定该教师身份，用户可直接使用分配的用户名和密码登录。
+- **请求方式**：POST，application/json
+- **请求体**（JSON）：
+
+  | 字段 | 类型 | 必填 | 说明 |
+  |------|------|------|------|
+  | teacher | object | 是 | 教师基本信息对象 |
+  | teacher.name | string | 是 | 教师姓名 |
+  | teacher.organization | string | 否 | 所属单位/院系 |
+  | teacher.gender | string | 否 | 性别 |
+  | teacher.education | string | 否 | 最高学历 |
+  | teacher.jointime | string | 否 | 入职时间 |
+  | username | string | 否 | 登录用户名，不传则自动生成（格式：T + 时间戳） |
+  | password | string | 否 | 登录密码，不传则默认为 123456 |
+  | telephone | string | 否 | 手机号 |
+  | email | string | 否 | 邮箱 |
+- **返回**（成功）：data 字段包含新创建的 teacher 和 user 对象，其中 user 不返回密码字段。
+- **返回**（失败）：code: 4091，实体已存在（如教师姓名、用户名、手机号、邮箱重复等）。
+
 ## 学生管理模块 `/api/students`
 
 ### POST /api/students/add
@@ -1059,6 +1081,29 @@
   | 用户类型 | 关联用户类型（来自 User 表） |
 
 - **注意**：该接口直接响应文件下载，无需解析 JSON。导出的数据会根据传入的查询参数进行过滤，不传参数时默认导出全部学生。
+
+### POST /api/students/add-with-user
+
+- **描述**：新增一名学生记录，同时自动创建一个系统登录用户并绑定该学生身份，用户可直接使用分配的用户名和密码登录。
+  - **请求方式**：POST，application/json
+    **请求体**（JSON）：
+
+    | 字段 | 类型 | 必填 | 说明 |
+          |------|------|----|------|
+    | student | object | 是  | 学生基本信息对象 |
+    | student.name | string | 是  | 学生姓名 |
+    | student.studentNumber | string | 是  | 学号 |
+    | student.className | string | 否  | 班级 |
+    | student.gender | string | 否  | 性别 |
+    | student.admissionDate | string | 否  | 入学日期（格式：yyyy-MM-dd） |
+    | username | string | 否  | 登录用户名，不传则默认使用学号 |
+    | password | string | 否  | 登录密码，不传则默认为 123456 |
+    | telephone | string | 否  | 手机号 |
+    | email | string | 否  | 邮箱 |
+
+- **返回**（成功）：data 字段包含新创建的 student 和 user 对象，其中 user 不返回密码字段。
+- **返回**（失败）：code: 4091，实体已存在（如学号、用户名、手机号、邮箱重复等）。
+---
 
 ## 学生选课模块 `/api/student-courses`
 
@@ -1446,3 +1491,87 @@
   | 评判依据 | AI评判理由说明 |
 
 - **注意**：该接口直接响应文件下载，无需解析 JSON，前端可直接通过 `<a href="...">` 触发下载。当批改文本较长时建议使用 POST 方式提交。
+
+## 机构管理模块 `/api/organization`
+### POST /api/organization/add
+
+- **描述**：新增一条机构记录。
+- **请求方式**：POST，application/json
+- **请求体**（JSON，Organization 对象）：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 是 | 机构名称 |
+| logo | string | 否 | 机构 logo 图片地址 |
+| bannerUrl | string | 否 | 机构自定义 banner 图片地址 |
+| info | string | 否 | 机构信息描述（支持长文本） |
+| honorCertUrl | string | 否 | 荣誉证书图片地址 |
+
+- **返回**（成功）：
+
+```json
+{
+  "code": 2000,
+  "msg": "Ok.",
+  "timestamp": 1700000000000,
+  "data": {
+    "id": 1,
+    "name": "信息科学与技术学院",
+    "logo": "/static/logo.png",
+    "bannerUrl": "/static/banner.png",
+    "info": "学院简介...",
+    "honorCertUrl": "/static/cert.png",
+    "createdTime": "2026-05-06T10:00:00",
+    "updatedTime": "2026-05-06T10:00:00"
+  }
+}
+```
+
+- **返回**（失败）：code: 4091，机构名称已存在
+
+### DELETE /api/organization/{id}
+
+- **描述**：根据 ID 删除单条机构记录（物理删除）。
+- **路径参数**：id (long) — 机构ID
+- **返回**（成功）：data 字段为 null，msg 为 "机构删除成功"
+- **返回**（失败）：code: 4042，机构不存在
+
+### PUT /api/organization/{id}
+
+- **描述**：编辑已有机构的信息，根据 ID 进行更新。仅更新请求中提供的非 null 字段。
+- **路径参数**：id (long) — 要更新的机构ID
+- **请求体**（JSON，Organization 对象，所有字段均可选）：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 否 | 机构名称 |
+| logo | string | 否 | 机构 logo 图片地址 |
+| bannerUrl | string | 否 | 机构自定义 banner 图片地址 |
+| info | string | 否 | 机构信息描述 |
+| honorCrtUrl | string | 否 | 荣誉证书图片地址 |
+
+- **返回**（成功）：data 字段为更新后的 Organization 对象（结构同新增）
+- **返回**（失败）：code: 4042，机构不存在；code: 4091，机构名称已存在
+
+### GET /api/organization/{id}
+
+- **描述**：根据 ID 获取指定机构的详细信息。
+- **路径参数**：id (long) — 机构ID
+- **返回**（成功）：data 字段为 Organization 对象（结构同新增，含 createdTime 和 updatedTime）
+- **返回**（失败）：code: 4042，机构不存在
+
+### GET /api/organization/search
+
+- **描述**：按机构名称模糊搜索，分页返回结果。
+- **查询参数**：
+
+| 参数名 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 否 | 按机构名称模糊搜索 |
+| page | int | 否 | 页码，从 0 开始，默认 0 |
+| size | int | 否 | 每页条数，默认 10 |
+| sort | string | 否 | 排序字段，默认 id |
+
+- **返回**（成功）：data 字段为 Spring Data 分页对象（Page<Organization>），包含 content、totalElements、totalPages、size、number 等字段
+
+---

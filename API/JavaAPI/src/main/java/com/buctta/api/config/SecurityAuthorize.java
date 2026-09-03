@@ -17,23 +17,27 @@ public class SecurityAuthorize {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         http
-                //授权规则
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/**"
-                                // "/enter.html",
-                                // "/register.html",
-                                // "/css/**",
-                                // "/js/**",
-                                // "/images/**",
-                                // "/api/aijudegment/login",
-                                // "/api/aijudegment/register",
-                                // "/api/user/auth/login",
-                                // "/api/user/auth/register",
-                                // "/api/user/auth/send-code"
-                        )
-                        .permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers(
+                                        "/enter.html",
+                                        "/register.html",
+                                        "/login.html",
+                                        "/error",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/images/**",
+                                        "/api/aijudegment/login",
+                                        "/api/aijudegment/register",
+                                        "/api/admin/login",
+                                        "/api/admin/register",
+                                        "/api/user/auth/login",
+                                        "/api/user/auth/register",
+                                        "/api/user/auth/send-code"
+                                )
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 //关闭表单验证
                 .formLogin(AbstractHttpConfigurer::disable)

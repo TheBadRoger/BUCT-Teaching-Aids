@@ -1,3 +1,6 @@
+/**
+ * 名师详情页 - 显示名师信息、课程、热门课程等
+ */
 document.addEventListener('DOMContentLoaded', function () {
 
     // ========== 数据部分 ==========
