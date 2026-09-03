@@ -17,3 +17,22 @@ export const addTeacher = (data) => {
     data 
   })
 }
+
+// 编辑教师
+export const updateTeacher = (id, data) => {
+  return request({
+    url: '/api/teacher/update',
+    method: 'put',
+    params: { id },
+    data
+  })
+}
+
+// 批量删除教师
+export const deleteTeachers = (data) => {
+  return request({
+    url: '/api/teacher/batch',
+    method: 'delete',
+    data
+  })
+}
