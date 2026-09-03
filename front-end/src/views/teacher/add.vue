@@ -6,43 +6,60 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// 表单数据
+const formRef = ref()
+const submitting = ref(false)
 const form = ref({
   name: '',
   organization: '',
   gender: '',
   education: '',
-  jointime: ''
+  jointime: '',
+  username: '',
+  password: '123456',
+  telephone: '',
+  email: ''
 })
 
-// 表单规则
 const rules = {
   name: [{ required: true, message: '请输入教师姓名', trigger: 'blur' }],
   organization: [{ required: true, message: '请输入所属单位/院系', trigger: 'blur' }],
   gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
   education: [{ required: true, message: '请选择学历', trigger: 'change' }],
-  jointime: [{ required: true, message: '请选择入职时间', trigger: 'change' }]
+  jointime: [{ required: true, message: '请选择入职时间', trigger: 'change' }],
+  username: [{ required: true, message: '请输入登录用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入初始密码', trigger: 'blur' }]
 }
 
-const formRef = ref()
-
-// 提交
 const handleSubmit = () => {
   formRef.value.validate(async (valid) => {
     if (!valid) return
+    if (submitting.value) return
 
     try {
-      await addTeacher(form.value)
+      submitting.value = true
+      await addTeacher({
+        teacher: {
+          name: form.value.name.trim(),
+          organization: form.value.organization.trim(),
+          gender: form.value.gender,
+          education: form.value.education,
+          jointime: form.value.jointime
+        },
+        username: form.value.username.trim(),
+        password: form.value.password,
+        telephone: form.value.telephone.trim(),
+        email: form.value.email.trim()
+      })
       ElMessage.success('新增成功')
-
       router.push('/teacher/list')
     } catch (err) {
       console.log(err)
+    } finally {
+      submitting.value = false
     }
   })
 }
 
-// 重置
 const handleReset = () => {
   formRef.value.resetFields()
 }
@@ -51,12 +68,10 @@ const handleReset = () => {
 <template>
   <div class="page-container">
 
-    <!-- 标题 -->
     <div class="page-header">
       <span class="title">新增教师</span>
     </div>
 
-    <!-- 表单 -->
     <el-form
       :model="form"
       :rules="rules"
@@ -65,6 +80,7 @@ const handleReset = () => {
       class="form-box"
       style="margin: 0 auto;"
     >
+      <el-divider content-position="left">基础信息</el-divider>
 
       <el-form-item label="姓名" prop="name">
         <el-input v-model="form.name" clearable />
@@ -98,9 +114,26 @@ const handleReset = () => {
         />
       </el-form-item>
 
-      <!-- 按钮 -->
+      <el-divider content-position="left">账号信息</el-divider>
+
+      <el-form-item label="登录用户名" prop="username">
+        <el-input v-model="form.username" clearable />
+      </el-form-item>
+
+      <el-form-item label="初始密码" prop="password">
+        <el-input v-model="form.password" type="password" show-password clearable />
+      </el-form-item>
+
+      <el-form-item label="电话">
+        <el-input v-model="form.telephone" clearable />
+      </el-form-item>
+
+      <el-form-item label="邮箱">
+        <el-input v-model="form.email" clearable />
+      </el-form-item>
+
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button type="primary" :loading="submitting" @click="handleSubmit">提交</el-button>
         <el-button @click="handleReset">重置</el-button>
       </el-form-item>
 
@@ -121,6 +154,6 @@ const handleReset = () => {
 }
 
 .form-box {
-  width: 500px;
+  width: 560px;
 }
 </style>

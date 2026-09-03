@@ -7,42 +7,55 @@ import { addStudent } from '@/api/student'
 const router = useRouter()
 
 const formRef = ref()
+const submitting = ref(false)
 const form = ref({
   studentNumber: '',
   name: '',
   className: '',
   gender: '',
-  admissionDate: ''
+  admissionDate: '',
+  username: '',
+  password: '123456',
+  telephone: '',
+  email: ''
 })
 
 const rules = {
-  studentNumber: [
-    { required: true, message: '请输入学号', trigger: 'blur' }
-  ],
-  name: [
-    { required: true, message: '请输入学生姓名', trigger: 'blur' }
-  ],
-  className: [
-    { required: true, message: '请输入班级', trigger: 'blur' }
-  ],
-  gender: [
-    { required: true, message: '请选择性别', trigger: 'change' }
-  ],
-  admissionDate: [
-    { required: true, message: '请选择入学时间', trigger: 'change' }
-  ]
+  studentNumber: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
+  className: [{ required: true, message: '请输入班级', trigger: 'blur' }],
+  gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
+  admissionDate: [{ required: true, message: '请选择入学时间', trigger: 'change' }],
+  username: [{ required: true, message: '请输入登录用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入初始密码', trigger: 'blur' }]
 }
 
 const handleSubmit = () => {
   formRef.value.validate(async (valid) => {
     if (!valid) return
+    if (submitting.value) return
 
     try {
-      await addStudent(form.value)
+      submitting.value = true
+      await addStudent({
+        student: {
+          studentNumber: form.value.studentNumber.trim(),
+          name: form.value.name.trim(),
+          className: form.value.className.trim(),
+          gender: form.value.gender,
+          admissionDate: form.value.admissionDate
+        },
+        username: form.value.username.trim(),
+        password: form.value.password,
+        telephone: form.value.telephone.trim(),
+        email: form.value.email.trim()
+      })
       ElMessage.success('新增成功')
       router.push('/student/list')
     } catch (err) {
       console.log(err)
+    } finally {
+      submitting.value = false
     }
   })
 }
@@ -67,6 +80,8 @@ const handleReset = () => {
       class="form-box"
       style="margin: 0 auto;"
     >
+      <el-divider content-position="left">基础信息</el-divider>
+
       <el-form-item label="学号" prop="studentNumber">
         <el-input v-model="form.studentNumber" clearable />
       </el-form-item>
@@ -95,8 +110,26 @@ const handleReset = () => {
         />
       </el-form-item>
 
+      <el-divider content-position="left">账号信息</el-divider>
+
+      <el-form-item label="登录用户名" prop="username">
+        <el-input v-model="form.username" clearable />
+      </el-form-item>
+
+      <el-form-item label="初始密码" prop="password">
+        <el-input v-model="form.password" type="password" show-password clearable />
+      </el-form-item>
+
+      <el-form-item label="电话">
+        <el-input v-model="form.telephone" clearable />
+      </el-form-item>
+
+      <el-form-item label="邮箱">
+        <el-input v-model="form.email" clearable />
+      </el-form-item>
+
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button type="primary" :loading="submitting" @click="handleSubmit">提交</el-button>
         <el-button @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -116,6 +149,6 @@ const handleReset = () => {
 }
 
 .form-box {
-  width: 500px;
+  width: 560px;
 }
 </style>

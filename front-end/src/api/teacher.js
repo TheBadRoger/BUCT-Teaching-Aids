@@ -12,9 +12,17 @@ export const getTeacherList = (params) => {
 // 新增教师
 export const addTeacher = (data) => {
   return request({
-    url: '/api/teacher/add',
+    url: '/api/teacher/add-with-user',
     method: 'post',
     data 
+  })
+}
+
+// 教师详情
+export const getTeacherDetail = (id) => {
+  return request({
+    url: `/api/teacher/${id}`,
+    method: 'get'
   })
 }
 
