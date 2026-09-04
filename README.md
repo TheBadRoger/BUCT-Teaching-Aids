@@ -23,13 +23,13 @@
 <!-- STATS_SECTION_START -->
 ## 项目统计
 
-> 统计更新时间（UTC+8）：`2026-09-03 14:50:46`
+> 统计更新时间（UTC+8）：`2026-09-04 14:40:23`
 
 ### 核心统计
 
 | 指标 | 数值 |
 | :-- | --: |
-| 代码总行数（非空行） | 30601 |
+| 代码总行数（非空行） | 31550 |
 | Java 接口数 | 94 |
 | Python 接口数 | 36 |
 | Java 单元测试用例数 | 129 |
@@ -55,21 +55,21 @@
   'pie10': '#A855F7'
 }}}%%
 pie showData
-    "Java (27.66%)" : 8465
-    "HTML (25.06%)" : 7668
-    "CSS (12.36%)" : 3781
-    "JavaScript (11.86%)" : 3630
-    "Python (10.97%)" : 3358
-    "Markdown (9.90%)" : 3030
-    "YAML (1.55%)" : 475
-    "SQL (0.59%)" : 180
-    "Shell (0.05%)" : 14
+    "Java (26.83%)" : 8465
+    "HTML (24.54%)" : 7741
+    "CSS (13.50%)" : 4260
+    "JavaScript (12.68%)" : 4000
+    "Python (10.64%)" : 3358
+    "Markdown (9.69%)" : 3057
+    "YAML (1.51%)" : 475
+    "SQL (0.57%)" : 180
+    "Shell (0.04%)" : 14
 ```
 <!-- STATS_SECTION_END -->
 
 ## 开发框架简介
 
-- 前端：经典HTML+js+css
+- 前端：Vue 3 + Vite + Element Plus（后台管理系统，位于 `front-end/`）；经典 HTML + JS + CSS（历史页面与部分合并部署页面）
 
 - 后端：Java SpringBoot + Python Flask
 
@@ -85,10 +85,46 @@ pie showData
 
 > 其余项目组的进度，以后就在这里加就行
 
+## Vue 后台前端说明
+
+`front-end/` 是当前后台管理系统的前端工程，采用 Vue 3 单页应用方式开发，主要面向管理员使用。旧版 `API/JavaAPI/src/main/resources/static/` 下的 HTML 页面可作为历史原型或合并部署页面，后续可在 Vue 重构完成后逐步替换。
+
+### 技术栈
+
+- Vue 3 + `<script setup>`
+- Vite
+- Vue Router
+- Element Plus
+- Axios
+- qs
+
+### 已完成页面
+
+| 模块 | 页面 | 完成情况 |
+| :-- | :-- | :-- |
+| 认证 | 管理员登录、注册 | 已接入 `/api/admin/login`、`/api/admin/register` |
+| 教师管理 | 教师列表、新增教师、教师详情 | 已完成查询、分页、查看、带账号新增、编辑、批量删除、导出 |
+| 学生管理 | 学生列表、新增学生、学生详情 | 已完成查询、分页、查看、带账号新增、编辑、批量删除、导出 |
+| 课程管理 | 课程列表、新增课程、课程详情 | 已完成查询、分页、查看、新增、编辑、批量删除、导出 |
+
+### 前端接口封装
+
+`front-end/src/api/` 下按业务模块拆分接口：
+
+- `admin.js`：管理员登录、注册
+- `teacher.js`：教师查询、带账号新增、详情、编辑、批量删除
+- `student.js`：学生查询、带账号新增、编辑、批量删除
+- `course.js`：课程查询、新增、编辑、批量删除
+
+开发环境通过 `front-end/vite.config.js` 将 `/api` 代理到 Java 后端，当前默认目标为 `http://localhost:80`。
+
+
+
 ## 项目文件结构
 
 由于我们有Java和Python两个后端，这两个后端都支持 **前后端合并部署**，所以两个部分的前端要分开
 
+- **_front-end/_** - Vue 后台管理系统前端工程
 - **_API/JavaAPI/src/_** - Java后端文件夹
 - **_API/JavaAPI/src/resources/static/_** - 与Java后端合并部署的前端文件夹
 - **_API/PythonAPI/_** - Python后端文件夹
