@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识点背诵手册 - AI智能生成</title>
+  <meta name="description" content="上传教材内容，AI自动生成知识归纳、记忆口诀、必背要点和自测题">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/flashcards.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+
+  <!-- ====== Header Bar ====== -->
+  <header class="app-header" id="appHeader">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="brand-icon">📘</span>
+        <h1 class="brand-title">知识点背诵手册</h1>
+        <span class="brand-badge">AI 智能生成</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline" id="btnFlashcardMode" disabled title="记忆卡片模式">
+          <span class="btn-icon">🃏</span>
+          <span class="btn-text">记忆卡片</span>
+        </button>
+        <button class="btn btn-outline" id="btnPrint" disabled title="打印手册">
+          <span class="btn-icon">🖨️</span>
+          <span class="btn-text">打印手册</span>
+        </button>
+        <button class="btn btn-ghost" id="btnToggleSidebar" title="切换侧边栏">
+          <span class="btn-icon">☰</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== Main Layout ====== -->
+  <div class="app-body" id="appBody">
+
+    <!-- ====== Sidebar ====== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <!-- File Upload Section -->
+        <div class="selector-section">
+          <h3 class="selector-heading">📂 上传学习资料</h3>
+          <div class="upload-zone" id="uploadZone">
+            <div class="upload-zone-inner">
+              <span class="upload-icon">📄</span>
+              <p class="upload-text">拖拽文件到此处</p>
+              <p class="upload-subtext">或点击选择文件</p>
+              <p class="upload-hint">支持 .txt / .docx / .pdf 文件</p>
+              <input type="file" id="fileInput" accept=".txt,.text,.docx,.pdf,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+            </div>
+          </div>
+          <div class="upload-file-info" id="uploadFileInfo" style="display:none;">
+            <div class="file-info-card">
+              <span class="file-icon">📄</span>
+              <div class="file-details">
+                <span class="file-name" id="fileName"></span>
+                <span class="file-size" id="fileSize"></span>
+              </div>
+              <button class="btn-remove-file" id="btnRemoveFile" title="移除文件">✕</button>
+            </div>
+            <div class="file-preview" id="filePreview"></div>
+          </div>
+        </div>
+
+        <!-- Topic Name -->
+        <div class="selector-section">
+          <h3 class="selector-heading">📝 知识点名称（可选）</h3>
+          <input type="text" class="topic-name-input" id="topicNameInput"
+                 placeholder="例：勾股定理、二次函数...">
+          <p class="input-hint">留空则由AI自动识别知识点</p>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="selector-actions">
+          <button class="btn btn-primary btn-generate" id="btnGenerate" disabled>
+            <span class="generate-icon">✨</span>
+            <span>生成背诵手册</span>
+          </button>
+        </div>
+
+        <div class="sidebar-footer">
+          <p class="sidebar-hint">上传教材内容或笔记<br>AI 自动提炼知识点并生成手册</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====== Sidebar Overlay (mobile) ====== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ====== Main Content Area ====== -->
+    <main class="main-content" id="mainContent">
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-illustration">
+          <span class="empty-icon">📚</span>
+        </div>
+        <h2 class="empty-title">上传文件，AI 为你生成背诵手册</h2>
+        <p class="empty-description">
+          在左侧<strong>上传教材内容文件</strong>（.txt / .docx / .pdf），<br>
+          点击「生成背诵手册」，AI 将自动分析内容并整理：<br>
+          知识归纳 · 记忆口诀 · 必背要点 · 自测题
+        </p>
+        <div class="empty-features">
+          <div class="empty-feature">
+            <span class="feature-icon">📝</span>
+            <span>重点知识归纳</span>
+          </div>
+          <div class="empty-feature">
+            <span class="feature-icon">🎵</span>
+            <span>押韵记忆口诀</span>
+          </div>
+          <div class="empty-feature">
+            <span class="feature-icon">⭐</span>
+            <span>必背核心要点</span>
+          </div>
+          <div class="empty-feature">
+            <span class="feature-icon">✅</span>
+            <span>互动自测练习</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state" id="loadingState" style="display:none;">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">AI 正在分析文件内容...</p>
+        <p class="loading-subtext" id="loadingDetail">正在调用 AI 接口，请耐心等待</p>
+        <div class="loading-steps" id="loadingSteps">
+          <span class="loading-step active">📖 读取文件</span>
+          <span class="loading-step-arrow">→</span>
+          <span class="loading-step" id="stepAnalyze">🔍 AI 分析</span>
+          <span class="loading-step-arrow">→</span>
+          <span class="loading-step" id="stepGenerate">✨ 生成手册</span>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div class="error-state" id="errorState" style="display:none;">
+        <div class="error-icon" id="errorIcon">😔</div>
+        <h3 class="error-title" id="errorTitle">生成失败</h3>
+        <p class="error-message" id="errorMessage">请检查API Key配置或文件内容后重试</p>
+        <div class="error-actions">
+          <button class="btn btn-outline" id="btnRetry">🔄 重试</button>
+          <button class="btn btn-ghost" id="btnBackToUpload">返回上传</button>
+        </div>
+      </div>
+
+      <!-- Handbook Content (same structure as before) -->
+      <div class="handbook-content" id="handbookContent" style="display:none;">
+        <nav class="tab-nav" id="tabNav">
+          <button class="tab-btn active" data-tab="summary">
+            <span class="tab-icon">📝</span>
+            <span class="tab-label">知识归纳</span>
+          </button>
+          <button class="tab-btn" data-tab="mnemonics">
+            <span class="tab-icon">🎵</span>
+            <span class="tab-label">记忆口诀</span>
+          </button>
+          <button class="tab-btn" data-tab="essentials">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">必背要点</span>
+          </button>
+          <button class="tab-btn" data-tab="selftest">
+            <span class="tab-icon">✅</span>
+            <span class="tab-label">自测题</span>
+          </button>
+        </nav>
+
+        <div class="handbook-meta" id="handbookMeta"></div>
+
+        <div class="tab-panels" id="tabPanels">
+          <div class="tab-panel active" id="panel-summary"></div>
+          <div class="tab-panel" id="panel-mnemonics"></div>
+          <div class="tab-panel" id="panel-essentials"></div>
+          <div class="tab-panel" id="panel-selftest"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ====== Flashcard Overlay (unchanged) ====== -->
+  <div class="flashcard-overlay" id="flashcardOverlay" style="display:none;">
+    <div class="flashcard-container">
+      <div class="flashcard-header">
+        <button class="btn btn-ghost btn-close-flashcard" id="btnCloseFlashcard">✕ 退出</button>
+        <div class="flashcard-progress">
+          <span class="progress-text" id="flashcardProgress">1 / 12</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="flashcardProgressFill"></div>
+          </div>
+        </div>
+        <div class="flashcard-actions-top">
+          <button class="btn btn-sm btn-outline" id="btnShuffle">🔀 打乱</button>
+          <button class="btn btn-sm btn-outline" id="btnResetFlashcard">🔄 重置</button>
+        </div>
+      </div>
+      <div class="flashcard-stage" id="flashcardStage">
+        <div class="flashcard-card" id="flashcardCard">
+          <div class="flashcard-inner">
+            <div class="flashcard-front" id="flashcardFront">
+              <span class="card-type-badge" id="cardTypeBadge">填空题</span>
+              <p class="card-question" id="cardQuestion"></p>
+              <p class="card-flip-hint">点击翻转查看答案 / 按空格键</p>
+            </div>
+            <div class="flashcard-back" id="flashcardBack">
+              <span class="card-answer-label">✅ 正确答案</span>
+              <p class="card-answer" id="cardAnswer"></p>
+              <div class="card-hint" id="cardHintWrap" style="display:none;">
+                <span class="hint-label">💡 提示</span>
+                <p class="hint-text" id="cardHint"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard-controls">
+        <button class="btn btn-control" id="btnPrevCard"><span>◀</span><span class="control-label">上一张</span></button>
+        <button class="btn btn-control btn-known" id="btnKnown"><span>✓</span><span class="control-label">记住了</span></button>
+        <button class="btn btn-control btn-again" id="btnAgain"><span>↻</span><span class="control-label">再练一次</span></button>
+        <button class="btn btn-control" id="btnNextCard"><span>▶</span><span class="control-label">下一张</span></button>
+      </div>
+    </div>
+
+    <div class="flashcard-summary" id="flashcardSummary" style="display:none;">
+      <div class="summary-card">
+        <h2 class="summary-title">🎉 本轮完成！</h2>
+        <div class="summary-stats">
+          <div class="stat-ring" id="statRing">
+            <svg viewBox="0 0 120 120" class="ring-svg">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fill" id="ringFill"/>
+            </svg>
+            <span class="ring-percent" id="ringPercent">0%</span>
+          </div>
+          <div class="stat-details">
+            <p>✅ 记住了：<strong id="statKnown">0</strong> 张</p>
+            <p>🔄 需复习：<strong id="statAgain">0</strong> 张</p>
+            <p>📝 总计：<strong id="statTotal">0</strong> 张</p>
+          </div>
+        </div>
+        <div class="summary-actions">
+          <button class="btn btn-primary" id="btnRetryWeak">复习未掌握的卡片</button>
+          <button class="btn btn-outline" id="btnRetryAll">全部重新练习</button>
+          <button class="btn btn-ghost" id="btnExitSummary">返回查看手册</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Footer ====== -->
+  <footer class="app-footer">
+    <p>📘 知识点背诵手册 · AI智能生成 · 上传教材内容自动生成</p>
+    <p class="footer-hint">由北化教学辅助系统后端 AI 分析内容</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
