@@ -1,0 +1,109 @@
+/* ============================================================
+   print.css — 打印样式
+   ============================================================ */
+
+@media print {
+  /* Hide non-content */
+  .app-header,
+  .sidebar,
+  .sidebar-overlay,
+  .app-footer,
+  .flashcard-overlay,
+  .empty-state,
+  .loading-state,
+  .error-state,
+  .tab-nav,
+  .selftest-toolbar,
+  .question-toggle,
+  .handbook-meta,
+  .btn,
+  .header-actions,
+  .selector-actions,
+  .file-preview {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    font-size: 12pt;
+    line-height: 1.7;
+    color: #000;
+  }
+
+  .app-body {
+    display: block;
+    max-width: 100%;
+  }
+
+  .main-content {
+    padding: 0 !important;
+  }
+
+  .handbook-content {
+    display: block !important;
+  }
+
+  /* Show all tabs as sequential sections */
+  .tab-panel {
+    display: block !important;
+    page-break-before: always;
+    padding: 0;
+  }
+  .tab-panel:first-of-type {
+    page-break-before: avoid;
+  }
+
+  /* Show all self-test answers */
+  .selftest-answer {
+    display: block !important;
+    border-top: 1px dashed #ccc;
+  }
+
+  /* Remove shadows & borders */
+  .essential-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  .mnemonics-card {
+    box-shadow: none;
+    border: 2px solid #ccc;
+    background: #fffde7;
+  }
+
+  /* Typography */
+  .summary-content {
+    font-size: 11pt;
+  }
+  .summary-content h3 {
+    border-bottom: 1px solid #999;
+  }
+  .summary-content table {
+    border: 1px solid #ccc;
+  }
+  .summary-content th {
+    background: #eee;
+    color: #000;
+  }
+  .summary-content td, .summary-content th {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+  }
+
+  .mnemonic-line {
+    font-size: 13pt;
+  }
+
+  .essential-value {
+    color: #000;
+  }
+
+  .essentials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+}

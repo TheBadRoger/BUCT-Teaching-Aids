@@ -82,6 +82,7 @@ pie showData
 - 已实现课程相关的大多数功能
 - 实现AI智能批改实验报告，前后端均已实现。
 - 打通教师/学生/课程后台管理页（列表、查看、新增、编辑、删除、导出）的前后端链路，详见 [admin_frontend_api_map.md](documents/admin_frontend_api_map.md)
+- 新增 AI 背诵手册：上传 `.txt/.docx/.pdf` 学习资料，自动生成知识归纳、记忆口诀、必背要点、自测题（复用 polymas AI，前端见 `static/recitation/`）。
 
 > 其余项目组的进度，以后就在这里加就行
 
@@ -95,6 +96,11 @@ pie showData
 - **_API/PythonAPI/static_** - 与Python后端合并部署的前端css，js文件夹
 - **_API/PythonAPI/templates_** - 与Python后端合并部署的前端html网页文件夹
 - **_documents_** - 仓库文档相关资源文件夹
+
+## AI 配置说明（polymas）
+
+AI 批改、背诵手册等功能共用一个第三方 AI 平台 **polymas**。相关配置在
+`API/JavaAPI/src/main/resources/application.properties` 的 `app.ai.polymas.*` 段，密钥可直接用默认值，也可通过环境变量 `POLYMAS_AUTH_KEY` 覆盖。
 
 ## 文档
 
