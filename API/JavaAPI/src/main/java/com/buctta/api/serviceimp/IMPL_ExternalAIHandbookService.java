@@ -139,13 +139,13 @@ public class IMPL_ExternalAIHandbookService implements ExternalAIHandbookService
 
         String subject = "自定义";
         if (tags.isArray() && tags.size() > 0) {
-            tags.get(0).asString();
+            String first = tags.get(0).asString();
             if (first != null && !first.isBlank()) {
                 subject = first;
             }
         }
 
-        parsed.path("topic").asString();
+        String topic = parsed.path("topic").asString();
         if (topic == null || topic.isBlank()) {
             topic = (topicName == null || topicName.isBlank()) ? "未命名知识点" : topicName;
         }
