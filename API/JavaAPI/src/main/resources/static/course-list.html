@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>课程大全 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/course-list.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>课程大全</span>
+  </nav>
+
+  <header class="flex-between mb-lg">
+    <div>
+      <h1 class="page-title">课程大全</h1>
+      <p class="page-desc mb-sm" id="list-summary">正在加载课程…</p>
+    </div>
+    <div class="flex gap-sm">
+      <label class="sr-only" for="sort-select">排序方式</label>
+      <select class="form-control" id="sort-select">
+        <option value="id">按最新上架</option>
+        <option value="viewCount">按学习人数</option>
+        <option value="courseName">按课程名称</option>
+      </select>
+    </div>
+  </header>
+
+  <form class="filter-bar" id="filter-form" role="search">
+    <div class="form-group">
+      <label class="form-group__label" for="filter-name">课程名称</label>
+      <input class="form-control" id="filter-name" name="courseName" type="search" placeholder="输入课程关键词">
+    </div>
+    <div class="form-group">
+      <label class="form-group__label" for="filter-teacher">授课教师</label>
+      <input class="form-control" id="filter-teacher" name="teachingTeachers" type="text" placeholder="教师姓名">
+    </div>
+    <div class="form-group">
+      <label class="form-group__label" for="filter-status">课程状态</label>
+      <select class="form-control" id="filter-status" name="courseStatus">
+        <option value="">全部状态</option>
+        <option value="进行中">进行中</option>
+        <option value="未开始">未开始</option>
+        <option value="已结课">已结课</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-group__label" for="filter-tags">课程标签</label>
+      <input class="form-control" id="filter-tags" name="courseTags" type="text" placeholder="如：数学">
+    </div>
+    <div class="flex gap-sm">
+      <button class="btn btn--primary" type="submit">筛选</button>
+      <button class="btn" id="reset-filter" type="reset">重置</button>
+    </div>
+  </form>
+
+  <div id="course-grid" class="grid-cards" aria-live="polite"></div>
+  <div class="pagination" id="course-pagination"></div>
+
+  <section class="card mt-xl" aria-labelledby="ranking-heading">
+    <div class="card__header">
+      <h2 class="card__title" id="ranking-heading">热门课程排行</h2>
+      <span class="card__subtitle">按访问量统计</span>
+    </div>
+    <ol class="ranking-list" id="ranking-list"></ol>
+  </section>
+</main>
+
+<script src="./js/course-list.js" type="module"></script>
+</body>
+</html>

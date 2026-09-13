@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>我的笔记 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/my-note.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-class.html">我的易课堂</a> / <span>我的笔记</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="flex-between mb-lg">
+        <div>
+          <h1 class="page-title">我的笔记</h1>
+          <p class="page-desc mb-sm" id="note-summary">正在加载笔记…</p>
+        </div>
+        <button class="btn btn--primary" id="new-note-btn" type="button">写笔记</button>
+      </header>
+
+      <form class="filter-bar" id="note-filter" role="search">
+        <div class="form-group">
+          <label class="form-group__label" for="note-keyword">关键词</label>
+          <input class="form-control" id="note-keyword" name="keyword" type="search" placeholder="搜索标题或内容">
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="note-scope">范围</label>
+          <select class="form-control" id="note-scope" name="scope">
+            <option value="mine">我的笔记</option>
+            <option value="public">公开笔记</option>
+            <option value="popular">热门笔记</option>
+          </select>
+        </div>
+        <div class="flex gap-sm">
+          <button class="btn btn--primary" type="submit">搜索</button>
+          <button class="btn" id="note-reset" type="reset">重置</button>
+        </div>
+      </form>
+
+      <div id="note-list" aria-live="polite"></div>
+      <div class="pagination" id="note-pagination"></div>
+    </div>
+  </div>
+</main>
+
+<!-- 笔记编辑弹窗 -->
+<div class="modal" id="note-modal" hidden role="dialog" aria-modal="true" aria-labelledby="note-modal-title">
+  <div class="modal__dialog">
+    <div class="modal__header">
+      <h2 class="modal__title" id="note-modal-title">写笔记</h2>
+      <button class="modal__close" id="note-modal-close" type="button" aria-label="关闭">&times;</button>
+    </div>
+    <form id="note-form">
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-group__label form-group__label--required" for="modal-note-title">标题</label>
+          <input class="form-control" id="modal-note-title" name="title" type="text"
+                 placeholder="给这条笔记起个标题" required>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label form-group__label--required" for="modal-note-course">关联课程</label>
+          <select class="form-control" id="modal-note-course" name="courseId" required>
+            <option value="">请选择课程</option>
+          </select>
+          <p class="form-group__hint">笔记需要关联到一门课程，仅可选择你已加入的课程。</p>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label form-group__label--required" for="modal-note-content">内容</label>
+          <textarea class="form-control" id="modal-note-content" name="content" rows="8"
+                    placeholder="支持 Markdown 语法" required></textarea>
+        </div>
+        <label class="choice">
+          <input id="modal-note-public" name="isPublic" type="checkbox">
+          <span>公开这条笔记</span>
+        </label>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="note-modal-cancel" type="button">取消</button>
+        <button class="btn btn--primary" id="note-save" type="submit">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="./js/my-note.js" type="module"></script>
+</body>
+</html>

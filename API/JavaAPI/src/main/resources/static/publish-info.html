@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>发布信息（机构） - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/publish-info.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="institution.html">机构专区</a> / <span>发布信息</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="card">
+        <h1 class="page-title">发布机构信息</h1>
+        <p class="page-desc mb-sm">
+          机构账号可为所属单位发布主页资料：机构名称、Logo、Banner、单位简介与荣誉证书。
+          发布后将展示在“机构专区”与学生端课程页，帮助学生了解开课单位。
+        </p>
+        <p class="mode-banner" id="publish-mode">正在读取机构资料…</p>
+      </header>
+
+      <section class="card mt-lg" aria-labelledby="org-form-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="org-form-heading">机构资料</h2>
+          <span class="card__subtitle">带 * 为必填项</span>
+        </div>
+
+        <form id="org-form" novalidate>
+          <div class="form-group">
+            <label class="form-group__label form-group__label--required" for="org-name">机构名称</label>
+            <input class="form-control" id="org-name" name="name" type="text" required
+                   placeholder="例如：信息科学与技术学院">
+            <p class="form-group__hint">机构名称唯一，已存在同名机构时将无法创建。</p>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label" for="org-logo">机构 Logo 地址</label>
+              <input class="form-control" id="org-logo" name="logo" type="text"
+                     placeholder="/static/logo.png 或外链地址">
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="org-banner">机构 Banner 地址</label>
+              <input class="form-control" id="org-banner" name="bannerUrl" type="text"
+                     placeholder="/static/banner.png 或外链地址">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="org-honor">荣誉证书图片地址</label>
+            <input class="form-control" id="org-honor" name="honorCertUrl" type="text"
+                   placeholder="/static/cert.png 或外链地址">
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="org-info">机构简介</label>
+            <textarea class="form-control" id="org-info" name="info" rows="6"
+                      placeholder="介绍机构定位、师资力量、开设课程与联系方式"></textarea>
+          </div>
+
+          <p class="form-message" id="org-message" role="alert" hidden></p>
+
+          <div class="form-actions">
+            <button class="btn btn--primary" id="org-submit" type="submit">发布信息</button>
+            <button class="btn" id="org-clear" type="reset">清空表单</button>
+            <a class="btn" href="institution.html">返回机构专区</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="preview-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="preview-heading">发布预览</h2>
+          <span class="card__subtitle">学生端将看到的效果</span>
+        </div>
+        <div class="org-preview">
+          <img class="org-preview__banner" id="preview-banner" src="images/main-background.jpg" alt="机构 Banner 预览">
+          <div class="org-preview__body">
+            <img class="org-preview__logo" id="preview-logo" src="images/default.png" alt="机构 Logo 预览">
+            <div>
+              <p class="org-preview__name" id="preview-name">机构名称</p>
+              <p class="org-preview__info" id="preview-info">机构简介将显示在这里。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="list-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="list-heading">已发布机构</h2>
+          <span class="card__subtitle" id="org-count">—</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <caption class="sr-only">已发布的机构列表</caption>
+            <thead>
+            <tr>
+              <th scope="col">机构名称</th>
+              <th scope="col">简介</th>
+              <th scope="col">更新时间</th>
+              <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody id="org-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/publish-info.js" type="module"></script>
+</body>
+</html>

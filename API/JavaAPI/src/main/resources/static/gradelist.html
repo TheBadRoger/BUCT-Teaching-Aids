@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>名单列表 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/gradelist.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-course.html">我开的课</a> / <span>名单</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="flex-between mb-lg">
+        <div>
+          <h1 class="page-title">班级名单</h1>
+          <p class="page-desc mb-sm" id="gradelist-summary">正在汇总你开课班级的名单数据…</p>
+        </div>
+        <div class="flex gap-sm">
+          <a class="btn" href="my-course.html">我开的课</a>
+          <a class="btn btn--primary" href="gradedetail-list.html">按班级查看名单</a>
+        </div>
+      </header>
+
+      <form class="filter-bar" id="gradelist-filter" role="search">
+        <div class="form-group">
+          <label class="form-group__label" for="grade-keyword">班级名称</label>
+          <input class="form-control" id="grade-keyword" name="keyword" type="search"
+                 placeholder="输入班级关键词">
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="grade-status">课程状态</label>
+          <select class="form-control" id="grade-status" name="status">
+            <option value="">全部状态</option>
+            <option value="进行中">进行中</option>
+            <option value="未开始">未开始</option>
+            <option value="已结课">已结课</option>
+          </select>
+        </div>
+        <div class="flex gap-sm">
+          <button class="btn btn--primary" type="submit">筛选</button>
+          <button class="btn" id="grade-reset" type="reset">重置</button>
+        </div>
+      </form>
+
+      <div class="stat-grid mb-lg">
+        <div class="stat">
+          <p class="stat__label">开课班级</p>
+          <p class="stat__value" id="stat-class">—</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">开设课程</p>
+          <p class="stat__value" id="stat-course">—</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">名单学生总数</p>
+          <p class="stat__value" id="stat-student">—</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">平均班级规模</p>
+          <p class="stat__value" id="stat-average">—</p>
+        </div>
+      </div>
+
+      <div class="table-wrap card card--flush">
+        <table class="data-table">
+          <caption class="sr-only">我开课班级的名单概览</caption>
+          <thead>
+          <tr>
+            <th scope="col">班级名称</th>
+            <th scope="col">关联课程</th>
+            <th scope="col">学生人数</th>
+            <th scope="col">课程状态</th>
+            <th scope="col">操作</th>
+          </tr>
+          </thead>
+          <tbody id="grade-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="./js/gradelist.js" type="module"></script>
+</body>
+</html>

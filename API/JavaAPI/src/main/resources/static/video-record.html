@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>在线录制视频 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/video-record.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-course.html">我开的课</a> / <span>在线录制视频</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="card">
+        <h1 class="page-title">在线录制视频</h1>
+        <p class="page-desc mb-sm">
+          通过浏览器直接调用摄像头与麦克风录制裁剪课时视频。录制完成后可下载本地保存，
+          再复制视频地址补充到课程大纲中，即可在学生端“课时播放”页播放。
+        </p>
+        <p class="record-tip" id="support-tip">正在检测浏览器录制能力…</p>
+      </header>
+
+      <section class="card mt-lg" aria-labelledby="record-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="record-heading">录制面板</h2>
+          <span class="card__subtitle" id="record-timer" aria-live="off">00:00</span>
+        </div>
+
+        <div class="record-stage">
+          <video id="record-preview" autoplay muted playsinline aria-label="摄像头预览"></video>
+          <p class="record-stage__placeholder" id="record-placeholder">点击“开始录制”后开启摄像头预览</p>
+        </div>
+
+        <div class="record-actions">
+          <button class="btn btn--primary" id="start-record" type="button">开始录制</button>
+          <button class="btn btn--danger" id="stop-record" type="button" disabled>停止录制</button>
+          <button class="btn" id="reset-record" type="button">重录</button>
+          <label class="choice">
+            <input id="with-audio" type="checkbox" checked>
+            <span>录制麦克风音频</span>
+          </label>
+        </div>
+
+        <div class="record-result hidden" id="record-result">
+          <h3 class="card__title mb-sm">录制结果</h3>
+          <video id="record-playback" controls playsinline aria-label="录制结果回放"></video>
+          <p class="record-result__meta" id="record-meta">—</p>
+          <div class="record-result__actions">
+            <button class="btn" id="download-record" type="button">下载视频文件</button>
+            <button class="btn" id="discard-record" type="button">放弃本次录制</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="attach-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="attach-heading">关联到课程课时</h2>
+          <span class="card__subtitle">更新课程大纲，学生端即可播放</span>
+        </div>
+
+        <form id="attach-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label form-group__label--required" for="attach-course">选择课程</label>
+              <select class="form-control" id="attach-course" name="courseId" required>
+                <option value="">请选择课程</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label form-group__label--required" for="attach-lesson">课时名称</label>
+              <input class="form-control" id="attach-lesson" name="lessonTitle" type="text"
+                     placeholder="例如：第二课时 导数的定义" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="attach-url">视频地址</label>
+            <input class="form-control" id="attach-url" name="videoUrl" type="url"
+                   placeholder="https://... 或服务器静态资源地址">
+            <p class="form-group__hint">
+              若已下载视频并上传到服务器/对象存储，请填写可公开访问的地址；留空则只登记课时名称。
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="choice">
+              <input id="attach-append" type="checkbox" checked>
+              <span>追加到现有课程大纲末尾（取消勾选将替换整个大纲）</span>
+            </label>
+          </div>
+          <p class="form-message" id="attach-message" role="alert" hidden></p>
+          <div class="form-actions">
+            <button class="btn btn--primary" id="attach-submit" type="submit">保存到课程大纲</button>
+            <a class="btn" href="my-course.html">返回我开的课</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/video-record.js" type="module"></script>
+</body>
+</html>

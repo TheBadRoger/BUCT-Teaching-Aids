@@ -1,0 +1,114 @@
+/*
+ * 课时播放（普通视频）页面专属样式
+ */
+
+.play-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+/* 播放器 */
+.player-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.player-frame {
+  position: relative;
+  background-color: #000;
+  aspect-ratio: 16 / 9;
+}
+
+.player-frame video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.player-frame__notice {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: #ffd8d0;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.player-meta {
+  padding: var(--spacing-lg);
+}
+
+.player-meta__title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.player-meta__sub {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.player-meta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+/* 目录 */
+.play-outline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.play-outline__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.play-outline__item:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-primary);
+}
+
+.play-outline__item.is-active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.play-outline__index {
+  width: 22px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* 笔记表单 */
+.note-form .form-actions {
+  margin-top: var(--spacing-md);
+}
+
+@media (min-width: 1024px) {
+  .play-layout {
+    grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+    gap: var(--spacing-xl);
+  }
+}

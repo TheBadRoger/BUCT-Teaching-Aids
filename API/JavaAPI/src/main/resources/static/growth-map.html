@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>成长地图 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/growth-map.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-class.html">我的易课堂</a> / <span>成长地图</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="map-hero card">
+        <div>
+          <h1 class="page-title">成长地图</h1>
+          <p class="page-desc mb-sm" id="map-summary">正在根据你的学习数据生成成长路径…</p>
+          <div class="map-level">
+            <span class="tag tag--primary" id="map-level-tag">等级计算中</span>
+            <span class="text-muted" id="map-level-hint">—</span>
+          </div>
+        </div>
+        <div class="map-hero__progress">
+          <p class="stat__label">当前成长进度</p>
+          <p class="stat__value" id="map-progress">—<span class="stat__unit">%</span></p>
+          <div class="progress mt-sm">
+            <div class="progress__bar" id="map-progress-bar" style="width:0"></div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card mt-lg" aria-labelledby="ability-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="ability-heading">能力维度</h2>
+          <span class="card__subtitle">依据课程完成、笔记产出与互动数据折算</span>
+        </div>
+        <div class="grid-2" id="ability-grid"></div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="stage-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="stage-heading">成长阶段</h2>
+          <span class="card__subtitle">完成阶段目标即可解锁下一阶段</span>
+        </div>
+        <ol class="stage-track" id="stage-track"></ol>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="task-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="task-heading">推荐任务</h2>
+          <span class="card__subtitle" id="task-count">—</span>
+        </div>
+        <ul class="task-list" id="task-list"></ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/growth-map.js" type="module"></script>
+</body>
+</html>

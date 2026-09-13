@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>机构专区 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/institution.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>机构专区</span>
+  </nav>
+
+  <header class="org-hero">
+    <div>
+      <h1 class="org-hero__title">机构专区</h1>
+      <p class="org-hero__desc">
+        浏览校内各学院与教学机构，查看机构简介、师资与开设课程，找到适合你的学习方向。
+      </p>
+    </div>
+    <form class="org-hero__search" id="org-search" role="search">
+      <label class="sr-only" for="org-keyword">搜索机构名称</label>
+      <input id="org-keyword" name="name" type="search" placeholder="搜索机构名称…">
+      <button type="submit">搜索</button>
+    </form>
+  </header>
+
+  <section aria-labelledby="org-list-heading" class="mt-xl">
+    <div class="flex-between mb-md">
+      <h2 class="section-heading" id="org-list-heading">机构列表</h2>
+      <span class="text-muted" id="org-summary">正在加载机构…</span>
+    </div>
+    <div class="grid-cards" id="org-grid" aria-live="polite"></div>
+    <div class="pagination" id="org-pagination"></div>
+  </section>
+
+  <section class="card mt-xl" id="org-detail-panel" hidden aria-labelledby="org-detail-heading">
+    <div class="card__header">
+      <h2 class="card__title" id="org-detail-heading">机构详情</h2>
+      <button class="btn btn--sm" id="close-detail" type="button">收起</button>
+    </div>
+    <div id="org-detail-body"></div>
+  </section>
+</main>
+
+<script src="./js/institution.js" type="module"></script>
+</body>
+</html>
