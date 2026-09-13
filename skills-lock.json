@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skills": {
+    "html-css-js": {
+      "source": "dkbnull/hello-skill",
+      "sourceType": "github",
+      "skillPath": "frontend/skills/html-css-js/SKILL.md",
+      "computedHash": "f552748d017a04e952ceedaa8e51d1f3775d28267d04345efd99f3d0affc0c9a"
+    },
+    "spring-ai": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-ai/SKILL.md",
+      "computedHash": "1a3d96188862dfda06ecc2936925a53b9dde5e36239e1a52d374291e99ec613d"
+    },
+    "spring-ai-alibaba": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-ai-alibaba/SKILL.md",
+      "computedHash": "accd4a4b15828cc30fa71fb5fa280e1cd5eaeeaf6e16c3a18064bd1acd028fe0"
+    },
+    "spring-boot": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-boot/SKILL.md",
+      "computedHash": "e270b16ae083c7e516199af8eabbf0dd675903c2e17e73ce8cefea3b21766934"
+    },
+    "spring-cloud": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-cloud/SKILL.md",
+      "computedHash": "34f4e7279715defa3a80dcdc7dc1103fd4232e08841697ae69920b7ab572f0d7"
+    },
+    "spring-cloud-alibaba": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-cloud-alibaba/SKILL.md",
+      "computedHash": "5513121022e6365103d83cc59097a115154117b828c0d46de96b564a74326c5c"
+    },
+    "spring-data-jpa": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-data-jpa/SKILL.md",
+      "computedHash": "3bb5bb8705d4f7782b41a813675c6b2c3c5728d131f7674aee3140747ed01958"
+    },
+    "spring-security": {
+      "source": "full-stack-skills/spring-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spring-security/SKILL.md",
+      "computedHash": "5540b2b72314205236352bd8176789839e2933ec24ea71051e25a8f2aa185dd6"
+    }
+  }
+}
