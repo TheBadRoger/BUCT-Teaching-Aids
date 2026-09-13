@@ -23,13 +23,13 @@
 <!-- STATS_SECTION_START -->
 ## 项目统计
 
-> 统计更新时间（UTC+8）：`2026-09-13 15:09:51`
+> 统计更新时间（UTC+8）：`2026-09-13 22:45:58`
 
 ### 核心统计
 
 | 指标 | 数值 |
 | :-- | --: |
-| 代码总行数（非空行） | 30608 |
+| 代码总行数（非空行） | 43118 |
 | Java 接口数 | 94 |
 | Python 接口数 | 36 |
 | Java 单元测试用例数 | 129 |
@@ -55,15 +55,15 @@
   'pie10': '#A855F7'
 }}}%%
 pie showData
-    "Java (27.68%)" : 8472
-    "HTML (25.05%)" : 7668
-    "CSS (12.35%)" : 3781
-    "JavaScript (11.86%)" : 3630
-    "Python (10.97%)" : 3358
-    "Markdown (9.90%)" : 3030
-    "YAML (1.55%)" : 475
-    "SQL (0.59%)" : 180
-    "Shell (0.05%)" : 14
+    "JavaScript (22.14%)" : 9547
+    "HTML (21.61%)" : 9317
+    "Java (19.68%)" : 8486
+    "CSS (15.49%)" : 6678
+    "Markdown (11.74%)" : 5063
+    "Python (7.79%)" : 3358
+    "YAML (1.10%)" : 475
+    "SQL (0.42%)" : 180
+    "Shell (0.03%)" : 14
 ```
 <!-- STATS_SECTION_END -->
 
@@ -82,6 +82,7 @@ pie showData
 - 已实现课程相关的大多数功能
 - 实现AI智能批改实验报告，前后端均已实现。
 - 打通教师/学生/课程后台管理页（列表、查看、新增、编辑、删除、导出）的前后端链路，详见 [admin_frontend_api_map.md](documents/admin_frontend_api_map.md)
+- 新增 AI 背诵手册：上传 `.txt/.docx/.pdf` 学习资料，自动生成知识归纳、记忆口诀、必背要点、自测题（复用 polymas AI，前端见 `static/recitation/`）。
 
 > 其余项目组的进度，以后就在这里加就行
 
@@ -95,6 +96,11 @@ pie showData
 - **_API/PythonAPI/static_** - 与Python后端合并部署的前端css，js文件夹
 - **_API/PythonAPI/templates_** - 与Python后端合并部署的前端html网页文件夹
 - **_documents_** - 仓库文档相关资源文件夹
+
+## AI 配置说明（polymas）
+
+AI 批改、背诵手册等功能共用一个第三方 AI 平台 **polymas**。相关配置在
+`API/JavaAPI/src/main/resources/application.properties` 的 `app.ai.polymas.*` 段，密钥可直接用默认值，也可通过环境变量 `POLYMAS_AUTH_KEY` 覆盖。
 
 ## 文档
 

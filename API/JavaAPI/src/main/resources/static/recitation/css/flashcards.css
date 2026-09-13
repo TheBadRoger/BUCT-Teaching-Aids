@@ -1,0 +1,321 @@
+/* ============================================================
+   flashcards.css — 记忆卡片 3D 翻转 & 覆盖层
+   ============================================================ */
+
+.flashcard-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.92);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: var(--space-md);
+}
+
+/* ---- Flashcard Container ---- */
+.flashcard-container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Header */
+.flashcard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+.btn-close-flashcard {
+  color: white !important;
+  font-size: var(--font-size-sm);
+}
+.btn-close-flashcard:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+.flashcard-progress {
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+}
+.progress-text {
+  color: white;
+  font-size: var(--font-size-sm);
+  display: block;
+  margin-bottom: 4px;
+}
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--color-success);
+  border-radius: 2px;
+  transition: width var(--transition-normal);
+}
+.flashcard-actions-top {
+  display: flex;
+  gap: var(--space-sm);
+}
+.flashcard-actions-top .btn {
+  color: white;
+  border-color: rgba(255,255,255,0.3);
+  font-size: var(--font-size-xs);
+}
+.flashcard-actions-top .btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ---- Card Stage ---- */
+.flashcard-stage {
+  perspective: 1200px;
+  width: 100%;
+}
+
+.flashcard-card {
+  width: 100%;
+  min-height: 320px;
+  cursor: pointer;
+  position: relative;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard-card.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+/* Front & Back */
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 320px;
+}
+
+.flashcard-front {
+  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  color: white;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, #0f766e, #10b981);
+  color: white;
+  transform: rotateY(180deg);
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+}
+
+/* Card content */
+.card-type-badge {
+  font-size: var(--font-size-xs);
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin-bottom: var(--space-lg);
+  backdrop-filter: blur(4px);
+}
+
+.card-question {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  line-height: 1.6;
+  margin-bottom: var(--space-xl);
+  max-width: 90%;
+}
+
+.card-flip-hint {
+  font-size: var(--font-size-xs);
+  opacity: 0.6;
+  margin-top: auto;
+  animation: hintPulse 2s infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.card-answer-label {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-md);
+  opacity: 0.9;
+}
+
+.card-answer {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+  max-width: 90%;
+}
+
+.card-hint {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--radius-md);
+  max-width: 90%;
+}
+
+.hint-label {
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.hint-text {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+/* ---- Controls ---- */
+.flashcard-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.btn-control {
+  min-width: 64px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  font-size: var(--font-size-sm);
+  background: rgba(255,255,255,0.08);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.btn-control:hover {
+  background: rgba(255,255,255,0.2);
+}
+.control-label {
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+}
+.btn-known {
+  background: rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+.btn-known:hover {
+  background: rgba(16, 185, 129, 0.5);
+}
+.btn-again {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+.btn-again:hover {
+  background: rgba(239, 68, 68, 0.5);
+}
+
+/* ---- Summary ---- */
+.flashcard-summary {
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.summary-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  text-align: center;
+  max-width: 440px;
+  box-shadow: var(--shadow-xl);
+}
+.summary-title {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-xl);
+}
+.summary-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  justify-content: center;
+}
+.stat-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+.ring-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ring-bg {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 8;
+}
+.ring-fill {
+  fill: none;
+  stroke: var(--color-success);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.6s ease;
+}
+.ring-percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-success);
+}
+.stat-details {
+  text-align: left;
+  font-size: var(--font-size-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.summary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Mobile flashcard */
+@media (max-width: 768px) {
+  .flashcard-card { min-height: 280px; }
+  .flashcard-inner { min-height: 280px; }
+  .flashcard-front, .flashcard-back { min-height: 280px; padding: var(--space-lg); }
+  .card-question { font-size: var(--font-size-lg); }
+  .flashcard-controls { gap: var(--space-sm); }
+  .btn-control { padding: 10px 14px; min-width: 50px; }
+}
