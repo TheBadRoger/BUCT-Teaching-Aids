@@ -40,6 +40,9 @@ public class SecurityAuthorize {
                                         "/ai-agent.html",
                                         "/AIchat.html",
                                         "/institution.html",
+                                        // AI 背诵手册页面及其自带的 css/js（页面本身放行，
+                                        // 页面内调用的 /api/handbook/** 仍需登录）
+                                        "/recitation/**",
                                         // 认证与绑定接口
                                         "/api/aijudegment/login",
                                         "/api/aijudegment/register",
