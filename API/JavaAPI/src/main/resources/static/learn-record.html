@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>我的学习记录 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/learn-record.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-class.html">我的易课堂</a> / <span>我的学习记录</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="flex-between mb-lg">
+        <div>
+          <h1 class="page-title">我的学习记录</h1>
+          <p class="page-desc mb-sm" id="record-summary">正在加载学习记录…</p>
+        </div>
+        <div class="flex gap-sm">
+          <a class="btn" href="study-distribution.html">学习分布</a>
+          <a class="btn btn--primary" href="course-list.html">继续学习</a>
+        </div>
+      </header>
+
+      <form class="filter-bar" id="record-filter">
+        <div class="form-group">
+          <label class="form-group__label" for="record-type">记录类型</label>
+          <select class="form-control" id="record-type" name="type">
+            <option value="all">全部记录</option>
+            <option value="course">课程学习</option>
+            <option value="note">笔记产出</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="record-range">时间范围</label>
+          <select class="form-control" id="record-range" name="range">
+            <option value="all">全部时间</option>
+            <option value="7">最近 7 天</option>
+            <option value="30">最近 30 天</option>
+            <option value="90">最近 90 天</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="record-keyword">关键词</label>
+          <input class="form-control" id="record-keyword" name="keyword" type="search" placeholder="课程名称 / 笔记标题">
+        </div>
+        <div class="flex gap-sm">
+          <button class="btn btn--primary" type="submit">筛选</button>
+          <button class="btn" id="record-reset" type="reset">重置</button>
+        </div>
+      </form>
+
+      <section class="card" aria-labelledby="timeline-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="timeline-heading">学习时间线</h2>
+          <span class="card__subtitle" id="timeline-count">—</span>
+        </div>
+        <ol class="timeline" id="record-timeline" aria-live="polite"></ol>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/learn-record.js" type="module"></script>
+</body>
+</html>

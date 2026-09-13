@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>我开的课 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/my-course.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>我开的课</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="course-hero-panel card">
+        <div>
+          <h1 class="page-title" id="my-course-heading">我开的课</h1>
+          <p class="page-desc mb-sm" id="my-course-desc">正在加载你开设的课程…</p>
+          <div class="flex-wrap flex gap-sm">
+            <a class="btn btn--primary" href="my-course-detail.html?mode=create">我要开课 - 上传课程</a>
+            <a class="btn" href="video-record.html">在线录制视频</a>
+            <a class="btn" href="publish-info.html">发布信息</a>
+          </div>
+        </div>
+        <dl class="course-hero-panel__stats">
+          <div><dt>课程总数</dt><dd id="stat-total">—</dd></div>
+          <div><dt>进行中</dt><dd id="stat-doing">—</dd></div>
+          <div><dt>总访问量</dt><dd id="stat-views">—</dd></div>
+        </dl>
+      </header>
+
+      <form class="filter-bar mt-lg" id="course-filter" role="search">
+        <div class="form-group">
+          <label class="form-group__label" for="filter-name">课程名称</label>
+          <input class="form-control" id="filter-name" name="courseName" type="search" placeholder="输入课程关键词">
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="filter-status">课程状态</label>
+          <select class="form-control" id="filter-status" name="courseStatus">
+            <option value="">全部状态</option>
+            <option value="进行中">进行中</option>
+            <option value="未开始">未开始</option>
+            <option value="已结课">已结课</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-group__label" for="filter-sort">排序</label>
+          <select class="form-control" id="filter-sort" name="sort">
+            <option value="id">按最新创建</option>
+            <option value="viewCount">按访问量</option>
+            <option value="courseName">按课程名称</option>
+          </select>
+        </div>
+        <div class="flex gap-sm">
+          <button class="btn btn--primary" type="submit">筛选</button>
+          <button class="btn" id="filter-reset" type="reset">重置</button>
+        </div>
+      </form>
+
+      <div class="flex-between mb-md">
+        <p class="text-secondary" id="course-count">—</p>
+        <button class="btn btn--danger btn--sm" id="batch-delete" type="button">批量删除选中课程</button>
+      </div>
+
+      <div class="table-wrap card card--flush">
+        <table class="data-table">
+          <caption class="sr-only">我开设的课程列表</caption>
+          <thead>
+          <tr>
+            <th scope="col">
+              <label class="choice">
+                <input id="select-all" type="checkbox">
+                <span class="sr-only">全选</span>
+              </label>
+            </th>
+            <th scope="col">课程名称</th>
+            <th scope="col">课程编号</th>
+            <th scope="col">状态</th>
+            <th scope="col">时长</th>
+            <th scope="col">访问量</th>
+            <th scope="col">操作</th>
+          </tr>
+          </thead>
+          <tbody id="course-body"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="course-pagination"></div>
+    </div>
+  </div>
+</main>
+
+<script src="./js/my-course.js" type="module"></script>
+</body>
+</html>

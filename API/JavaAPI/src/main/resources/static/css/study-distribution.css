@@ -1,0 +1,46 @@
+/*
+ * 学习分布页面专属样式
+ */
+
+.chart-host {
+  min-height: 180px;
+}
+
+/* 状态 / 标签分布使用横向进度条，避免依赖图表库 */
+.bar-row--wide {
+  grid-template-columns: 120px 1fr 64px;
+}
+
+/* 月度活跃度柱状图 */
+.chart__value {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.chart__col:hover .chart__bar {
+  background-color: var(--color-primary-dark);
+}
+
+/* 明细表格中的状态点 */
+.state-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.state-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-text-muted);
+}
+
+.state-dot--done::before {
+  background-color: var(--color-success);
+}
+
+.state-dot--doing::before {
+  background-color: var(--color-warning);
+}

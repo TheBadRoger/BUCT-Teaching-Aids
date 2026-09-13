@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>学习分布 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/study-distribution.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="learn-record.html">我的学习记录</a> / <span>学习分布</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="flex-between mb-lg">
+        <div>
+          <h1 class="page-title">学习分布</h1>
+          <p class="page-desc mb-sm" id="distribution-summary">正在统计学习分布…</p>
+        </div>
+        <a class="btn" href="report.html">查看学情报告</a>
+      </header>
+
+      <div class="stat-grid" id="distribution-stats">
+        <div class="stat">
+          <p class="stat__label">课程总数</p>
+          <p class="stat__value" id="stat-course">—</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">已完成</p>
+          <p class="stat__value" id="stat-viewed">—</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">完成率</p>
+          <p class="stat__value" id="stat-rate">—<span class="stat__unit">%</span></p>
+        </div>
+        <div class="stat">
+          <p class="stat__label">笔记产出</p>
+          <p class="stat__value" id="stat-note">—</p>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-lg">
+        <section class="card" aria-labelledby="status-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="status-heading">按课程状态分布</h2>
+            <span class="card__subtitle">单位：门</span>
+          </div>
+          <div id="status-chart" class="chart-host"></div>
+        </section>
+
+        <section class="card" aria-labelledby="tag-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="tag-heading">按课程标签分布</h2>
+            <span class="card__subtitle">单位：门</span>
+          </div>
+          <div id="tag-chart" class="chart-host"></div>
+        </section>
+      </div>
+
+      <section class="card mt-lg" aria-labelledby="month-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="month-heading">近半年学习活跃度</h2>
+          <span class="card__subtitle">按加入课程与笔记产出的月份统计</span>
+        </div>
+        <div id="month-chart" class="chart-host"></div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="detail-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="detail-heading">课程明细分布</h2>
+          <span class="card__subtitle" id="detail-count">—</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <caption class="sr-only">按课程统计的学习分布明细</caption>
+            <thead>
+            <tr>
+              <th scope="col">课程名称</th>
+              <th scope="col">授课教师</th>
+              <th scope="col">课程状态</th>
+              <th scope="col">学习状态</th>
+              <th scope="col">课程标签</th>
+            </tr>
+            </thead>
+            <tbody id="detail-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/study-distribution.js" type="module"></script>
+</body>
+</html>

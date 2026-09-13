@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>AI 智能体 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/ai-agent.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>AI 智能体</span>
+  </nav>
+
+  <section class="agent-hero" aria-labelledby="agent-hero-heading">
+    <div class="agent-hero__text">
+      <h1 class="agent-hero__title" id="agent-hero-heading">AI 智能体工作台</h1>
+      <p class="agent-hero__desc">
+        把备课、答疑、批改、学情分析交给智能体，教师与学生都能在这里找到随取随用的 AI 助手。
+      </p>
+      <div class="agent-hero__actions">
+        <a class="btn btn--primary btn--lg" href="ai-chat.html?agent=assistant">立即对话</a>
+        <a class="btn btn--lg" href="report.html">查看我的学情报告</a>
+      </div>
+    </div>
+    <dl class="agent-hero__stats" id="agent-hero-stats">
+      <div>
+        <dt>可用智能体</dt>
+        <dd id="hero-agent-count">—</dd>
+      </div>
+      <div>
+        <dt>我的课程</dt>
+        <dd id="hero-course-count">—</dd>
+      </div>
+      <div>
+        <dt>我的笔记</dt>
+        <dd id="hero-note-count">—</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="agent-list-heading" class="mt-xl">
+    <div class="flex-between mb-md">
+      <h2 class="section-heading" id="agent-list-heading">选择智能体</h2>
+      <p class="text-muted" id="agent-role-hint">正在识别你的身份…</p>
+    </div>
+    <div class="grid-cards" id="agent-grid"></div>
+  </section>
+
+  <section class="card mt-xl" aria-labelledby="usage-heading">
+    <div class="card__header">
+      <h2 class="card__title" id="usage-heading">最近使用</h2>
+      <span class="card__subtitle">来自本机浏览器记录</span>
+    </div>
+    <ul class="usage-list" id="usage-list"></ul>
+  </section>
+</main>
+
+<script src="./js/ai-agent.js" type="module"></script>
+</body>
+</html>

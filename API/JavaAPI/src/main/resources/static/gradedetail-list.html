@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>名单 - 列表详情 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/gradedetail-list.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="gradelist.html">名单</a> / <span>学生名单</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="flex-between mb-lg">
+        <div>
+          <h1 class="page-title">学生名单</h1>
+          <p class="page-desc mb-sm" id="list-summary">正在加载学生名单…</p>
+        </div>
+        <div class="flex gap-sm">
+          <a class="btn" href="gradelist.html">返回班级列表</a>
+          <a class="btn" id="export-link" href="/api/students/export" download>导出 Excel</a>
+        </div>
+      </header>
+
+      <div class="grade-layout">
+        <aside class="card" aria-labelledby="class-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="class-heading">班级</h2>
+            <span class="card__subtitle" id="class-count">—</span>
+          </div>
+          <ul class="class-nav" id="class-nav"></ul>
+        </aside>
+
+        <div class="grade-main">
+          <form class="filter-bar" id="student-filter" role="search">
+            <div class="form-group">
+              <label class="form-group__label" for="student-name">姓名</label>
+              <input class="form-control" id="student-name" name="name" type="search" placeholder="学生姓名">
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="student-number">学号</label>
+              <input class="form-control" id="student-number" name="studentNumber" type="search" placeholder="学号">
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="student-gender">性别</label>
+              <select class="form-control" id="student-gender" name="gender">
+                <option value="">全部</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+              </select>
+            </div>
+            <div class="flex gap-sm">
+              <button class="btn btn--primary" type="submit">筛选</button>
+              <button class="btn" id="student-reset" type="reset">重置</button>
+            </div>
+          </form>
+
+          <div class="table-wrap card card--flush">
+            <table class="data-table">
+              <caption class="sr-only">班级学生名单</caption>
+              <thead>
+              <tr>
+                <th scope="col">学号</th>
+                <th scope="col">姓名</th>
+                <th scope="col">班级</th>
+                <th scope="col">性别</th>
+                <th scope="col">入学日期</th>
+                <th scope="col">联系电话</th>
+                <th scope="col">邮箱</th>
+              </tr>
+              </thead>
+              <tbody id="student-body"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="student-pagination"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="./js/gradedetail-list.js" type="module"></script>
+</body>
+</html>
