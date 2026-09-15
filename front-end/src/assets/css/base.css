@@ -1,0 +1,66 @@
+/* ===== 全局重置 ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  font-size: 16px;
+  color: #333;  
+  line-height: 1.5;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 根节点撑满 */
+html, body, #app {
+  height: 100%;
+  width: 100%;
+}
+
+/* ===== html body ===== */
+html, body, #app {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background-color: #f5f7fa;
+}
+
+/* ===== 链接 ===== */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===== 列表 ===== */
+ul, li {
+  list-style: none;
+}
+
+/* ===== 页面容器（通用） ===== */
+.page-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+/* ===== 标题 ===== */
+.page-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* ===== 查询区域 ===== */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+/* ===== 表格间距 ===== */
+.table-container {
+  margin-top: 10px;
+}

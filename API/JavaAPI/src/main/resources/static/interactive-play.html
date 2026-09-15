@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>课时播放 - 互动视频 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/interactive-play.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+
+<main class="page-main page-main--offset">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="course-list.html">课程大全</a> /
+    <a href="course-info.html" id="crumb-course">课程详情</a> / <span>互动视频课时</span>
+  </nav>
+
+  <div id="interactive-root" aria-live="polite">
+    <div class="skeleton skeleton--block" style="height:240px"></div>
+  </div>
+</main>
+
+<script src="./js/interactive-play.js" type="module"></script>
+</body>
+</html>

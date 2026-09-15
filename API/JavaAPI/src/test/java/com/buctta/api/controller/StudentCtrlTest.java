@@ -1,5 +1,6 @@
 package com.buctta.api.controller;
 
+import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
 import com.buctta.api.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,10 +88,10 @@ class StudentCtrlTest {
 
     @Test
     void searchStudents_noFilters_returnsPage() throws Exception {
-        Student student = new Student();
+        StudentDTO student = new StudentDTO();
         student.setId(1L);
         student.setName("Alice");
-        Page<Student> page = new PageImpl<>(List.of(student), PageRequest.of(0, 10), 1);
+        Page<StudentDTO> page = new PageImpl<>(List.of(student), PageRequest.of(0, 10), 1);
 
         when(studentService.searchStudents(
                 isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), any(Pageable.class)))
@@ -104,10 +105,10 @@ class StudentCtrlTest {
 
     @Test
     void searchStudents_withNameFilter_returnsFilteredPage() throws Exception {
-        Student student = new Student();
+        StudentDTO student = new StudentDTO();
         student.setId(1L);
         student.setName("Alice");
-        Page<Student> page = new PageImpl<>(List.of(student), PageRequest.of(0, 10), 1);
+        Page<StudentDTO> page = new PageImpl<>(List.of(student), PageRequest.of(0, 10), 1);
 
         when(studentService.searchStudents(
                 any(), any(), any(), any(), any(), any(), any(Pageable.class)))

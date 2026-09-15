@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>课时播放 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/course-play.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+
+<main class="page-main page-main--offset">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="course-list.html">课程大全</a> /
+    <a href="course-info.html" id="crumb-course">课程详情</a> / <span id="crumb-lesson">课时播放</span>
+  </nav>
+
+  <div class="play-layout">
+    <div class="play-main">
+      <section class="player-card" aria-labelledby="lesson-title">
+        <div class="player-frame">
+          <video id="lesson-player" controls preload="metadata" playsinline
+                 poster="images/test-img.jpg"
+                 aria-label="课程视频播放器">
+            你的浏览器不支持 HTML5 视频播放，请升级浏览器后再试。
+          </video>
+          <p class="player-frame__notice" id="player-notice" hidden></p>
+        </div>
+
+        <div class="player-meta">
+          <h1 class="player-meta__title" id="lesson-title">正在加载课时…</h1>
+          <p class="player-meta__sub" id="lesson-sub">—</p>
+          <div class="player-meta__actions">
+            <button class="btn btn--sm" id="prev-lesson" type="button">上一课时</button>
+            <button class="btn btn--sm" id="next-lesson" type="button">下一课时</button>
+            <button class="btn btn--sm" id="mark-viewed" type="button">标记已学</button>
+            <a class="btn btn--sm" id="detail-link" href="course-info.html">返回课程详情</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="note-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="note-heading">课时笔记</h2>
+          <span class="card__subtitle" id="note-count">—</span>
+        </div>
+        <form class="note-form" id="note-form">
+          <div class="form-group">
+            <label class="form-group__label form-group__label--required" for="note-title">笔记标题</label>
+            <input class="form-control" id="note-title" name="title" type="text"
+                   placeholder="例如：第三课时 极限的四则运算" required>
+          </div>
+          <div class="form-group">
+            <label class="form-group__label form-group__label--required" for="note-content">笔记内容</label>
+            <textarea class="form-control" id="note-content" name="content"
+                      placeholder="支持 Markdown 语法，记录本节要点、疑问与收获" required></textarea>
+          </div>
+          <label class="choice">
+            <input id="note-public" name="isPublic" type="checkbox">
+            <span>公开这篇笔记，供同学参考</span>
+          </label>
+          <div class="form-actions">
+            <button class="btn btn--primary" type="submit" id="note-submit">保存笔记</button>
+          </div>
+        </form>
+        <ul class="list-plain mt-lg" id="lesson-notes"></ul>
+      </section>
+    </div>
+
+    <aside class="play-aside" aria-labelledby="outline-heading">
+      <section class="card">
+        <div class="card__header">
+          <h2 class="card__title" id="outline-heading">课程目录</h2>
+          <span class="card__subtitle" id="outline-count">—</span>
+        </div>
+        <ol class="play-outline" id="play-outline"></ol>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script src="./js/course-play.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+/*
+ * 互动视频课时播放页面专属样式
+ */
+
+.interactive-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+.interactive-player {
+  position: relative;
+  background-color: #10131a;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+}
+
+.interactive-player video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* 互动节点提示层 */
+.interactive-marker {
+  position: absolute;
+  right: var(--spacing-md);
+  bottom: 68px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 280px;
+}
+
+.interactive-marker__bubble {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  background-color: rgba(22, 93, 255, 0.92);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-md);
+}
+
+/* 互动点列表 */
+.marker-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.marker-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-alt);
+  font-size: var(--font-size-sm);
+}
+
+.marker-item__time {
+  font-weight: 600;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.marker-item__type {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* 二期说明 */
+.phase-note {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-warning);
+  background-color: rgba(250, 140, 22, 0.08);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 1024px) {
+  .interactive-hero {
+    grid-template-columns: minmax(0, 3fr) minmax(300px, 1fr);
+    gap: var(--spacing-xl);
+  }
+}

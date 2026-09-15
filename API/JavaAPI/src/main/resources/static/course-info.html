@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>课程详情 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/course-info.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="course-list.html">课程大全</a> / <span id="crumb-course">课程详情</span>
+  </nav>
+
+  <div id="course-root" aria-live="polite">
+    <div class="skeleton skeleton--block" style="height:240px"></div>
+  </div>
+</main>
+
+<script src="./js/course-info.js" type="module"></script>
+</body>
+</html>

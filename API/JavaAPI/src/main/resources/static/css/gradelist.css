@@ -1,0 +1,22 @@
+/*
+ * 名单 - 列表页面专属样式
+ */
+
+/* 班级规模条 */
+.class-scale {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 160px;
+}
+
+.class-scale .progress {
+  flex: 1;
+  min-width: 60px;
+}
+
+.class-scale__value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}

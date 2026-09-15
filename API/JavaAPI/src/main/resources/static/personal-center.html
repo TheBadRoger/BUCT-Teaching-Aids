@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>个人中心 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/personal-center.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>个人中心</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <section class="card" aria-labelledby="profile-hero-heading">
+        <div class="profile-hero">
+          <img class="profile-hero__avatar" id="profile-avatar" src="images/default.png" alt="用户头像">
+          <div class="profile-hero__info">
+            <h1 class="page-title" id="profile-hero-heading">正在加载…</h1>
+            <p class="page-desc mb-sm" id="profile-hero-desc">—</p>
+            <div class="flex-wrap flex gap-sm">
+              <span class="tag" id="profile-role-tag">身份未知</span>
+              <span class="tag" id="profile-id-tag">—</span>
+            </div>
+          </div>
+          <div class="profile-hero__actions">
+            <a class="btn" href="apply-teacher.html" id="apply-entry">申请成为老师</a>
+            <button class="btn btn--danger" id="logout-btn" type="button">退出登录</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="profile-tabs-heading">
+        <div class="tabs" id="profile-tabs" role="tablist">
+          <button class="tabs__item is-active" type="button" role="tab" aria-selected="true"
+                  data-panel="info" id="profile-tabs-heading">个人资料</button>
+          <button class="tabs__item" type="button" role="tab" aria-selected="false"
+                  data-panel="learning">学习情况</button>
+          <button class="tabs__item" type="button" role="tab" aria-selected="false"
+                  data-panel="account">账号与安全</button>
+        </div>
+
+        <!-- 个人资料 -->
+        <div class="tab-panel" data-panel-body="info">
+          <h2 class="sr-only">个人资料</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label" for="profile-username">用户名</label>
+              <input class="form-control" id="profile-username" type="text" readonly>
+              <p class="form-group__hint">用户名作为登录凭证，暂不支持自助修改。</p>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="profile-type">账号类型</label>
+              <input class="form-control" id="profile-type" type="text" readonly>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label" for="profile-name">真实姓名</label>
+              <input class="form-control" id="profile-name" type="text" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="profile-gender">性别</label>
+              <input class="form-control" id="profile-gender" type="text" readonly>
+            </div>
+          </div>
+          <div class="form-row form-row--3">
+            <div class="form-group">
+              <label class="form-group__label" for="profile-class">班级 / 单位</label>
+              <input class="form-control" id="profile-class" type="text" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="profile-extra">学号 / 工号</label>
+              <input class="form-control" id="profile-extra" type="text" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="profile-join">入学 / 入职时间</label>
+              <input class="form-control" id="profile-join" type="text" readonly>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label" for="profile-telephone">手机号</label>
+              <input class="form-control" id="profile-telephone" type="tel" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="profile-email">邮箱</label>
+              <input class="form-control" id="profile-email" type="email" readonly>
+            </div>
+          </div>
+          <p class="form-group__hint">
+            以上资料来自教务系统同步的实名信息，如需变更请联系教务管理员；资料修改接口开放后本页将自动支持编辑与保存。
+          </p>
+          <div class="form-actions">
+            <a class="btn" href="apply-teacher.html">变更身份绑定</a>
+            <a class="btn" href="my.html">打开个人资料页</a>
+          </div>
+        </div>
+
+        <!-- 学习情况 -->
+        <div class="tab-panel hidden" data-panel-body="learning">
+          <h2 class="sr-only">学习情况</h2>
+          <div class="stat-grid" id="learning-stats">
+            <div class="stat">
+              <p class="stat__label">已选课程</p>
+              <p class="stat__value" id="learning-course">—</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">已学完</p>
+              <p class="stat__value" id="learning-viewed">—</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">我的笔记</p>
+              <p class="stat__value" id="learning-note">—</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">我的提问</p>
+              <p class="stat__value" id="learning-question">—</p>
+            </div>
+          </div>
+          <div class="quick-links mt-lg">
+            <a class="quick-link" href="my-class.html">我的易课堂<span>查看全部在学课程</span></a>
+            <a class="quick-link" href="learn-record.html">我的学习记录<span>按时序回顾学习轨迹</span></a>
+            <a class="quick-link" href="report.html">个性化学情报告<span>了解强项与薄弱环节</span></a>
+            <a class="quick-link" href="growth-map.html">成长地图<span>查看能力成长路径</span></a>
+            <a class="quick-link" href="my-note.html">我的笔记<span>管理课程笔记</span></a>
+            <a class="quick-link" href="myquestion.html">我的提问<span>查看提问与回复</span></a>
+          </div>
+        </div>
+
+        <!-- 账号与安全 -->
+        <div class="tab-panel hidden" data-panel-body="account">
+          <h2 class="sr-only">账号与安全</h2>
+          <ul class="account-list">
+            <li>
+              <div>
+                <p class="list-item__title">登录会话</p>
+                <p class="list-item__meta">当前登录状态由服务端 Session 维持，退出后需重新登录。</p>
+              </div>
+              <button class="btn btn--danger btn--sm" id="logout-btn-2" type="button">退出登录</button>
+            </li>
+            <li>
+              <div>
+                <p class="list-item__title">身份绑定</p>
+                <p class="list-item__meta" id="account-binding">正在读取绑定信息…</p>
+              </div>
+              <button class="btn btn--sm" id="unbind-btn" type="button">解除绑定</button>
+            </li>
+            <li>
+              <div>
+                <p class="list-item__title">密码管理</p>
+                <p class="list-item__meta">如需重置密码，请退出登录后在登录页使用手机号或邮箱验证码登录后联系管理员处理。</p>
+              </div>
+              <a class="btn btn--sm" href="login.html">前往登录页</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/personal-center.js" type="module"></script>
+</body>
+</html>

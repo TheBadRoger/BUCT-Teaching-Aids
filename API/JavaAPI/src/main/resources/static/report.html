@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>个性化学情报告 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/report.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="my-class.html">我的易课堂</a> / <span>个性化学情报告</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="report-hero card">
+        <div class="report-hero__main">
+          <h1 class="page-title" id="report-title">个性化学情报告</h1>
+          <p class="page-desc" id="report-desc">基于你的选课、学习记录与笔记数据自动生成，帮助你快速定位强项与薄弱环节。</p>
+          <p class="report-hero__stamp">
+            报告生成时间：<time id="report-time">—</time>
+          </p>
+        </div>
+        <div class="report-hero__score">
+          <div class="score-ring" id="score-ring" role="img" aria-label="综合学习指数">
+            <span class="score-ring__value" id="score-value">—</span>
+            <span class="score-ring__label">综合学习指数</span>
+          </div>
+        </div>
+      </header>
+
+      <section aria-labelledby="overview-heading" class="mt-lg">
+        <h2 class="section-heading" id="overview-heading">学习概览</h2>
+        <div class="stat-grid" id="overview-stats">
+          <div class="stat">
+            <p class="stat__label">已选课程</p>
+            <p class="stat__value" id="stat-total">—<span class="stat__unit">门</span></p>
+          </div>
+          <div class="stat">
+            <p class="stat__label">已学课程</p>
+            <p class="stat__value" id="stat-viewed">—<span class="stat__unit">门</span></p>
+          </div>
+          <div class="stat">
+            <p class="stat__label">待学课程</p>
+            <p class="stat__value" id="stat-pending">—<span class="stat__unit">门</span></p>
+          </div>
+          <div class="stat">
+            <p class="stat__label">学习笔记</p>
+            <p class="stat__value" id="stat-notes">—<span class="stat__unit">篇</span></p>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid-2 mt-lg">
+        <section class="card" aria-labelledby="distribution-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="distribution-heading">学习分布</h2>
+            <a class="card__extra" href="study-distribution.html">查看详情</a>
+          </div>
+          <div id="distribution-chart" class="chart-host"></div>
+        </section>
+
+        <section class="card" aria-labelledby="progress-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="progress-heading">课程完成度</h2>
+            <span class="card__subtitle">按学习状态统计</span>
+          </div>
+          <div id="progress-panel" class="chart-host"></div>
+        </section>
+      </div>
+
+      <section class="card mt-lg" aria-labelledby="suggestion-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="suggestion-heading">学习建议</h2>
+          <span class="card__subtitle">根据当前进度自动推荐</span>
+        </div>
+        <ul class="suggestion-list" id="suggestion-list"></ul>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="pending-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="pending-heading">待推进课程</h2>
+          <a class="card__extra" href="towatchcourse.html">全部未看课程</a>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <caption class="sr-only">待推进课程列表</caption>
+            <thead>
+            <tr>
+              <th scope="col">课程名称</th>
+              <th scope="col">授课教师</th>
+              <th scope="col">课程状态</th>
+              <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody id="pending-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/report.js" type="module"></script>
+</body>
+</html>

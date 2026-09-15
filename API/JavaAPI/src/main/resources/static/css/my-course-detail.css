@@ -1,0 +1,79 @@
+/*
+ * 我已开的课 - 课程详情 / 我要开课 - 上传课程 页面专属样式
+ */
+
+.detail-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.detail-hero__cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+}
+
+.detail-hero__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.detail-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.detail-meta dt {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.detail-meta dd {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 封面预览 */
+.cover-preview {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+  margin-top: var(--spacing-sm);
+}
+
+/* 表单模式切换提示 */
+.mode-banner {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .detail-hero {
+    grid-template-columns: 280px minmax(0, 1fr);
+    padding: var(--spacing-xl);
+  }
+
+  .detail-meta {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

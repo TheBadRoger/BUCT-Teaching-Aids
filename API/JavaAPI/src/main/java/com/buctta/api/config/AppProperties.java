@@ -26,6 +26,11 @@ public class AppProperties {
      */
     private IdentityVerification identityVerification = new IdentityVerification();
 
+    /**
+     * 外部 AI（polymas）服务配置
+     */
+    private Ai ai = new Ai();
+
     @Getter
     @Setter
     public static class VerificationCode {
@@ -46,6 +51,31 @@ public class AppProperties {
          * false: 调用真实的身份认证服务（生产环境）
          */
         private boolean mockMode = true;
+    }
+
+    @Getter
+    @Setter
+    public static class Ai {
+        private Polymas polymas = new Polymas();
+    }
+
+    /**
+     * polymas 第三方 AI 平台配置
+     * <p>
+     * ⚠️ authKey 是敏感密钥，切勿提交到公开仓库。
+     * 强烈建议通过环境变量 POLYMAS_AUTH_KEY（或 .env）注入，
+     * 并在 polymas 后台重置已被泄露的密钥。
+     */
+    @Getter
+    @Setter
+    public static class Polymas {
+        private String endpoint = "https://cloudapi.polymas.com/bot/v2/completions/chat/stream";
+        private String authKey = "";
+        private String stopMark = "(AI生成)";
+        private String appCode = "ti39Ohdy6k";
+        private String userNid = "N7I7pSTrm3";
+        private String sessionNid = "PNeg1BjP6x";
+        private String chatNid = "JJdylJaMSF";
     }
 }
 

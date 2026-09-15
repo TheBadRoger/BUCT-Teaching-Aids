@@ -20,13 +20,30 @@ public class SecurityAuthorize {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(
+                                        // 登录 / 注册 / 错误页
                                         "/enter.html",
                                         "/register.html",
                                         "/login.html",
                                         "/error",
+                                        // 公共静态资源
                                         "/css/**",
                                         "/js/**",
                                         "/images/**",
+                                        // 学生智慧前台页面（页面本身放行，页面内调用的 /api/** 仍需登录）
+                                        "/index.html",
+                                        "/search.html",
+                                        "/course-list.html",
+                                        "/course-info.html",
+                                        "/course-play.html",
+                                        "/interactive-play.html",
+                                        "/guessyouneed.html",
+                                        "/ai-agent.html",
+                                        "/AIchat.html",
+                                        "/institution.html",
+                                        // AI 背诵手册页面及其自带的 css/js（页面本身放行，
+                                        // 页面内调用的 /api/handbook/** 仍需登录）
+                                        "/recitation/**",
+                                        // 认证与绑定接口
                                         "/api/aijudegment/login",
                                         "/api/aijudegment/register",
                                         "/api/admin/login",
