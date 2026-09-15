@@ -1,0 +1,117 @@
+/*
+ * 个性化学情报告页面专属样式
+ * 依赖 css/frontend.css 中的设计令牌与基础组件
+ */
+
+/* 报告头部 */
+.report-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  background: linear-gradient(135deg, #ffffff 0%, #f2f7ff 100%);
+}
+
+.report-hero__stamp {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.report-hero__score {
+  display: flex;
+  justify-content: center;
+}
+
+/* 环形分数：使用 conic-gradient 绘制，无需图表库 */
+.score-ring {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-primary) 0deg, var(--color-border) 0deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.score-ring::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background-color: var(--color-surface);
+}
+
+.score-ring__value,
+.score-ring__label {
+  position: relative;
+}
+
+.score-ring__value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.score-ring__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* 区块标题 */
+.section-heading {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+/* 图表容器统一最小高度，避免加载抖动 */
+.chart-host {
+  min-height: 180px;
+}
+
+/* 学习建议 */
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.suggestion-item {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-alt);
+  border-left: 3px solid var(--color-primary);
+}
+
+.suggestion-item--warning {
+  border-left-color: var(--color-warning);
+}
+
+.suggestion-item--success {
+  border-left-color: var(--color-success);
+}
+
+.suggestion-item__title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.suggestion-item__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* 桌面端：报告头部横向排布 */
+@media (min-width: 768px) {
+  .report-hero {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,166 @@
+/*
+ * 机构专区页面专属样式
+ */
+
+.org-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #0e4bd0 0%, #165dff 100%);
+  color: var(--color-text-inverse);
+}
+
+.org-hero__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.org-hero__desc {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 60ch;
+}
+
+.org-hero__search {
+  display: flex;
+  width: 100%;
+}
+
+.org-hero__search input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  font-size: var(--font-size-base);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-right: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.org-hero__search button {
+  padding: 0 var(--spacing-lg);
+  border: 1px solid var(--color-text-inverse);
+  background-color: var(--color-text-inverse);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* 机构卡片 */
+.org-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.org-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.org-card__banner {
+  height: 96px;
+  background-color: var(--color-surface-alt);
+  object-fit: cover;
+  width: 100%;
+}
+
+.org-card__body {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.org-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.org-card__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+  flex-shrink: 0;
+}
+
+.org-card__name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.org-card__info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.org-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin-top: auto;
+}
+
+/* 机构详情 */
+.org-detail__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.org-detail__logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+}
+
+.org-detail__name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.org-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+  .org-hero {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-2xl);
+  }
+
+  .org-hero__search {
+    max-width: 360px;
+  }
+}

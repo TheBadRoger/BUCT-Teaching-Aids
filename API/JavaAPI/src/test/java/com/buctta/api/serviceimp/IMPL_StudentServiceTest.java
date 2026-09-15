@@ -1,6 +1,7 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.StudentReposit;
+import com.buctta.api.dto.StudentDTO;
 import com.buctta.api.entities.Student;
 import com.buctta.api.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -184,11 +185,12 @@ class IMPL_StudentServiceTest {
         Page<Student> page = new PageImpl<>(List.of(alice), pageable, 1);
         when(studentRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<Student> result = studentService.searchStudents(
+        Page<StudentDTO> result = studentService.searchStudents(
                 "Alice", null, null, null, null, null, pageable);
 
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0)).isEqualTo(alice);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("Alice");
+        assertThat(result.getContent().get(0).getStudentNumber()).isEqualTo("S001");
     }
 
     // ─── isStudentNumberExists ────────────────────────────────────────────────

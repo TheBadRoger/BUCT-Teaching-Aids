@@ -1,0 +1,60 @@
+/*
+ * 名单 - 列表详情页面专属样式
+ */
+
+.grade-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+.grade-main {
+  min-width: 0;
+}
+
+/* 班级侧栏 */
+.class-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.class-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.class-nav__item:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-primary);
+}
+
+.class-nav__item.is-active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.class-nav__count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 1024px) {
+  .grade-layout {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: var(--spacing-xl);
+  }
+}

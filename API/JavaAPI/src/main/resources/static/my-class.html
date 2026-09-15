@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>我的易课堂 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/my-class.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <span>我的易课堂</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <section class="class-hero card" aria-labelledby="class-hero-heading">
+        <div>
+          <h1 class="page-title" id="class-hero-heading">我的易课堂</h1>
+          <p class="page-desc mb-sm" id="class-hero-desc">正在加载你的学习数据…</p>
+          <div class="flex-wrap flex gap-sm">
+            <a class="btn btn--primary" href="course-list.html">去选课</a>
+            <a class="btn" href="report.html">查看学情报告</a>
+            <a class="btn" href="growth-map.html">成长地图</a>
+          </div>
+        </div>
+        <dl class="class-hero__stats">
+          <div><dt>在学课程</dt><dd id="hero-total">—</dd></div>
+          <div><dt>已学完</dt><dd id="hero-viewed">—</dd></div>
+          <div><dt>待开始</dt><dd id="hero-pending">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="course-tabs-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="course-tabs-heading">我的课程</h2>
+          <span class="card__subtitle" id="course-count">—</span>
+        </div>
+
+        <div class="tabs" id="course-tabs" role="tablist">
+          <button class="tabs__item is-active" type="button" role="tab" aria-selected="true"
+                  data-scope="all">全部课程</button>
+          <button class="tabs__item" type="button" role="tab" aria-selected="false"
+                  data-scope="viewed">已学完</button>
+          <button class="tabs__item" type="button" role="tab" aria-selected="false"
+                  data-scope="pending">待学习</button>
+        </div>
+
+        <div class="grid-cards" id="class-course-grid" aria-live="polite"></div>
+        <div class="pagination" id="class-pagination"></div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="recent-note-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="recent-note-heading">最近笔记</h2>
+          <a class="card__extra" href="my-note.html">全部笔记</a>
+        </div>
+        <ul class="list-plain" id="recent-notes"></ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/my-class.js" type="module"></script>
+</body>
+</html>

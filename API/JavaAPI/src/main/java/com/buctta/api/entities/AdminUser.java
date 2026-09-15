@@ -18,7 +18,7 @@ public class AdminUser {
     // 主键自增int(10)对应long
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     // 用户名属性varchar对应String
     private String username;

@@ -1,0 +1,143 @@
+/*
+ * 课程详情页专属样式
+ */
+
+/* 课程头部 */
+.course-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.course-hero__cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+}
+
+.course-hero__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: var(--spacing-sm);
+}
+
+.course-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.course-hero__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.course-hero__meta div {
+  min-width: 0;
+}
+
+.course-hero__meta dt {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.course-hero__meta dd {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-price {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.course-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+/* 正文两栏 */
+.course-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+/* 富文本段落保留换行 */
+.rich-text {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 大纲 / 课时 */
+.outline-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.outline-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-alt);
+}
+
+.outline-item__order {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.outline-item__title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+}
+
+@media (min-width: 768px) {
+  .course-hero {
+    grid-template-columns: 320px minmax(0, 1fr);
+    padding: var(--spacing-xl);
+  }
+
+  .course-hero__meta {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .course-body {
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: var(--spacing-xl);
+  }
+}

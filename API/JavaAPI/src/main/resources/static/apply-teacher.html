@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>申请成为老师 - 北化教学辅助系统</title>
+  <link href="./css/frontend.css" rel="stylesheet">
+  <link href="./css/apply-teacher.css" rel="stylesheet">
+</head>
+<body>
+<div data-site-header></div>
+<div data-sub-nav></div>
+
+<main class="page-main page-main--offset-sub">
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a href="index.html">首页</a> / <a href="personal-center.html">个人中心</a> / <span>申请成为老师</span>
+  </nav>
+
+  <div class="layout-with-sidebar">
+    <div data-side-nav></div>
+
+    <div class="layout-content">
+      <header class="card">
+        <h1 class="page-title">申请成为老师</h1>
+        <p class="page-desc">
+          填写真实姓名、身份证号与工号提交实名认证申请。认证通过后账号身份将升级为教师，
+          可使用开课、录制课程、名单管理与 AI 教学工具。请确保信息与教务系统登记一致。
+        </p>
+        <ol class="apply-steps" id="apply-steps">
+          <li class="apply-step is-active"><span class="apply-step__index">1</span>填写身份信息</li>
+          <li class="apply-step"><span class="apply-step__index">2</span>提交实名认证</li>
+          <li class="apply-step"><span class="apply-step__index">3</span>开始使用教师功能</li>
+        </ol>
+      </header>
+
+      <section class="card mt-lg" aria-labelledby="identity-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="identity-heading">当前身份</h2>
+          <span class="card__subtitle" id="identity-hint">正在读取…</span>
+        </div>
+        <div id="identity-panel">
+          <div class="skeleton skeleton--block"></div>
+        </div>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="form-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="form-heading">教师身份认证</h2>
+          <span class="card__subtitle">带 * 为必填项</span>
+        </div>
+
+        <form id="apply-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label form-group__label--required" for="apply-name">真实姓名</label>
+              <input class="form-control" id="apply-name" name="name" type="text" autocomplete="name"
+                     placeholder="请输入与证件一致的姓名" required>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label form-group__label--required" for="apply-idcard">身份证号</label>
+              <input class="form-control" id="apply-idcard" name="idCard" type="text" inputmode="numeric"
+                     maxlength="18" placeholder="18 位身份证号" required>
+              <p class="form-group__hint">仅用于实名认证，系统不会对外展示。</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-group__label form-group__label--required" for="apply-employee">工号</label>
+              <input class="form-control" id="apply-employee" name="employeeNumber" type="text"
+                     placeholder="请输入教师工号" required>
+            </div>
+            <div class="form-group">
+              <label class="form-group__label" for="apply-org">所属单位 / 院系</label>
+              <input class="form-control" id="apply-org" name="organization" type="text"
+                     placeholder="如：信息科学与技术学院">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-group__label" for="apply-intro">教学经历简介</label>
+            <textarea class="form-control" id="apply-intro" name="introduction"
+                      placeholder="可简要说明主讲课程、教学年限等，便于管理员审核（选填）"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="choice">
+              <input id="apply-agreement" name="agreement" type="checkbox" required>
+              <span>我已阅读并同意《教师身份认证与数据使用说明》</span>
+            </label>
+          </div>
+
+          <p class="form-message" id="form-message" role="alert" hidden></p>
+
+          <div class="form-actions">
+            <button class="btn btn--primary" id="submit-btn" type="submit">提交认证申请</button>
+            <button class="btn" id="reset-btn" type="reset">重置表单</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card mt-lg" aria-labelledby="faq-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="faq-heading">常见问题</h2>
+        </div>
+        <dl class="faq-list">
+          <dt>提交后多久可以生效？</dt>
+          <dd>实名认证由教务数据校验，通过后身份立即生效，页面会自动刷新为教师视角。</dd>
+          <dt>身份绑定错误怎么办？</dt>
+          <dd>可在个人中心执行“解除绑定”，随后重新提交正确的身份信息。</dd>
+          <dt>一个工号可以被多个账号绑定吗？</dt>
+          <dd>不可以。若工号已被其他账号绑定，系统会提示“该身份已被其他用户绑定”。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./js/apply-teacher.js" type="module"></script>
+</body>
+</html>

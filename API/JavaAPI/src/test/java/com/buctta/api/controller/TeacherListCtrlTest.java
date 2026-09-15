@@ -1,5 +1,6 @@
 package com.buctta.api.controller;
 
+import com.buctta.api.dto.TeacherDTO;
 import com.buctta.api.entities.Teacher;
 import com.buctta.api.service.TeacherService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,12 +76,14 @@ class TeacherListCtrlTest {
 
     @Test
     void searchTeacher_success_returnsPage() throws Exception {
-        Teacher teacher = new Teacher();
+        TeacherDTO teacher = new TeacherDTO();
         teacher.setId(2L);
         teacher.setName("Wang");
-        Page<Teacher> page = new PageImpl<>(List.of(teacher), PageRequest.of(0, 10), 1);
+        Page<TeacherDTO> page = new PageImpl<>(List.of(teacher), PageRequest.of(0, 10), 1);
 
-        when(teacherService.searchTeachers(any(), any(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(teacherService.searchTeachers(
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(Pageable.class)))
+                .thenReturn(page);
 
         mockMvc.perform(post("/api/teacher/search")
                         .param("name", "Wang")
@@ -93,7 +96,8 @@ class TeacherListCtrlTest {
 
     @Test
     void searchTeacher_serviceThrows_returns5000() throws Exception {
-        when(teacherService.searchTeachers(any(), any(), any(), any(), any(), any(Pageable.class)))
+        when(teacherService.searchTeachers(
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(Pageable.class)))
                 .thenThrow(new RuntimeException("db error"));
 
         mockMvc.perform(post("/api/teacher/search"))
