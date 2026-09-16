@@ -3,6 +3,7 @@ package com.buctta.api.serviceimp;
 import com.buctta.api.dao.OrganizationRepository;
 import com.buctta.api.entities.Organization;
 import com.buctta.api.service.OrganizationService;
+import com.buctta.api.utils.MediaUrls;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,18 @@ public class IMPL_OrganizationService implements OrganizationService {
                     "该名称已被其他机构使用: " + details.getName());
         }
 
+        // 图片地址会直接进入 <img src>，必须限制协议，避免 javascript: 之类被存库
+        OrganizationResult invalid = validateImageUrl("logo", details.getLogo());
+        if (invalid == null) {
+            invalid = validateImageUrl("bannerUrl", details.getBannerUrl());
+        }
+        if (invalid == null) {
+            invalid = validateImageUrl("honorCertUrl", details.getHonorCertUrl());
+        }
+        if (invalid != null) {
+            return invalid;
+        }
+
         if (details.getName() != null) {
             existing.setName(details.getName());
         }
@@ -68,6 +81,21 @@ public class IMPL_OrganizationService implements OrganizationService {
         } catch (Exception e) {
             return OrganizationResult.fail("UPDATE_FAILED", "更新机构失败: " + e.getMessage());
         }
+    }
+
+    /**
+     * 校验图片地址是否可安全用作 img/背景图。
+     * <p>
+     * 允许三种形态：空值、站内相对路径（以 {@code /} 开头）、http(s) 绝对地址。
+     * 其他协议（{@code javascript:}、{@code data:} 等）一律拒绝。
+     *
+     * @return 校验通过返回 null，否则返回失败结果
+     */
+    private OrganizationResult validateImageUrl(String field, String url) {
+        if (MediaUrls.isSafe(url)) {
+            return null;
+        }
+        return OrganizationResult.fail("INVALID_MEDIA_URL", MediaUrls.rejectMessage(field));
     }
 
     @Override
