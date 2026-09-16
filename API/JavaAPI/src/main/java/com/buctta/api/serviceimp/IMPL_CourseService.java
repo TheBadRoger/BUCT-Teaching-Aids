@@ -211,4 +211,57 @@ public class IMPL_CourseService implements CourseService {
     public List<Course> getAllCourses() {
         return courseReposit.findAll();
     }
+
+    @Override
+    public CourseResult setPublished(Long id, Boolean published, String teacherName) {
+        if (id == null) {
+            return CourseResult.fail("PARAM_MISSING", "课程 ID 不能为空");
+        }
+        Course course = courseReposit.findById(id).orElse(null);
+        if (course == null) {
+            return CourseResult.fail("COURSE_NOT_FOUND", "课程不存在，ID: " + id);
+        }
+
+        // 弱归属校验：teachingTeachers 是逗号分隔的姓名文本，没有教师外键可依赖。
+        // teacherName == null 表示管理员调用，跳过校验；空串表示调用者没有教师身份，
+        // 必须照常走校验并被拒绝——否则任何登录用户都能发布任意课程。
+        if (teacherName != null && !belongsToTeacher(course, teacherName)) {
+            return CourseResult.fail("NO_PERMISSION",
+                    "只能发布自己授课的课程（当前课程授课教师：" + course.getTeachingTeachers() + "）");
+        }
+
+        course.setPublished(published == null || published);
+        try {
+            return CourseResult.success(courseReposit.save(course),
+                    course.getPublished() ? "课程已发布" : "课程已取消发布");
+        }
+        catch (Exception e) {
+            return CourseResult.fail("UPDATE_FAILED", "更新发布状态失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 判断课程是否由指定教师授课。
+     * <p>
+     * {@code teachingTeachers} 支持中英文逗号、顿号、分号分隔，且可能是"张三老师"这类带后缀的写法，
+     * 因此做包含匹配而不是精确相等。
+     */
+    private boolean belongsToTeacher(Course course, String teacherName) {
+        String teachers = course.getTeachingTeachers();
+        if (teachers == null || teachers.isBlank()) {
+            // 未填写授课教师时不拦截，避免把正常流程卡死
+            return true;
+        }
+        if (teacherName == null || teacherName.isBlank()) {
+            // 课程有授课教师，但调用者没有可用的教师姓名 → 无从匹配，拒绝
+            return false;
+        }
+        String target = teacherName.trim();
+        for (String part : teachers.split("[,，、;；]")) {
+            if (part.trim().contains(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
