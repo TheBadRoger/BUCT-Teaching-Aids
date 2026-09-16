@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "label": "Java Unit Test",
-  "message": "133 cases passing",
-  "color": "22c55e",
+  "message": "1 of 278 cases failing",
+  "color": "ef4444",
   "labelColor": "0f172a"
 }
