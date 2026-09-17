@@ -25,6 +25,10 @@ public class User {
     @Column(name = "email", length = 100)
     private String email;  // 邮箱
 
+    /** 头像地址：站内路径（如 /api/media/{id}/content）或 http(s) 外链 */
+    @Column(name = "avatar", length = 500)
+    private String avatar;
+
     @Column(name = "password", nullable = false)
     private String password;  // 密码
 

@@ -28,7 +28,7 @@ public class OrganizationController {
         if (result.success()) {
             return ApiResponse.ok(result.organization());
         } else {
-            return ApiResponse.fail(BusinessStatus.ENTITY_EXISTS, result.message());
+            return fail(result);
         }
     }
 
@@ -38,7 +38,7 @@ public class OrganizationController {
         if (result.success()) {
             return ApiResponse.ok(result.organization());
         } else {
-            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+            return fail(result);
         }
     }
 
@@ -50,8 +50,24 @@ public class OrganizationController {
         if (result.success()) {
             return ApiResponse.ok(result.organization());
         } else {
-            return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+            return fail(result);
         }
+    }
+
+    /**
+     * 把服务层的失败结果映射为对应的业务状态码。
+     * <p>
+     * 之前这里对各接口硬编码了状态码（如 PUT 一律返回 4042），会把"名称重复""图片地址非法"
+     * 这类失败误报成"机构不存在"，前端无法据此给出正确的提示。
+     */
+    private ApiResponse<Organization> fail(OrganizationService.OrganizationResult result) {
+        BusinessStatus status = switch (result.errorCode() == null ? "" : result.errorCode()) {
+            case "ORGANIZATION_NOT_FOUND" -> BusinessStatus.RESOURCE_NOT_FOUND;
+            case "ORGANIZATION_NAME_EXISTS" -> BusinessStatus.ENTITY_EXISTS;
+            case "INVALID_MEDIA_URL" -> BusinessStatus.INVALID_MEDIA_URL;
+            default -> BusinessStatus.INTERNAL_ERROR;
+        };
+        return ApiResponse.fail(status, result.message());
     }
 
     @GetMapping("/{id}")

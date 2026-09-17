@@ -1,13 +1,16 @@
 package com.buctta.api.serviceimp;
 
 import com.buctta.api.dao.CourseReposit;
+import com.buctta.api.dao.CourseVideoRepository;
 import com.buctta.api.dao.StudentCourseReposit;
 import com.buctta.api.dao.StudentReposit;
 import com.buctta.api.entities.Course;
+import com.buctta.api.entities.CourseVideo;
 import com.buctta.api.entities.Student;
 import com.buctta.api.entities.StudentCourse;
 import com.buctta.api.entities.StudentCourseId;
 import com.buctta.api.service.StudentCourseService;
+import com.buctta.api.service.VideoProgressService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,9 @@ import java.util.List;
 @Service
 public class IMPL_StudentCourseService implements StudentCourseService {
 
+    /** 播放到该比例即视为看完，避免片尾几秒误差导致永远看不完 */
+    private static final double COMPLETE_THRESHOLD = 0.97;
+
     @Resource
     private StudentCourseReposit studentCourseRepository;
 
@@ -31,6 +37,12 @@ public class IMPL_StudentCourseService implements StudentCourseService {
 
     @Resource
     private CourseReposit courseListRepository;
+
+    @Resource
+    private CourseVideoRepository courseVideoRepository;
+
+    @Resource
+    private VideoProgressService videoProgressService;
 
     @Override
     public CourseOperationResult selectCourse(Long studentId, Long courseId) {
@@ -157,6 +169,97 @@ public class IMPL_StudentCourseService implements StudentCourseService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         return studentCourseRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public PlaybackProgressResult reportPlaybackProgress(Long studentId, Long courseId, Long videoId,
+                                                         Integer positionSeconds, Integer durationSeconds) {
+        if (studentId == null || courseId == null) {
+            return PlaybackProgressResult.fail("PARAM_MISSING", "studentId 与 courseId 不能为空");
+        }
+        if (positionSeconds == null || positionSeconds < 0) {
+            return PlaybackProgressResult.fail("PARAM_INVALID", "positionSeconds 必须为非负整数");
+        }
+
+        // 校验视频确实属于该课程，避免把进度写到别的课的视频上
+        if (videoId != null) {
+            CourseVideo video = courseVideoRepository.findById(videoId).orElse(null);
+            if (video == null || !video.getCourseId().equals(courseId)) {
+                return PlaybackProgressResult.fail("VIDEO_NOT_IN_COURSE",
+                        "视频 " + videoId + " 不属于课程 " + courseId);
+            }
+        }
+
+        StudentCourse studentCourse = studentCourseRepository
+                .findByStudentIdAndCourseId(studentId, courseId)
+                .orElse(null);
+        boolean existed = studentCourse != null;
+
+        try {
+            if (studentCourse == null) {
+                // 尚未选课：自动补建选课记录，保证播放进度不丢
+                Student student = studentRepository.findById(studentId).orElse(null);
+                if (student == null) {
+                    return PlaybackProgressResult.fail("STUDENT_NOT_FOUND", "学生不存在，ID: " + studentId);
+                }
+                Course course = courseListRepository.findById(courseId).orElse(null);
+                if (course == null) {
+                    return PlaybackProgressResult.fail("COURSE_NOT_FOUND", "课程不存在，ID: " + courseId);
+                }
+                studentCourse = new StudentCourse(student, course);
+                studentCourse.setIsViewed(false);
+            }
+
+            if (videoId != null) {
+                studentCourse.setLastVideoId(videoId);
+            }
+            // 课程级指针始终记录真实位置：此前在标记"已看完"时把它归零，
+            // 导致用户看到 97% 离开后，回来续播会从头开始。
+            studentCourse.setLastPositionSeconds(positionSeconds);
+
+            // 播放到片尾附近则认为该课程已观看完成
+            if (isFinished(positionSeconds, durationSeconds)) {
+                studentCourse.setIsViewed(true);
+            }
+
+            StudentCourse saved = studentCourseRepository.save(studentCourse);
+
+            // 同步写入逐视频学习轨迹（视频级明细），失败不影响课程级进度
+            if (videoId != null) {
+                VideoProgressService.ReportResult trail = videoProgressService
+                        .report(studentId, courseId, videoId, positionSeconds, durationSeconds);
+                if (!trail.success()) {
+                    log.warn("逐视频学习记录写入失败 studentId={} videoId={}: {}",
+                            studentId, videoId, trail.message());
+                }
+            }
+
+            return PlaybackProgressResult.success(saved, existed,
+                    existed ? "进度已更新" : "已自动补建选课记录并保存进度");
+        }
+        catch (Exception e) {
+            log.error("上报播放进度失败 studentId={} courseId={}", studentId, courseId, e);
+            return PlaybackProgressResult.fail("UPDATE_FAILED", "进度保存失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public PlaybackProgress getPlaybackProgress(Long studentId, Long courseId) {
+        if (studentId == null || courseId == null) {
+            return null;
+        }
+        return studentCourseRepository.findByStudentIdAndCourseId(studentId, courseId)
+                .map(sc -> new PlaybackProgress(sc.getLastVideoId(),
+                        sc.getLastPositionSeconds() == null ? 0 : sc.getLastPositionSeconds(),
+                        sc.getIsViewed()))
+                .orElse(null);
+    }
+
+    private boolean isFinished(Integer positionSeconds, Integer durationSeconds) {
+        if (durationSeconds == null || durationSeconds <= 0 || positionSeconds == null) {
+            return false;
+        }
+        return positionSeconds >= durationSeconds * COMPLETE_THRESHOLD;
     }
 }
 

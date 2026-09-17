@@ -50,6 +50,19 @@ public interface CourseService {
     CourseResult deleteCourse(Long id);
 
     /**
+     * 发布 / 取消发布课程（教师自助，无需审批）。
+     * <p>
+     * 归属校验为**弱校验**：课程的 {@code teachingTeachers} 是自由文本（逗号分隔的教师姓名），
+     * 数据库层面没有教师外键，因此只能按姓名判断。传入 {@code teacherName} 为空时跳过归属校验
+     * （供管理员调用）。
+     *
+     * @param id          课程 ID
+     * @param published   目标发布状态
+     * @param teacherName 调用者姓名，用于归属校验；为空表示不校验
+     */
+    CourseResult setPublished(Long id, Boolean published, String teacherName);
+
+    /**
      * 课程操作结果
      */
     record CourseResult(boolean success, Course course, String errorCode, String message) {
