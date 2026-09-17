@@ -15,6 +15,9 @@ public enum BusinessStatus {
     PARAM_MISSING(4001, "Parameters not found: {0}."),
     PARAM_TYPE_ERROR(4002, "Parameters type incorrect: {0}."),
     PARAM_FORMAT_ERROR(4003, "Parameters format incorrect."),
+    UPLOAD_FILE_TOO_LARGE(4004, "Uploaded file is too large: {0}."),
+    UPLOAD_CONTENT_TYPE_NOT_SUPPORTED(4005, "Unsupported upload content type: {0}."),
+    INVALID_MEDIA_URL(4006, "Invalid media url: {0}."),
 
     // 401x 认证错误
     ACCOUNT_PASSWORD_ERROR(4011, "Incorrect password or name."),
@@ -40,6 +43,8 @@ public enum BusinessStatus {
     IDENTITY_ALREADY_BOUND(4096, "This identity is already bound to another user."),
     NOT_BOUND(4097, "User has not bound any identity."),
     BINDING_CONFLICT(4098, "Cannot bind this identity type, user already has another identity type bound."),
+    ALREADY_FOLLOWED(4099, "Already following this user."),
+    NOT_FOLLOWED(4100, "Not following this user."),
 
     // 410x 身份验证错误
     IDENTITY_VERIFY_FAILED(4101, "Identity verification failed: {0}."),

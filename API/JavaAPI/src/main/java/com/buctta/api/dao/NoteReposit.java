@@ -45,4 +45,22 @@ public interface NoteReposit extends JpaRepository<Note, Long> {
 
         // 查找最新笔记
         Page<Note> findByIsPublicTrueOrderByCreatedAtDesc(Pageable pageable);
+
+        // 某学生的笔记总数（用于学习统计聚合，避免拉全量数据）
+        long countByStudentId(Long studentId);
+
+        // 某学生公开笔记数
+        long countByStudentIdAndIsPublicTrue(Long studentId);
+
+        /**
+         * 某学生收到的总点赞数与总评论数。
+         * <p>
+         * 用聚合查询而不是把笔记全捞出来在内存里求和，数据量大时差别明显。
+         * COALESCE 保证无笔记时返回 0 而不是 null。
+         *
+         * @return 长度为 2 的数组：[总点赞数, 总评论数]
+         */
+        @Query("SELECT COALESCE(SUM(n.likeCount), 0), COALESCE(SUM(n.commentCount), 0) "
+                + "FROM Note n WHERE n.student.id = :studentId")
+        Long[] sumEngagementByStudentId(@Param("studentId") Long studentId);
 }

@@ -1,6 +1,7 @@
 package com.buctta.api.controller;
 
 import com.buctta.api.entities.Course;
+import com.buctta.api.entities.User;
 import com.buctta.api.service.CourseService;
 import com.buctta.api.utils.ApiResponse;
 import com.buctta.api.utils.BusinessStatus;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -94,5 +96,51 @@ public class CourseCalls {
         } else {
             return ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
         }
+    }
+
+    /**
+     * 发布 / 取消发布课程（**无需审批**）。
+     * <p>
+     * 教师可直接发布自己授课的课程。归属校验为弱校验——课程的授课教师存储为
+     * 逗号分隔的姓名字符串，数据库层面没有教师外键，因此按姓名匹配；
+     * 管理员登录态（principal 为 AdminUser）跳过归属校验。
+     *
+     * @param id        课程 ID
+     * @param published 目标状态，省略时按"发布"处理
+     */
+    @PutMapping("/{id}/publish")
+    public ApiResponse<Course> setPublished(@PathVariable Long id,
+                                            @RequestParam(defaultValue = "true") Boolean published) {
+        String teacherName = currentTeacherName();
+        CourseService.CourseResult result = courseService.setPublished(id, published, teacherName);
+        if (result.success()) {
+            return ApiResponse.ok(result.course());
+        }
+        return switch (result.errorCode() == null ? "" : result.errorCode()) {
+            case "NO_PERMISSION" -> ApiResponse.fail(BusinessStatus.NO_PERMISSION, result.message());
+            case "COURSE_NOT_FOUND" -> ApiResponse.fail(BusinessStatus.RESOURCE_NOT_FOUND, result.message());
+            case "PARAM_MISSING" -> ApiResponse.fail(BusinessStatus.PARAM_MISSING, result.message());
+            default -> ApiResponse.fail(BusinessStatus.INTERNAL_ERROR, result.message());
+        };
+    }
+
+    /**
+     * 当前调用者的教师姓名，用于课程归属校验。
+     * <p>
+     * 管理员（principal 为 AdminUser）返回 null，表示跳过归属校验；
+     * 未绑定教师身份的普通用户返回空串，会在服务层被拦截。
+     */
+    private String currentTeacherName() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return "";
+        }
+        if (authentication.getPrincipal() instanceof com.buctta.api.entities.AdminUser) {
+            return null;
+        }
+        if (authentication.getPrincipal() instanceof User user && user.getTeacher() != null) {
+            return user.getTeacher().getName();
+        }
+        return "";
     }
 }
