@@ -1,32 +1,22 @@
-FROM docker.m.daocloud.io/library/maven:3.9.9-eclipse-temurin-25 AS builder
-
+ARG MAVEN_IMAGE=maven:3.9-eclipse-temurin-25
+ARG JAVA_IMAGE=eclipse-temurin:25-jre
+FROM ${MAVEN_IMAGE} AS builder
 WORKDIR /build
+COPY API/JavaAPI/pom.xml ./
+RUN mvn -B dependency:go-offline
+COPY API/JavaAPI/src ./src
+RUN mvn -B package -DskipTests && \
+    cp target/japi-*.jar /build/app.jar
 
-# Prefer domestic Maven mirror to speed up dependency downloads.
-RUN mkdir -p /root/.m2 && cat > /root/.m2/settings.xml <<'EOF'
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <mirrors>
-    <mirror>
-      <id>aliyunmaven</id>
-      <mirrorOf>*</mirrorOf>
-      <name>aliyun maven</name>
-      <url>https://maven.aliyun.com/repository/public</url>
-    </mirror>
-  </mirrors>
-</settings>
-EOF
-
-COPY API/JavaAPI /build
-RUN mvn -s /root/.m2/settings.xml -f /build/pom.xml clean package -DskipTests && \
-    JAR_FILE=$(find /build/target -maxdepth 1 -type f -name '*.jar' ! -name '*.jar.original' | head -n 1) && \
-    test -n "$JAR_FILE" && cp "$JAR_FILE" /build/app.jar
-
-FROM docker.m.daocloud.io/library/eclipse-temurin:25-jre
-
+FROM ${JAVA_IMAGE}
 WORKDIR /app
-COPY --from=builder /build/app.jar /app/app.jar
-
-EXPOSE 80
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    groupadd --gid 10001 app && useradd --uid 10001 --gid app --home-dir /app app && \
+    mkdir -p /app/data/uploads && chown -R app:app /app
+COPY --from=builder --chown=app:app /build/app.jar /app/app.jar
+USER app
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=5 \
+    CMD curl --fail --silent --output /dev/null http://127.0.0.1:8080/enter.html || exit 1
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

@@ -1,0 +1,44 @@
+name: Docker Configuration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docker/**'
+      - '.dockerignore'
+      - '.github/workflows/docker-config.yml'
+  pull_request:
+    paths:
+      - 'docker/**'
+      - '.dockerignore'
+      - '.github/workflows/docker-config.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: ci-only-root
+      BUCTTA_JAVA_DB_PASSWORD: ci-only-java
+      BUCTTA_PYTHON_DB_PASSWORD: ci-only-python
+      REDIS_PASSWORD: ci-only-redis
+      APP_ADMIN_PASSWORD: ci-only-admin
+      PYTHON_SECRET_KEY: ci-only-secret
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate all deployment variants
+        run: |
+          for file in docker/docker-compose*.yml; do
+            docker compose -f "$file" config --quiet
+          done
+      - name: Verify required credentials
+        run: |
+          if env -u MYSQL_ROOT_PASSWORD docker compose -f docker/docker-compose.yml config --quiet 2>/dev/null; then
+            echo 'Missing database password must fail validation'
+            exit 1
+          fi
+      - name: Test container startup configuration
+        run: python3 -m unittest discover -s docker/python -p 'test_*.py' -v
