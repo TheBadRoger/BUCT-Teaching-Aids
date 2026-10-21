@@ -14,6 +14,18 @@ const routes = [
     redirect: '/teacher/list',
     component: () => import('@/layout/index.vue'), 
     children: [
+      ...['list', 'add', 'detail'].map(mode => ({
+        path: `organization/${mode}`,
+        component: () => import('@/views/organization/index.vue')
+      })),
+      ...['list', 'add'].map(mode => ({
+        path: `admin/${mode}`,
+        component: () => import('@/views/admin/index.vue')
+      })),
+      ...['widgets', 'email', 'calendar', 'live/add', 'live/room'].map(mode => ({
+        path: `application/${mode}`,
+        component: () => import('@/views/application/index.vue')
+      })),
       {
       path: 'teacher/list',
       component: () => import('@/views/teacher/list.vue')

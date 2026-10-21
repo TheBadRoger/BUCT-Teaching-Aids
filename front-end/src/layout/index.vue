@@ -1,10 +1,11 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import BUCTLogo from '@/assets/images/BUCT-logo.png'
 import { ElMessageBox } from 'element-plus'
 import { UserFilled } from '@element-plus/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 const user = JSON.parse(localStorage.getItem('user') || '{}')
 
 const go = (path) => {
@@ -30,7 +31,7 @@ const handleLogout = () => {
             <div style="height:60px; display:flex; align-items:center; justify-content:center;">
                 <img :src="BUCTLogo" alt="BUCTLogo" style="width:200px;object-fit:contain;">
             </div>
-            <el-menu default-active="/teacher/list" background-color="#325a7d" text-color="#fff"
+            <el-menu :default-active="route.path" background-color="#325a7d" text-color="#fff"
                 active-text-color="#409EFF" style="border-right: none;" router>
                 <!-- 教师管理 -->
                 <el-sub-menu index="teacher">
@@ -89,6 +90,28 @@ const handleLogout = () => {
                     </el-menu-item>
                 </el-sub-menu>
 
+                <el-sub-menu index="organization">
+                    <template #title>机构管理</template>
+                    <el-menu-item index="/organization/list">机构列表</el-menu-item>
+                    <el-menu-item index="/organization/add">新增机构</el-menu-item>
+                    <el-menu-item index="/organization/detail">机构介绍</el-menu-item>
+                </el-sub-menu>
+                <el-sub-menu index="admin">
+                    <template #title>管理员管理</template>
+                    <el-menu-item index="/admin/list">管理员列表</el-menu-item>
+                    <el-menu-item index="/admin/add">新增管理员</el-menu-item>
+                </el-sub-menu>
+                <el-sub-menu index="application">
+                    <template #title>应用管理</template>
+                    <el-menu-item index="/application/widgets">小部件</el-menu-item>
+                    <el-menu-item index="/application/email">电子邮件</el-menu-item>
+                    <el-menu-item index="/application/calendar">日历</el-menu-item>
+                    <el-sub-menu index="live">
+                        <template #title>直播管理</template>
+                        <el-menu-item index="/application/live/add">新增直播</el-menu-item>
+                        <el-menu-item index="/application/live/room">直播间</el-menu-item>
+                    </el-sub-menu>
+                </el-sub-menu>
             </el-menu>
         </el-aside>
 

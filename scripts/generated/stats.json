@@ -1,8 +1,8 @@
 {
-  "updated_at_utc": "2026-10-21T07:03:14Z",
-  "updated_at_utc8": "2026-10-21 15:03:14",
-  "total_lines": 54767,
-  "language_count": 9,
+  "updated_at_utc": "2026-09-16T05:14:28Z",
+  "updated_at_utc8": "2026-09-16 13:14:28",
+  "total_lines": 57139,
+  "language_count": 10,
   "top_language": "Java",
   "java_endpoint_count": 142,
   "python_endpoint_count": 36,
@@ -10,12 +10,13 @@
   "python_test_case_count": 48,
   "language_lines": {
     "Java": 16020,
-    "JavaScript": 10993,
+    "JavaScript": 11005,
     "HTML": 9638,
     "CSS": 8358,
-    "Markdown": 5702,
-    "Python": 3358,
-    "YAML": 475,
+    "Markdown": 5586,
+    "Python": 3397,
+    "Vue": 2439,
+    "YAML": 473,
     "SQL": 209,
     "Shell": 14
   }

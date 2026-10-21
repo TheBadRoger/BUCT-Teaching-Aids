@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -34,6 +35,7 @@ LANGUAGE_BY_SUFFIX = {
     ".py": "Python",
     ".js": "JavaScript",
     ".ts": "TypeScript",
+    ".vue": "Vue",
     ".css": "CSS",
     ".html": "HTML",
     ".sql": "SQL",
@@ -61,7 +63,9 @@ SECTION_END = "<!-- STATS_SECTION_END -->"
 
 
 def _is_excluded(path: Path) -> bool:
-    return any(part in EXCLUDED_DIRS for part in path.parts)
+    return any(part in EXCLUDED_DIRS for part in path.parts) or path in {
+        README_PATH, STATS_MD_PATH
+    }
 
 
 def _count_non_empty_lines(file_path: Path) -> int:
@@ -117,9 +121,16 @@ def collect_stats() -> dict:
     total_lines = sum(sorted_language_lines.values())
     top_language = next(iter(sorted_language_lines.keys()), "N/A")
 
+    # 使用最近一次源码提交时间，避免机器人提交和时钟变化造成统计噪声。
+    source_time = subprocess.check_output(
+        ["git", "log", "-1", "--format=%ct", "--", ".",
+         ":(exclude)README.md", ":(exclude)scripts/generated/**"],
+        cwd=ROOT_DIR, text=True,
+    ).strip()
+    updated_at = datetime.fromtimestamp(int(source_time), timezone.utc)
     return {
-        "updated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "updated_at_utc8": datetime.now(UTC_PLUS_8).strftime("%Y-%m-%d %H:%M:%S"),
+        "updated_at_utc": updated_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "updated_at_utc8": updated_at.astimezone(UTC_PLUS_8).strftime("%Y-%m-%d %H:%M:%S"),
         "total_lines": total_lines,
         "language_count": len(sorted_language_lines),
         "top_language": top_language,
@@ -194,7 +205,7 @@ def update_readme(stats_md: str, stats: dict) -> None:
     else:
         readme_content = readme_content.rstrip() + "\n\n" + replacement + "\n"
 
-    README_PATH.write_text(readme_content, encoding="utf-8")
+    README_PATH.write_text(readme_content, encoding="utf-8", newline="\n")
 
 
 def main() -> None:
@@ -205,8 +216,9 @@ def main() -> None:
     STATS_JSON_PATH.write_text(
         json.dumps(stats, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
-    STATS_MD_PATH.write_text(stats_md, encoding="utf-8")
+    STATS_MD_PATH.write_text(stats_md, encoding="utf-8", newline="\n")
     update_readme(stats_md, stats)
 
 
