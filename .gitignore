@@ -37,6 +37,18 @@ replay_pid*
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Python virtual environments and installed dependencies
+venv/
+.venv/
+env/
+.tox/
+.nox/
+site-packages/
 
 # JetBrains local state (shared configs in .idea are intentionally versioned)
 .idea/workspace.xml
