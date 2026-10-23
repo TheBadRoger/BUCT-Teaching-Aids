@@ -7,10 +7,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential cmake libboost-all-dev libopencv-dev \
       libgl1 libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/*
-COPY API/PythonAPI/requirements*.txt ./
+COPY apps/api/python/requirements*.txt ./
 COPY docker/python/requirements-server.txt ./
 RUN pip install --index-url "$PIP_INDEX_URL" -r requirements.txt -r requirements-server.txt
-COPY API/PythonAPI/ ./
+COPY apps/api/python/ ./
 COPY docker/python/entrypoint.py /usr/local/bin/buctta-entrypoint.py
 RUN groupadd --gid 10001 app && useradd --uid 10001 --gid app --home-dir /app app && \
     mkdir -p /app/data/uploads /app/data/models /app/data/ultralytics /app/face_database/face_db && \

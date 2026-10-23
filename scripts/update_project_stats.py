@@ -55,8 +55,8 @@ JAVA_TEST_CASE_PATTERN = re.compile(
 )
 PYTHON_TEST_CASE_PATTERN = re.compile(r"^\s*def\s+test_\w*\s*\(", re.MULTILINE)
 
-JAVA_TEST_DIR = ROOT_DIR / "API" / "JavaAPI" / "src" / "test" / "java"
-PYTHON_TEST_DIR = ROOT_DIR / "API" / "PythonAPI" / "tests"
+JAVA_TEST_DIR = ROOT_DIR / "apps" / "api" / "java" / "src" / "test" / "java"
+PYTHON_TEST_DIR = ROOT_DIR / "apps" / "api" / "python" / "tests"
 
 SECTION_START = "<!-- STATS_SECTION_START -->"
 SECTION_END = "<!-- STATS_SECTION_END -->"

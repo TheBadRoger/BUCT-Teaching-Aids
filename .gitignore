@@ -27,7 +27,7 @@ replay_pid*
 *.xslx
 
 # Testing files
-/API/JavaAPI/temp/
+/apps/api/java/temp/
 
 # Secret environment files
 **/.env

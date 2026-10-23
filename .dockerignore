@@ -17,4 +17,4 @@
 **/*.pt
 **/*.onnx
 **/uploads
-API/PythonAPI/face_database
+apps/api/python/face_database

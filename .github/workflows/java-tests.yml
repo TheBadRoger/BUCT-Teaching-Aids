@@ -28,14 +28,14 @@ jobs:
           cache: maven
 
       - name: Run Java tests
-        working-directory: API/JavaAPI
+        working-directory: apps/api/java
         run: mvn -B test || true
 
       - name: Parse and save test results
         run: |
           python3 - <<'EOF'
           import xml.etree.ElementTree as ET, json, glob, os
-          reports = glob.glob("API/JavaAPI/target/surefire-reports/TEST-*.xml")
+          reports = glob.glob("apps/api/java/target/surefire-reports/TEST-*.xml")
           if not reports:
               data = {"status": "no result", "passed": 0, "failed": 0, "total": 0}
           else:

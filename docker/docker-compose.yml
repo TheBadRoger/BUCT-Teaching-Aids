@@ -115,7 +115,7 @@ services:
     ports:
       - "${APP_BIND_IP:-127.0.0.1}:${PYTHON_HOST_PORT:-8080}:8080"
     volumes:
-      - ${FACE_DATABASE_DIR:-../API/PythonAPI/face_database}:/app/face_database
+      - ${FACE_DATABASE_DIR:-../apps/api/python/face_database}:/app/face_database
       - python_data:/app/data
     logging: *logging
 

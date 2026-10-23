@@ -22,4 +22,4 @@ jobs:
           python-version: "3.11"
 
       - name: Compile Python files
-        run: python -m compileall API/PythonAPI
+        run: python -m compileall apps/api/python

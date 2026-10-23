@@ -70,7 +70,7 @@ pie showData
 
 ## 开发框架简介
 
-- 前端：经典HTML+js+css
+- 管理前端：Vue 3 + Vite + Element Plus；保留随后端部署的 HTML/CSS/JavaScript 页面
 
 - 后端：Java SpringBoot + Python Flask
 
@@ -82,32 +82,42 @@ pie showData
 
 - 已实现课程相关的大多数功能
 - 实现AI智能批改实验报告，前后端均已实现。
-- 打通教师/学生/课程后台管理页（列表、查看、新增、编辑、删除、导出）的前后端链路，详见 [admin_frontend_api_map.md](documents/admin_frontend_api_map.md)
+- 打通教师/学生/课程后台管理页（列表、查看、新增、编辑、删除、导出）的前后端链路，详见 [admin_frontend_api_map.md](docs/api/admin_frontend_api_map.md)
 - 新增 AI 背诵手册：上传 `.txt/.docx/.pdf` 学习资料，自动生成知识归纳、记忆口诀、必背要点、自测题（复用 polymas AI，前端见 `static/recitation/`）。
 
 > 其余项目组的进度，以后就在这里加就行
 
 ## 项目文件结构
 
-由于我们有Java和Python两个后端，这两个后端都支持 **前后端合并部署**，所以两个部分的前端要分开
+```text
+apps/
+  api/
+    java/                  # Java Spring Boot 后端
+    python/                # Python Flask 后端
+  web/
+    admin/                 # Vue 管理端
+    teacher-ai-assistant/  # 教师 AI 助手（含配套 Express 服务）
+docker/                    # Dockerfile、Compose、容器启动配置
+database/manual/           # 独立 SQL，按需人工执行
+docs/
+  api/                     # 接口文档及页面接口映射
+  architecture/            # 后端架构说明
+  deployment/              # Linux、Windows、Docker 部署说明
+scripts/                   # 仓库工具及生成的统计数据
+```
 
-- **_API/JavaAPI/src/_** - Java后端文件夹
-- **_API/JavaAPI/src/resources/static/_** - 与Java后端合并部署的前端文件夹
-- **_API/PythonAPI/_** - Python后端文件夹
-- **_API/PythonAPI/static_** - 与Python后端合并部署的前端css，js文件夹
-- **_API/PythonAPI/templates_** - 与Python后端合并部署的前端html网页文件夹
-- **_documents_** - 仓库文档相关资源文件夹
+Java 的 `src/main/resources/static/` 和 Python 的 `static/`、`templates/` 保持在各自应用内，保留现有资源加载方式。各应用使用原有构建和启动命令，不引入新的工作区工具。旧路径对照和运行入口见 [目录说明](docs/project-layout.md)，全部文档见 [文档导航](docs/README.md)。
 
 ## AI 配置说明（polymas）
 
 AI 批改、背诵手册等功能共用一个第三方 AI 平台 **polymas**。相关配置在
-`API/JavaAPI/src/main/resources/application.properties` 的 `app.ai.polymas.*` 段，密钥可直接用默认值，也可通过环境变量 `POLYMAS_AUTH_KEY` 覆盖。
+`apps/api/java/src/main/resources/application.properties` 的 `app.ai.polymas.*` 段，可通过环境变量 `POLYMAS_AUTH_KEY` 配置。
 
 ## 文档
 
 |                   后端接口文档                   |                              后端部署方法                              |                     后端项目介绍                     |
 | :----------------------------------------------: | :--------------------------------------------------------------------: | :--------------------------------------------------: |
-|   [Java](documents/java_apidoc.md)   |      [Windows - Java](documents/java_deploy_win.md)       | [Java](documents/java_api_intro.md) |
-| [Python](documents/python_apidoc.md) |   [Ubuntu Linux - Java](documents/java_deploy_linux.md)   | [Python](documents/python_api_intro.md) |
-|                        -                         | [Ubuntu Linux - Python](documents/python_deploy_linux.md) | - |
-|                        -                         |           [Docker](documents/docker_deploy.md)            | - |
+|   [Java](docs/api/java_apidoc.md)   |      [Windows - Java](docs/deployment/java_deploy_win.md)       | [Java](docs/architecture/java_api_intro.md) |
+| [Python](docs/api/python_apidoc.md) |   [Ubuntu Linux - Java](docs/deployment/java_deploy_linux.md)   | [Python](docs/architecture/python_api_intro.md) |
+|                        -                         | [Ubuntu Linux - Python](docs/deployment/python_deploy_linux.md) | - |
+|                        -                         |           [Docker](docs/deployment/docker_deploy.md)            | - |

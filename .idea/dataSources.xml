@@ -5,7 +5,7 @@
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>$PROJECT_DIR$/API/JavaAPI/src/main/resources/application.properties</remarks>
+      <remarks>$PROJECT_DIR$/apps/api/java/src/main/resources/application.properties</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/BUCTTA_DATABASE?serverTimezone=UTC</jdbc-url>
       <jdbc-additional-properties>
@@ -20,7 +20,7 @@
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>$PROJECT_DIR$/API/JavaAPI/src/main/resources/application.properties</remarks>
+      <remarks>$PROJECT_DIR$/apps/api/java/src/main/resources/application.properties</remarks>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
       <jdbc-url>jdbc:redis://localhost:6379/0</jdbc-url>
       <jdbc-additional-properties>

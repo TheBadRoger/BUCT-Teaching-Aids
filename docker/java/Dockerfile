@@ -2,9 +2,9 @@ ARG MAVEN_IMAGE=maven:3.9-eclipse-temurin-25
 ARG JAVA_IMAGE=eclipse-temurin:25-jre
 FROM ${MAVEN_IMAGE} AS builder
 WORKDIR /build
-COPY API/JavaAPI/pom.xml ./
+COPY apps/api/java/pom.xml ./
 RUN mvn -B dependency:go-offline
-COPY API/JavaAPI/src ./src
+COPY apps/api/java/src ./src
 RUN mvn -B package -DskipTests && \
     cp target/japi-*.jar /build/app.jar
 
