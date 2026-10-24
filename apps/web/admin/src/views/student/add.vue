@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
+import type { FormInstance, FormRules } from 'element-plus'
 import { ref } from 'vue'
+import { useFormSubmit } from '@/composables/useFormSubmit'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { addStudent } from '@/api/student'
 
 const router = useRouter()
 
-const formRef = ref()
-const submitting = ref(false)
+const formRef = ref<FormInstance>()
+const { submitting, error: submitError, submit } = useFormSubmit(formRef)
 const form = ref({
   studentNumber: '',
   name: '',
@@ -20,7 +22,7 @@ const form = ref({
   email: ''
 })
 
-const rules = {
+const rules: FormRules = {
   studentNumber: [{ required: true, message: '请输入学号', trigger: 'blur' }],
   name: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
   className: [{ required: true, message: '请输入班级', trigger: 'blur' }],
@@ -30,38 +32,29 @@ const rules = {
   password: [{ required: true, message: '请输入初始密码', trigger: 'blur' }]
 }
 
-const handleSubmit = () => {
-  formRef.value.validate(async (valid) => {
-    if (!valid) return
-    if (submitting.value) return
-
-    try {
-      submitting.value = true
-      await addStudent({
-        student: {
-          studentNumber: form.value.studentNumber.trim(),
-          name: form.value.name.trim(),
-          className: form.value.className.trim(),
-          gender: form.value.gender,
-          admissionDate: form.value.admissionDate
-        },
-        username: form.value.username.trim(),
-        password: form.value.password,
-        telephone: form.value.telephone.trim(),
-        email: form.value.email.trim()
-      })
-      ElMessage.success('新增成功')
-      router.push('/student/list')
-    } catch (err) {
-      console.log(err)
-    } finally {
-      submitting.value = false
-    }
-  })
+const handleSubmit = async () => {
+  if (await submit(() => addStudent({
+    student: {
+      studentNumber: form.value.studentNumber.trim(),
+      name: form.value.name.trim(),
+      className: form.value.className.trim(),
+      gender: form.value.gender,
+      admissionDate: form.value.admissionDate
+    },
+    username: form.value.username.trim(),
+    password: form.value.password,
+    telephone: form.value.telephone.trim(),
+    email: form.value.email.trim()
+  }))) {
+    ElMessage.success('新增成功')
+    void router.push('/student/list')
+  }
 }
 
 const handleReset = () => {
-  formRef.value.resetFields()
+  if (submitting.value) return
+  submitError.value = ''
+  formRef.value?.resetFields()
 }
 </script>
 
@@ -72,7 +65,9 @@ const handleReset = () => {
       <span class="title">新增学生</span>
     </div>
 
+    <el-alert v-if="submitError" :title="submitError" type="error" :closable="false" show-icon />
     <el-form
+      :disabled="submitting"
       ref="formRef"
       :model="form"
       :rules="rules"

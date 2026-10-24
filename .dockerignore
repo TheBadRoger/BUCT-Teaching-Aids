@@ -18,3 +18,4 @@
 **/*.onnx
 **/uploads
 apps/api/python/face_database
+apps/api/java/src/main/resources/static/js/admin

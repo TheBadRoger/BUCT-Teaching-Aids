@@ -70,7 +70,7 @@ pie showData
 
 ## 开发框架简介
 
-- 管理前端：Vue 3 + Vite + Element Plus；保留随后端部署的 HTML/CSS/JavaScript 页面
+- 管理前端：Vue 3 + TypeScript + Vite + Pinia + Element Plus；保留随后端部署的 HTML/CSS/JavaScript 页面
 
 - 后端：Java SpringBoot + Python Flask
 

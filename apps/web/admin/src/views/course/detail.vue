@@ -1,12 +1,14 @@
-<script setup>
+<script setup lang="ts">
+import { readCachedDetail } from '@/utils/storage'
+import type { Course } from '@/types/api'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const course = ref(JSON.parse(localStorage.getItem('currentCourseDetail') || 'null'))
+const course = ref(readCachedDetail<Course>('currentCourseDetail', ['courseName', 'courseNumber']))
 
-const displayValue = (value) => {
+const displayValue = (value: unknown) => {
   if (value === 0) return 0
   return value || '暂无'
 }

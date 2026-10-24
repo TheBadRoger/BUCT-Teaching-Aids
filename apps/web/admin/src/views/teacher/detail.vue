@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import { readCachedDetail } from '@/utils/storage'
+import type { Teacher } from '@/types/api'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getTeacherDetail } from '@/api/teacher'
@@ -6,7 +8,7 @@ import { getTeacherDetail } from '@/api/teacher'
 const route = useRoute()
 const router = useRouter()
 
-const teacher = ref(JSON.parse(localStorage.getItem('currentTeacherDetail') || 'null'))
+const teacher = ref(readCachedDetail<Teacher>('currentTeacherDetail', ['name']))
 const loading = ref(false)
 
 const userTypeLabel = computed(() => {
@@ -15,14 +17,14 @@ const userTypeLabel = computed(() => {
   return teacher.value?.userType || '未绑定'
 })
 
-const displayValue = (value) => value || '暂无'
+const displayValue = (value: unknown) => value || '暂无'
 
 const goBack = () => {
   router.push('/teacher/list')
 }
 
 const fetchTeacherDetail = async () => {
-  if (!route.query.id) return
+  if (typeof route.query.id !== 'string' || !route.query.id) return
 
   loading.value = true
   try {

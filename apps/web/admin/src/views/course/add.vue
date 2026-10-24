@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
+import type { FormInstance, FormRules } from 'element-plus'
 import { ref } from 'vue'
+import { useFormSubmit } from '@/composables/useFormSubmit'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { addCourse } from '@/api/course'
 
 const router = useRouter()
 
-const formRef = ref()
-const submitting = ref(false)
+const formRef = ref<FormInstance>()
+const { submitting, error: submitError, submit } = useFormSubmit(formRef)
 const form = ref({
   courseName: '',
   courseNumber: '',
@@ -26,38 +28,29 @@ const form = ref({
   courseImage: ''
 })
 
-const rules = {
+const rules: FormRules = {
   courseName: [{ required: true, message: '请输入课程名称', trigger: 'blur' }],
   courseNumber: [{ required: true, message: '请输入课程编号', trigger: 'blur' }],
   teachingTeachers: [{ required: true, message: '请输入授课教师', trigger: 'blur' }],
   courseStatus: [{ required: true, message: '请选择课程状态', trigger: 'change' }]
 }
 
-const handleSubmit = () => {
-  formRef.value.validate(async (valid) => {
-    if (!valid) return
-    if (submitting.value) return
-
-    try {
-      submitting.value = true
-      await addCourse({
-        ...form.value,
-        courseName: form.value.courseName.trim(),
-        courseNumber: form.value.courseNumber.trim(),
-        teachingTeachers: form.value.teachingTeachers.trim()
-      })
-      ElMessage.success('新增成功')
-      router.push('/course/list')
-    } catch (err) {
-      console.log(err)
-    } finally {
-      submitting.value = false
-    }
-  })
+const handleSubmit = async () => {
+  if (await submit(() => addCourse({
+    ...form.value,
+    courseName: form.value.courseName.trim(),
+    courseNumber: form.value.courseNumber.trim(),
+    teachingTeachers: form.value.teachingTeachers.trim()
+  }))) {
+    ElMessage.success('新增成功')
+    void router.push('/course/list')
+  }
 }
 
 const handleReset = () => {
-  formRef.value.resetFields()
+  if (submitting.value) return
+  submitError.value = ''
+  formRef.value?.resetFields()
 }
 </script>
 
@@ -67,7 +60,9 @@ const handleReset = () => {
       <span class="title">新增课程</span>
     </div>
 
+    <el-alert v-if="submitError" :title="submitError" type="error" :closable="false" show-icon />
     <el-form
+      :disabled="submitting"
       ref="formRef"
       :model="form"
       :rules="rules"

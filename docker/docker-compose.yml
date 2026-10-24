@@ -5,6 +5,32 @@ x-logging: &logging
     max-file: "3"
 
 services:
+  teacher-ai:
+    build:
+      context: ..
+      dockerfile: docker/teacher-ai/Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-alpine}
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    stop_grace_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+      REQUEST_TIMEOUT: ${DEEPSEEK_REQUEST_TIMEOUT:-60000}
+    ports:
+      - "${APP_BIND_IP:-127.0.0.1}:${TEACHER_AI_HOST_PORT:-3000}:3000"
+    logging: *logging
+
   mysql:
     image: ${MYSQL_IMAGE:-mysql:8.0}
     restart: unless-stopped
@@ -48,6 +74,8 @@ services:
       context: ..
       dockerfile: docker/java/Dockerfile
       args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-alpine}
+        VITE_TEACHER_AI_BASE_URL: ${TEACHER_AI_PUBLIC_URL:-http://localhost:3000/api}
         MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9-eclipse-temurin-25}
         JAVA_IMAGE: ${JAVA_IMAGE:-eclipse-temurin:25-jre}
     restart: unless-stopped

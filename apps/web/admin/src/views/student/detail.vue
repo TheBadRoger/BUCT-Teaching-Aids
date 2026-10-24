@@ -1,10 +1,12 @@
-<script setup>
+<script setup lang="ts">
+import { readCachedDetail } from '@/utils/storage'
+import type { Student } from '@/types/api'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const student = ref(JSON.parse(localStorage.getItem('currentStudentDetail') || 'null'))
+const student = ref(readCachedDetail<Student>('currentStudentDetail', ['name']))
 
 const userTypeLabel = computed(() => {
   if (student.value?.userType === 'TEACHER') return '教师'
@@ -12,7 +14,7 @@ const userTypeLabel = computed(() => {
   return student.value?.userType || '未绑定'
 })
 
-const displayValue = (value) => value || '暂无'
+const displayValue = (value: unknown) => value || '暂无'
 
 const goBack = () => {
   router.push('/student/list')

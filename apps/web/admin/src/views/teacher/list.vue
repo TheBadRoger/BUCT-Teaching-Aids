@@ -1,79 +1,20 @@
-<script setup>
+<script setup lang="ts">
+import type { Teacher } from '@/types/api'
+import type { FormInstance, FormRules } from 'element-plus'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import SearchForm from '@/components/searchform.vue'
 import { getTeacherList, updateTeacher, deleteTeachers } from '@/api/teacher'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
+
+import { usePagedList } from '@/composables/usePagedList'
+import { useFormSubmit } from '@/composables/useFormSubmit'
 
 const router = useRouter()
 
-const query = ref({
-  name: '',
-  organization: '',
-  gender: '',
-  education: '',
-  jointime: '',
-  username: '',
-  telephone: '',
-  email: '',
-  userType: '',
-  page: 0,
-  size: 10
-})
-
-const tableData = ref([])
-const selectedRows = ref([])
-const total = ref(0)
-const loading = ref(false)
-const editDialogVisible = ref(false)
-const editFormRef = ref()
-const editForm = ref({
-  id: '',
-  name: '',
-  organization: '',
-  gender: '',
-  education: '',
-  jointime: ''
-})
-
-const editRules = {
-  name: [{ required: true, message: '请输入教师姓名', trigger: 'blur' }]
-}
-
-const fetchData = async () => {
-  loading.value = true
-
-  try {
-    const res = await getTeacherList({
-      name: query.value.name,
-      organization: query.value.organization,
-      gender: query.value.gender,
-      education: query.value.education,
-      jointime: query.value.jointime,
-      username: query.value.username,
-      telephone: query.value.telephone,
-      email: query.value.email,
-      userType: query.value.userType,
-      page: query.value.page,
-      size: query.value.size
-    })
-
-    tableData.value = res.content || []
-    total.value = res.totalElements || 0
-  } catch (err) {
-    console.log(err)
-  } finally {
-    loading.value = false
-  }
-}
-
-const handleSearch = () => {
-  query.value.page = 0
-  fetchData()
-}
-
-const handleReset = () => {
-  query.value = {
+const { query, tableData, total, loading, deleting, error: listError, fetchData,
+  handleSearch, handleReset, handleSelectionChange, handleDelete, handleCurrentChange, handleSizeChange } = usePagedList({
+  createQuery: () => ({
     name: '',
     organization: '',
     gender: '',
@@ -85,51 +26,31 @@ const handleReset = () => {
     userType: '',
     page: 0,
     size: 10
-  }
-  fetchData()
-}
+  }),
+  load: (params, signal) => getTeacherList({ ...params }, signal),
+  remove: deleteTeachers,
+  label: '教师'
+})
 
-const handleSelectionChange = (rows) => {
-  selectedRows.value = rows
-}
+const editDialogVisible = ref(false)
+const editFormRef = ref<FormInstance>()
+const { submitting: editSubmitting, error: editError, submit: submitEdit } = useFormSubmit(editFormRef)
+const editForm = ref<Teacher>({
+  id: '',
+  name: '',
+  organization: '',
+  gender: '',
+  education: '',
+  jointime: ''
+})
 
-const handleCurrentChange = (page) => {
-  query.value.page = page - 1
-  fetchData()
-}
-
-const handleSizeChange = (size) => {
-  query.value.size = size
-  query.value.page = 0
-  fetchData()
-}
-
-const handleDelete = async () => {
-  if (!selectedRows.value.length) {
-    ElMessage.warning('请先选择要删除的教师')
-    return
-  }
-
-  try {
-    await ElMessageBox.confirm('确定要删除选中的教师吗？', '提示', {
-      type: 'warning'
-    })
-  } catch {
-    return
-  }
-
-  try {
-    await deleteTeachers(selectedRows.value.map(item => item.id))
-    ElMessage.success('删除成功')
-    fetchData()
-  } catch (err) {
-    console.log(err)
-  }
+const editRules: FormRules = {
+  name: [{ required: true, message: '请输入教师姓名', trigger: 'blur' }]
 }
 
 const handleExport = () => {
   const params = new URLSearchParams()
-  const exportKeys = [
+  const exportKeys: (keyof typeof query.value)[] = [
     'name',
     'organization',
     'gender',
@@ -143,7 +64,7 @@ const handleExport = () => {
 
   exportKeys.forEach((key) => {
     if (query.value[key]) {
-      params.append(key, query.value[key])
+      params.append(key, String(query.value[key]))
     }
   })
 
@@ -151,7 +72,9 @@ const handleExport = () => {
   window.open(`/api/teacher/export${queryString ? `?${queryString}` : ''}`)
 }
 
-const handleEdit = (row) => {
+const handleEdit = (row: Teacher) => {
+  if (editSubmitting.value) return
+  editError.value = ''
   editForm.value = {
     id: row.id,
     name: row.name || '',
@@ -163,7 +86,7 @@ const handleEdit = (row) => {
   editDialogVisible.value = true
 }
 
-const handleView = (row) => {
+const handleView = (row: Teacher) => {
   localStorage.setItem('currentTeacherDetail', JSON.stringify(row))
   router.push({
     path: '/teacher/detail',
@@ -171,20 +94,16 @@ const handleView = (row) => {
   })
 }
 
-const handleEditSubmit = () => {
-  editFormRef.value.validate(async (valid) => {
-    if (!valid) return
-
+const handleEditSubmit = async () => {
+  const saved = await submitEdit(() => {
     const { id, ...payload } = editForm.value
-    try {
-      await updateTeacher(id, payload)
-      ElMessage.success('编辑成功')
-      editDialogVisible.value = false
-      fetchData()
-    } catch (err) {
-      console.log(err)
-    }
+    return updateTeacher(id, payload)
   })
+  if (saved) {
+    ElMessage.success('编辑成功')
+    editDialogVisible.value = false
+    await fetchData()
+  }
 }
 
 onMounted(() => {
@@ -199,8 +118,13 @@ onMounted(() => {
       <span class="title">教师列表</span>
     </div>
 
+    <el-alert v-if="listError" :title="listError" type="error" :closable="false" show-icon />
+    <el-button v-if="listError" :disabled="loading" @click="fetchData">重新加载</el-button>
+
     <SearchForm
       :model="query"
+      :loading="loading"
+      :deleting="deleting"
       @search="handleSearch"
       @reset="handleReset"
       @delete="handleDelete"
@@ -295,10 +219,12 @@ onMounted(() => {
       />
     </div>
 
-    <el-dialog v-model="editDialogVisible" title="编辑教师" width="520px">
+    <el-dialog :close-on-click-modal="!editSubmitting" :close-on-press-escape="!editSubmitting" :show-close="!editSubmitting" v-model="editDialogVisible" title="编辑教师" width="520px">
+      <el-alert v-if="editError" :title="editError" type="error" :closable="false" show-icon />
       <el-form
         ref="editFormRef"
         :model="editForm"
+        :disabled="editSubmitting"
         :rules="editRules"
         label-width="120px"
       >
@@ -335,8 +261,8 @@ onMounted(() => {
       </el-form>
 
       <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleEditSubmit">保存</el-button>
+        <el-button :disabled="editSubmitting" @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="editSubmitting" @click="handleEditSubmit">保存</el-button>
       </template>
     </el-dialog>
 

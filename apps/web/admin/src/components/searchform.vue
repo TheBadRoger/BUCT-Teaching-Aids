@@ -1,12 +1,7 @@
-<script setup>
-defineProps({
-  model: {
-    type: Object,
-    required: true
-  }
-})
+<script setup lang="ts">
+defineProps<{ model: Record<string, unknown>; loading?: boolean; deleting?: boolean }>()
 
-const emit = defineEmits(['search', 'reset', 'delete', 'export'])
+const emit = defineEmits<{ search: []; reset: []; delete: []; export: [] }>()
 </script>
 
 <template>
@@ -24,7 +19,7 @@ const emit = defineEmits(['search', 'reset', 'delete', 'export'])
           重置
         </el-button>
 
-        <el-button type="danger" @click="emit('delete')">
+        <el-button type="danger" :loading="deleting" :disabled="loading" @click="emit('delete')">
           删除
         </el-button>
 

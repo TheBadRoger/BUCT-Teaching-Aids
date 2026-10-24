@@ -1,5 +1,5 @@
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { registerApi } from '@/api/admin' 
 import { ElMessage } from 'element-plus' 
@@ -13,6 +13,9 @@ const password = ref('')
 const confirmPassword = ref('')
 const errorMsg = ref('')
 const time = ref('')
+const submitting = ref(false)
+let timer: ReturnType<typeof setInterval> | undefined
+let redirect: ReturnType<typeof setTimeout> | undefined
 
 const updateTime = () => {
   time.value = new Date().toLocaleString()
@@ -20,10 +23,12 @@ const updateTime = () => {
 
 onMounted(() => {
   updateTime()
-  setInterval(updateTime, 1000)
+  timer = setInterval(updateTime, 1000)
 })
+onUnmounted(() => { clearInterval(timer); clearTimeout(redirect) })
 
 const handleRegister = async () => {
+  if (submitting.value) return
   errorMsg.value = ''
   // 前端基础校验
   if (!username.value || !password.value || !confirmPassword.value) {
@@ -36,7 +41,8 @@ const handleRegister = async () => {
   }
 
   try {
-    const res = await registerApi({
+    submitting.value = true
+    await registerApi({
       username: username.value,
       password: password.value
     })
@@ -45,12 +51,13 @@ const handleRegister = async () => {
       message: '注册成功！即将跳转到登录页',
     })
 
-    setTimeout(() => {
+    redirect = setTimeout(() => {
       router.push('/login')
     }, 1500)
 
-  } catch (err) {
+  } catch {
     errorMsg.value = '注册失败，用户名已存在'
+    submitting.value = false
   }
 }
 
@@ -83,7 +90,7 @@ const goLogin = () => {
 
         <el-input v-model="confirmPassword" type="password" placeholder="确认密码" size="large" />
 
-        <el-button type="primary" class="login-btn" @click="handleRegister">
+        <el-button type="primary" class="login-btn" :loading="submitting" @click="handleRegister">
           注册
         </el-button>
 

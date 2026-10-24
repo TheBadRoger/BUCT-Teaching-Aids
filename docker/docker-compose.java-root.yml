@@ -1,5 +1,9 @@
 # 独立使用此文件；公共服务定义复用完整编排。
 services:
+  teacher-ai:
+    extends:
+      file: docker-compose.yml
+      service: teacher-ai
   mysql:
     extends:
       file: docker-compose.yml

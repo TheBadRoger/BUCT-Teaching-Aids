@@ -58,3 +58,6 @@ site-packages/
 .idea/queries/
 .idea/dataSources/
 .idea/dataSources.local.xml
+
+# Generated Vue bundle served by the Java application
+/apps/api/java/src/main/resources/static/js/admin/

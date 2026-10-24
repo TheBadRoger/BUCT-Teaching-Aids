@@ -1,11 +1,15 @@
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginApi } from '@/api/admin'
+import { useSessionStore } from '@/stores/session'
 
 import logo from '@/assets/images/BUCT-logo-blue.png'
 
 const router = useRouter()
+const session = useSessionStore()
+const submitting = ref(false)
+let timer: ReturnType<typeof setInterval> | undefined
 
 const username = ref('')
 const password = ref('')
@@ -18,10 +22,12 @@ const updateTime = () => {
 
 onMounted(() => {
   updateTime()
-  setInterval(updateTime, 1000)
+  timer = setInterval(updateTime, 1000)
 })
+onUnmounted(() => clearInterval(timer))
 
 const handleLogin = async () => {
+  if (submitting.value) return
   errorMsg.value = '' 
   if (!username.value || !password.value) {
     errorMsg.value = '请输入用户名和密码'
@@ -29,16 +35,16 @@ const handleLogin = async () => {
   }
 
   try {
+    submitting.value = true
     const res = await loginApi({
       username: username.value,
       password: password.value
     })
-    localStorage.setItem('isLogin', '1')
-    localStorage.setItem('user', JSON.stringify(res))
+    session.setUser(res)
     router.push('/')
-  } catch (err) {
+  } catch {
     errorMsg.value = '用户名或密码错误'
-  }
+  } finally { submitting.value = false }
 }
 
 const goRegister = () => {
@@ -51,7 +57,7 @@ const goRegister = () => {
 
     <header class="top-bar">
       <div class="left">
-        <img :src="logo" class="logo" />
+        <img :src="logo" class="logo" alt="北京化工大学" />
         <span class="title">教学辅助系统后台</span>
       </div>
       <div class="right">
@@ -64,11 +70,11 @@ const goRegister = () => {
 
         <h2>管理员登录</h2>
 
-        <el-input v-model="username" placeholder="学号/工号" size="large" />
+        <el-input v-model="username" placeholder="学号/工号" aria-label="用户名" autocomplete="username" size="large" @keyup.enter="handleLogin" />
 
-        <el-input v-model="password" type="password" placeholder="密码" size="large" />
+        <el-input v-model="password" type="password" placeholder="密码" aria-label="密码" autocomplete="current-password" size="large" @keyup.enter="handleLogin" />
 
-        <el-button type="primary" class="login-btn" @click="handleLogin">
+        <el-button type="primary" class="login-btn" :loading="submitting" @click="handleLogin">
           登录
         </el-button>
 

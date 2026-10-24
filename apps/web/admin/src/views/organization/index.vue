@@ -1,37 +1,43 @@
-<script setup>
+<script setup lang="ts">
+import type { FormInstance, FormRules } from 'element-plus'
+import type { Organization, Page } from '@/types/api'
 // 机构列表、新增及介绍共用后端机构接口。
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
+import { useFormSubmit } from '@/composables/useFormSubmit'
 
 const route = useRoute()
 const router = useRouter()
-const mode = computed(() => route.path.split('/').pop())
-const rows = ref([])
+const mode = computed(() => route.path.split('/').pop() || '')
+const rows = ref<Organization[]>([])
 const total = ref(0)
 const page = ref(1)
 const name = ref('')
 const busy = ref(false)
 const error = ref('')
-const formRef = ref()
+const formRef = ref<FormInstance>()
+const { submitting, error: submitError, submit } = useFormSubmit(formRef)
 const empty = () => ({ name: '', logo: '', bannerUrl: '', info: '', honorCertUrl: '' })
-const form = ref(empty())
-const rules = { name: [{ required: true, whitespace: true, message: '请输入机构名称', trigger: 'blur' }] }
-const title = computed(() => ({ list: '机构列表', add: '新增机构', detail: '机构介绍' })[mode.value])
+const form = ref<Organization>(empty())
+const rules: FormRules = { name: [{ required: true, whitespace: true, message: '请输入机构名称', trigger: 'blur' }] }
+const titles: Record<string, string> = { list: '机构列表', add: '新增机构', detail: '机构介绍' }
+const title = computed(() => titles[mode.value])
 
 /** 按路由加载列表或机构介绍。 */
 async function load() {
   error.value = ''
+  submitError.value = ''
   form.value = empty()
   busy.value = true
   try {
     if (mode.value === 'list') {
-      const data = await request.get('/api/organization/search', { params: { name: name.value, page: page.value - 1, size: 10 } })
+      const data = await request.get<Page<Organization>>('/api/organization/search', { params: { name: name.value, page: page.value - 1, size: 10 } })
       rows.value = Array.isArray(data?.content) ? data.content : []
       total.value = data?.totalElements || 0
     } else if (mode.value === 'detail' && route.query.id) {
-      form.value = await request.get(`/api/organization/${encodeURIComponent(route.query.id)}`)
+      form.value = await request.get<Organization>(`/api/organization/${encodeURIComponent(String(route.query.id))}`)
     }
   } catch {
     error.value = '机构信息加载失败，请重试'
@@ -41,18 +47,15 @@ async function load() {
 
 /** 校验机构信息并提交。 */
 async function save() {
-  if (busy.value || !await formRef.value.validate().catch(() => false)) return
-  busy.value = true
-  try {
-    await request.post('/api/organization/add', { ...form.value, name: form.value.name.trim() })
+  if (busy.value) return
+  if (await submit(() => request.post('/api/organization/add', { ...form.value, name: form.value.name.trim() }))) {
     ElMessage.success('机构新增成功')
-    router.push('/organization/list')
-  } catch { error.value = '保存失败，请检查信息后重试' }
-  finally { busy.value = false }
+    void router.push('/organization/list')
+  }
 }
 
 /** 确认后删除指定机构。 */
-async function remove(row) {
+async function remove(row: Organization) {
   try { await ElMessageBox.confirm(`确定删除机构“${row.name}”吗？`, '删除机构', { type: 'warning' }) }
   catch { return }
   try {
@@ -71,7 +74,7 @@ watch(() => route.fullPath, load, { immediate: true })
 <template>
   <section class="page-container" v-loading="busy">
     <h2 class="page-title">{{ title }}</h2>
-    <el-alert v-if="error" :title="error" type="error" show-icon :closable="false" />
+    <el-alert v-if="error || submitError" :title="error || submitError" type="error" show-icon :closable="false" />
     <template v-if="mode === 'list'">
       <el-form inline class="search-bar" @submit.prevent="search">
         <el-form-item label="机构名称"><el-input v-model="name" clearable @keyup.enter="search" /></el-form-item>
@@ -86,13 +89,13 @@ watch(() => route.fullPath, load, { immediate: true })
       </el-table>
       <el-pagination class="pagination" v-model:current-page="page" :total="total" :page-size="10" layout="total, prev, pager, next" @current-change="load" />
     </template>
-    <el-form v-else-if="mode === 'add'" ref="formRef" :model="form" :rules="rules" label-width="110px" class="form-box">
+    <el-form v-else-if="mode === 'add'" :disabled="submitting" ref="formRef" :model="form" :rules="rules" label-width="110px" class="form-box">
       <el-form-item label="机构名称" prop="name"><el-input v-model="form.name" maxlength="200" /></el-form-item>
       <el-form-item label="机构标志"><el-input v-model="form.logo" maxlength="500" placeholder="图片地址" /></el-form-item>
       <el-form-item label="横幅图片"><el-input v-model="form.bannerUrl" maxlength="500" placeholder="图片地址" /></el-form-item>
       <el-form-item label="机构介绍"><el-input v-model="form.info" type="textarea" :rows="6" /></el-form-item>
       <el-form-item label="荣誉证书"><el-input v-model="form.honorCertUrl" maxlength="500" placeholder="图片地址" /></el-form-item>
-      <el-form-item><el-button type="primary" :loading="busy" @click="save">提交</el-button><el-button @click="form = empty()">重置</el-button></el-form-item>
+      <el-form-item><el-button type="primary" :loading="submitting" @click="save">提交</el-button><el-button @click="form = empty(); submitError = ''; formRef?.clearValidate()">重置</el-button></el-form-item>
     </el-form>
     <el-empty v-else-if="!route.query.id" description="请从机构列表选择机构查看介绍"><el-button @click="router.push('/organization/list')">机构列表</el-button></el-empty>
     <el-descriptions v-else-if="!error" :column="1" border>

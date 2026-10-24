@@ -6,11 +6,15 @@ on:
     paths:
       - 'docker/**'
       - '.dockerignore'
+      - 'apps/web/admin/**'
+      - 'apps/web/teacher-ai-assistant/**'
       - '.github/workflows/docker-config.yml'
   pull_request:
     paths:
       - 'docker/**'
       - '.dockerignore'
+      - 'apps/web/admin/**'
+      - 'apps/web/teacher-ai-assistant/**'
       - '.github/workflows/docker-config.yml'
   workflow_dispatch:
 
@@ -42,3 +46,16 @@ jobs:
           fi
       - name: Test container startup configuration
         run: python3 -m unittest discover -s docker/python -p 'test_*.py' -v
+      - name: Build Java image with compiled frontend
+        run: |
+          docker compose -f docker/docker-compose.yml build java-app teacher-ai
+      - name: Check teacher AI container without calling the model
+        run: |
+          docker compose -f docker/docker-compose.yml up -d --no-deps --wait --wait-timeout 120 teacher-ai
+          curl --fail http://127.0.0.1:3000/api/health | python3 -c 'import json,sys; assert json.load(sys.stdin)["status"] == "ok"'
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose -f docker/docker-compose.yml logs --tail=100 teacher-ai
+      - name: Stop smoke-test containers
+        if: always()
+        run: docker compose -f docker/docker-compose.yml down

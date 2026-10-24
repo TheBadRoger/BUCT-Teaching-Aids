@@ -1,12 +1,24 @@
+ARG NODE_IMAGE=node:22-alpine
 ARG MAVEN_IMAGE=maven:3.9-eclipse-temurin-25
 ARG JAVA_IMAGE=eclipse-temurin:25-jre
+FROM ${NODE_IMAGE} AS frontend
+WORKDIR /web
+COPY apps/web/admin/package.json apps/web/admin/package-lock.json ./
+RUN npm ci
+COPY apps/web/admin/ ./
+ARG VITE_TEACHER_AI_BASE_URL=http://localhost:3000/api
+ENV VITE_TEACHER_AI_BASE_URL=${VITE_TEACHER_AI_BASE_URL}
+RUN npm run build -- --base=/js/admin/
+
 FROM ${MAVEN_IMAGE} AS builder
 WORKDIR /build
 COPY apps/api/java/pom.xml ./
 RUN mvn -B dependency:go-offline
 COPY apps/api/java/src ./src
+COPY --from=frontend /web/dist/ ./src/main/resources/static/js/admin/
 RUN mvn -B package -DskipTests && \
-    cp target/japi-*.jar /build/app.jar
+    cp target/japi-*.jar /build/app.jar && \
+    jar tf /build/app.jar | grep -q '^BOOT-INF/classes/static/js/admin/index.html$'
 
 FROM ${JAVA_IMAGE}
 WORKDIR /app

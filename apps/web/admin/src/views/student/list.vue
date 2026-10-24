@@ -1,78 +1,20 @@
-<script setup>
+<script setup lang="ts">
+import type { Student } from '@/types/api'
+import type { FormInstance, FormRules } from 'element-plus'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import SearchForm from '@/components/searchform.vue'
 import { getStudentList, updateStudent, deleteStudents } from '@/api/student'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
+
+import { usePagedList } from '@/composables/usePagedList'
+import { useFormSubmit } from '@/composables/useFormSubmit'
 
 const router = useRouter()
 
-const query = ref({
-  name: '',
-  studentNumber: '',
-  className: '',
-  gender: '',
-  telephone: '',
-  email: '',
-  page: 0,
-  size: 10
-})
-
-const tableData = ref([])
-const selectedRows = ref([])
-const total = ref(0)
-const loading = ref(false)
-const editDialogVisible = ref(false)
-const editFormRef = ref()
-const editForm = ref({
-  id: '',
-  studentNumber: '',
-  name: '',
-  className: '',
-  gender: '',
-  admissionDate: ''
-})
-
-const editRules = {
-  studentNumber: [{ required: true, message: '请输入学号', trigger: 'blur' }],
-  name: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
-  className: [{ required: true, message: '请输入班级', trigger: 'blur' }],
-  gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
-  admissionDate: [{ required: true, message: '请选择入学时间', trigger: 'change' }]
-}
-
-const fetchData = async () => {
-  loading.value = true
-
-  try {
-    const res = await getStudentList({
-      name: query.value.name,
-      studentNumber: query.value.studentNumber,
-      className: query.value.className,
-      gender: query.value.gender,
-      telephone: query.value.telephone,
-      email: query.value.email,
-      page: query.value.page,
-      size: query.value.size,
-      sort: 'id'
-    })
-
-    tableData.value = res.content || []
-    total.value = res.totalElements || 0
-  } catch (err) {
-    console.log(err)
-  } finally {
-    loading.value = false
-  }
-}
-
-const handleSearch = () => {
-  query.value.page = 0
-  fetchData()
-}
-
-const handleReset = () => {
-  query.value = {
+const { query, tableData, total, loading, deleting, error: listError, fetchData,
+  handleSearch, handleReset, handleSelectionChange, handleDelete, handleCurrentChange, handleSizeChange } = usePagedList({
+  createQuery: () => ({
     name: '',
     studentNumber: '',
     className: '',
@@ -81,44 +23,39 @@ const handleReset = () => {
     email: '',
     page: 0,
     size: 10
-  }
-  fetchData()
-}
+  }),
+  load: (params, signal) => getStudentList({ ...params, sort: 'id' }, signal),
+  remove: deleteStudents,
+  label: '学生'
+})
 
-const handleSelectionChange = (rows) => {
-  selectedRows.value = rows
-}
+const editDialogVisible = ref(false)
+const editFormRef = ref<FormInstance>()
+const { submitting: editSubmitting, error: editError, submit: submitEdit } = useFormSubmit(editFormRef)
+const editForm = ref<Student>({
+  id: '',
+  studentNumber: '',
+  name: '',
+  className: '',
+  gender: '',
+  admissionDate: ''
+})
 
-const handleDelete = async () => {
-  if (!selectedRows.value.length) {
-    ElMessage.warning('请先选择要删除的学生')
-    return
-  }
-
-  try {
-    await ElMessageBox.confirm('确定要删除选中的学生吗？', '提示', {
-      type: 'warning'
-    })
-  } catch {
-    return
-  }
-
-  try {
-    await deleteStudents(selectedRows.value.map(item => item.id))
-    ElMessage.success('删除成功')
-    fetchData()
-  } catch (err) {
-    console.log(err)
-  }
+const editRules: FormRules = {
+  studentNumber: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
+  className: [{ required: true, message: '请输入班级', trigger: 'blur' }],
+  gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
+  admissionDate: [{ required: true, message: '请选择入学时间', trigger: 'change' }]
 }
 
 const handleExport = () => {
   const params = new URLSearchParams()
-  const exportKeys = ['name', 'studentNumber', 'className', 'gender', 'telephone', 'email']
+  const exportKeys: (keyof typeof query.value)[] = ['name', 'studentNumber', 'className', 'gender', 'telephone', 'email']
 
   exportKeys.forEach((key) => {
     if (query.value[key]) {
-      params.append(key, query.value[key])
+      params.append(key, String(query.value[key]))
     }
   })
 
@@ -126,7 +63,9 @@ const handleExport = () => {
   window.open(`/api/students/export${queryString ? `?${queryString}` : ''}`)
 }
 
-const handleEdit = (row) => {
+const handleEdit = (row: Student) => {
+  if (editSubmitting.value) return
+  editError.value = ''
   editForm.value = {
     id: row.id,
     studentNumber: row.studentNumber || '',
@@ -138,39 +77,24 @@ const handleEdit = (row) => {
   editDialogVisible.value = true
 }
 
-const handleEditSubmit = () => {
-  editFormRef.value.validate(async (valid) => {
-    if (!valid) return
-
+const handleEditSubmit = async () => {
+  const saved = await submitEdit(() => {
     const { id, ...payload } = editForm.value
-    try {
-      await updateStudent(id, payload)
-      ElMessage.success('编辑成功')
-      editDialogVisible.value = false
-      fetchData()
-    } catch (err) {
-      console.log(err)
-    }
+    return updateStudent(id, payload)
   })
+  if (saved) {
+    ElMessage.success('编辑成功')
+    editDialogVisible.value = false
+    await fetchData()
+  }
 }
 
-const handleView = (row) => {
+const handleView = (row: Student) => {
   localStorage.setItem('currentStudentDetail', JSON.stringify(row))
   router.push({
     path: '/student/detail',
     query: { id: row.id }
   })
-}
-
-const handleCurrentChange = (page) => {
-  query.value.page = page - 1
-  fetchData()
-}
-
-const handleSizeChange = (size) => {
-  query.value.size = size
-  query.value.page = 0
-  fetchData()
 }
 
 onMounted(() => {
@@ -185,8 +109,13 @@ onMounted(() => {
       <span class="title">学生列表</span>
     </div>
 
+    <el-alert v-if="listError" :title="listError" type="error" :closable="false" show-icon />
+    <el-button v-if="listError" :disabled="loading" @click="fetchData">重新加载</el-button>
+
     <SearchForm
       :model="query"
+      :loading="loading"
+      :deleting="deleting"
       @search="handleSearch"
       @reset="handleReset"
       @delete="handleDelete"
@@ -257,10 +186,12 @@ onMounted(() => {
       />
     </div>
 
-    <el-dialog v-model="editDialogVisible" title="编辑学生" width="520px">
+    <el-dialog :close-on-click-modal="!editSubmitting" :close-on-press-escape="!editSubmitting" :show-close="!editSubmitting" v-model="editDialogVisible" title="编辑学生" width="520px">
+      <el-alert v-if="editError" :title="editError" type="error" :closable="false" show-icon />
       <el-form
         ref="editFormRef"
         :model="editForm"
+        :disabled="editSubmitting"
         :rules="editRules"
         label-width="120px"
       >
@@ -294,8 +225,8 @@ onMounted(() => {
       </el-form>
 
       <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleEditSubmit">保存</el-button>
+        <el-button :disabled="editSubmitting" @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="editSubmitting" @click="handleEditSubmit">保存</el-button>
       </template>
     </el-dialog>
 

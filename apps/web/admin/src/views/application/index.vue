@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { FormInstance, FormRules } from 'element-plus'
+import type { CalendarEvent, LivePlan } from '@/types/application'
 // 应用页面提供本地交互；邮件发送、直播推流需后端服务支持。
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -6,34 +8,34 @@ import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
-const mode = computed(() => route.path.split('/').pop())
-const titles = { widgets: '小部件', email: '电子邮件', calendar: '日历', add: '新增直播', room: '直播间' }
+const mode = computed(() => route.path.split('/').pop() || '')
+const titles: Record<string, string> = { widgets: '小部件', email: '电子邮件', calendar: '日历', add: '新增直播', room: '直播间' }
 const error = ref('')
 const date = ref(new Date())
 const eventDate = ref('')
 const eventTitle = ref('')
 const note = ref('')
-const events = ref([])
-const lives = ref([])
+const events = ref<CalendarEvent[]>([])
+const lives = ref<LivePlan[]>([])
 const mail = ref({ to: '', subject: '', body: '' })
 const live = ref({ title: '', teacher: '', start: '', description: '' })
-const liveForm = ref()
+const liveForm = ref<FormInstance>()
 const query = ref('')
-const selected = ref(null)
-const rules = Object.fromEntries(['title', 'teacher', 'start'].map(key => [key, [{ required: true, whitespace: true, message: '请填写此项', trigger: 'blur' }]]))
+const selected = ref<LivePlan | null>(null)
+const rules: FormRules = Object.fromEntries(['title', 'teacher', 'start'].map(key => [key, [{ required: true, whitespace: true, message: '请填写此项', trigger: 'blur' }]]))
 const rooms = computed(() => lives.value.filter(item => item.title.includes(query.value)))
 try {
   const storedEvents = JSON.parse(localStorage.getItem('buct-calendar') || '[]')
   const storedLives = JSON.parse(localStorage.getItem('buct-lives') || '[]')
-  events.value = Array.isArray(storedEvents) ? storedEvents.filter(item => item?.id && typeof item.title === 'string' && typeof item.date === 'string') : []
-  lives.value = Array.isArray(storedLives) ? storedLives.filter(item => item?.id && typeof item.title === 'string') : []
+  events.value = Array.isArray(storedEvents) ? storedEvents.filter((item: Partial<CalendarEvent> | null): item is CalendarEvent => typeof item?.id === 'string' && typeof item.title === 'string' && typeof item.date === 'string') : []
+  lives.value = Array.isArray(storedLives) ? storedLives.filter((item: Partial<LivePlan> | null): item is LivePlan => typeof item?.id === 'string' && typeof item.title === 'string' && typeof item.teacher === 'string' && typeof item.start === 'string' && typeof item.description === 'string') : []
   note.value = localStorage.getItem('buct-note') || ''
   const draft = JSON.parse(localStorage.getItem('buct-mail') || 'null')
   if (draft && ['to', 'subject', 'body'].every(key => typeof draft[key] === 'string')) mail.value = draft
 } catch { error.value = '本地数据读取失败，可继续使用页面' }
 
 /** 保存本地数据，失败时保留输入并提示。 */
-function persist(key, value) {
+function persist(key: string, value: unknown) {
   try { localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value)); return true }
   catch { error.value = '浏览器存储不可用，数据未保存'; return false }
 }
@@ -46,14 +48,14 @@ function addEvent() {
 }
 
 /** 删除本地日程。 */
-function removeEvent(id) {
+function removeEvent(id: string) {
   const next = events.value.filter(item => item.id !== id)
   if (persist('buct-calendar', next)) events.value = next
 }
 
 /** 保存直播计划，不产生真实直播间或推流地址。 */
 async function addLive() {
-  if (!await liveForm.value.validate().catch(() => false)) return
+  if (!await liveForm.value?.validate().catch(() => false)) return
   const next = [...lives.value, { ...live.value, title: live.value.title.trim(), id: crypto.randomUUID() }]
   if (!persist('buct-lives', next)) return
   lives.value = next
@@ -95,7 +97,7 @@ function openMail() {
       <el-form-item label="主讲教师" prop="teacher"><el-input v-model="live.teacher" /></el-form-item>
       <el-form-item label="开始时间" prop="start"><el-date-picker v-model="live.start" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" /></el-form-item>
       <el-form-item label="直播介绍"><el-input v-model="live.description" type="textarea" :rows="5" /></el-form-item>
-      <el-form-item><el-button type="primary" @click="addLive">保存本地计划</el-button><el-button @click="liveForm.resetFields(); live.description = ''">重置</el-button></el-form-item>
+      <el-form-item><el-button type="primary" @click="addLive">保存本地计划</el-button><el-button @click="liveForm?.resetFields(); live.description = ''">重置</el-button></el-form-item>
     </el-form>
     <template v-else-if="mode === 'room'">
       <el-form inline class="action"><el-form-item label="直播名称"><el-input v-model="query" clearable /></el-form-item><el-form-item><el-button type="primary" @click="router.push('/application/live/add')">新增直播</el-button></el-form-item></el-form>

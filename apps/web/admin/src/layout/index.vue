@@ -1,26 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import BUCTLogo from '@/assets/images/BUCT-logo.png'
 import { ElMessageBox } from 'element-plus'
 import { UserFilled } from '@element-plus/icons-vue'
+import { useSessionStore } from '@/stores/session'
 
 const router = useRouter()
 const route = useRoute()
-const user = JSON.parse(localStorage.getItem('user') || '{}')
-
-const go = (path) => {
-    router.push(path)
-}
+const session = useSessionStore()
 
 // 退出登录
-const handleLogout = () => {
-  ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-    type: 'warning'
-  }).then(() => {
-    localStorage.removeItem('isLogin')
-    localStorage.removeItem('user')
-    router.push('/login')
-  })
+const handleLogout = async () => {
+  try { await ElMessageBox.confirm('确定要退出登录吗？', '提示', { type: 'warning' }) }
+  catch { return }
+  session.clear()
+  await router.push('/login')
 }
 </script>
 
@@ -112,6 +106,11 @@ const handleLogout = () => {
                         <el-menu-item index="/application/live/room">直播间</el-menu-item>
                     </el-sub-menu>
                 </el-sub-menu>
+                <el-sub-menu index="teaching-ai">
+                    <template #title>AI 教学工具</template>
+                    <el-menu-item index="/ai/knowledge">知识点手册</el-menu-item>
+                    <el-menu-item index="/ai/lesson-plan">智能教案</el-menu-item>
+                </el-sub-menu>
             </el-menu>
         </el-aside>
 
@@ -119,7 +118,7 @@ const handleLogout = () => {
         <el-container>
             <!-- 顶部 -->
             <el-header class="header" style="background: #325a7d; color: white;">
-                <span class="welcome">欢迎您，{{ user.username }}！</span>
+                <span class="welcome">欢迎您，{{ session.user?.username }}！</span>
                 <el-dropdown >
                     <span class="avatar-wrapper" style="border: none !important; outline: none !important;">
                         <el-avatar size="small" :icon="UserFilled" />
