@@ -16,8 +16,20 @@ def database_url(environ):
     return f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}?charset=utf8mb4'
 
 
+def load_credentials(environ):
+    directory = environ.get('CREDENTIALS_DIR')
+    if directory:
+        # Deployment credentials take precedence over manually supplied development values.
+        for target, filename in [('MYSQL_USER', 'python_user'), ('MYSQL_PASSWORD', 'python_password')]:
+            environ[target] = (Path(directory) / filename).read_text(encoding='utf-8').strip()
+            if not environ[target]:
+                raise ValueError('Empty container credential: ' + filename)
+        environ.pop('DATABASE_URL', None)
+
+
 def main():
     """准备数据路径并以单进程、多线程 Gunicorn 启动 Socket.IO 应用。"""
+    load_credentials(os.environ)
     os.environ['DATABASE_URL'] = database_url(os.environ)
     for key, default in [('UPLOAD_DIR', '/app/data/uploads'),
                          ('YOLO_CONFIG_DIR', '/app/data/ultralytics'),

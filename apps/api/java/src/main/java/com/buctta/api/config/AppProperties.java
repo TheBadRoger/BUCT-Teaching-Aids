@@ -72,10 +72,10 @@ public class AppProperties {
         private String endpoint = "https://cloudapi.polymas.com/bot/v2/completions/chat/stream";
         private String authKey = "";
         private String stopMark = "(AI生成)";
-        private String appCode = "ti39Ohdy6k";
-        private String userNid = "N7I7pSTrm3";
-        private String sessionNid = "PNeg1BjP6x";
-        private String chatNid = "JJdylJaMSF";
+        private String appCode = "";
+        private String userNid = "";
+        private String sessionNid = "";
+        private String chatNid = "";
     }
 }
 

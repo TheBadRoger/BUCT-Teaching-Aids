@@ -2,7 +2,9 @@
 import unittest
 from urllib.parse import unquote, urlsplit
 
-from entrypoint import database_url
+from entrypoint import database_url, load_credentials
+from pathlib import Path
+import tempfile
 
 
 class DatabaseUrlTest(unittest.TestCase):
@@ -21,6 +23,26 @@ class DatabaseUrlTest(unittest.TestCase):
     def test_missing_password_fails(self):
         with self.assertRaises(KeyError):
             database_url({})
+
+    def test_container_credentials_override_development_values(self):
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory, 'python_user').write_text('generated_user')
+            Path(directory, 'python_password').write_text('generated_password')
+            env = {'CREDENTIALS_DIR': directory, 'MYSQL_USER': 'development', 'MYSQL_PASSWORD': 'development', 'DATABASE_URL': 'old'}
+            load_credentials(env)
+            self.assertEqual(env['MYSQL_USER'], 'generated_user')
+            self.assertEqual(env['MYSQL_PASSWORD'], 'generated_password')
+            self.assertNotIn('DATABASE_URL', env)
+
+    def test_development_environment_is_unchanged(self):
+        env = {'MYSQL_USER': 'dev', 'MYSQL_PASSWORD': 'manual'}
+        load_credentials(env)
+        self.assertEqual(env, {'MYSQL_USER': 'dev', 'MYSQL_PASSWORD': 'manual'})
+
+    def test_missing_container_credentials_fail(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaises(FileNotFoundError):
+                load_credentials({'CREDENTIALS_DIR': directory})
 
 
 if __name__ == '__main__':

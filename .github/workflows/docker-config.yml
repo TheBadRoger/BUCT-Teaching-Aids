@@ -8,6 +8,7 @@ on:
       - 'Dockerfile'
       - '.env.example'
       - 'database/init/**'
+      - 'scripts/deployment/**'
       - 'apps/api/python/deployment/**'
       - '.dockerignore'
       - 'apps/web/**'
@@ -19,6 +20,7 @@ on:
       - 'Dockerfile'
       - '.env.example'
       - 'database/init/**'
+      - 'scripts/deployment/**'
       - 'apps/api/python/deployment/**'
       - '.dockerignore'
       - 'apps/web/**'
@@ -33,10 +35,6 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     env:
-      MYSQL_ROOT_PASSWORD: ci-only-root
-      BUCTTA_JAVA_DB_PASSWORD: ci-only-java
-      BUCTTA_PYTHON_DB_PASSWORD: ci-only-python
-      REDIS_PASSWORD: ci-only-redis
       APP_ADMIN_PASSWORD: ci-only-admin
       PYTHON_SECRET_KEY: ci-only-secret
     steps:
@@ -45,12 +43,14 @@ jobs:
         run: docker compose config --quiet
       - name: Verify required credentials
         run: |
-          if env -u MYSQL_ROOT_PASSWORD docker compose config --quiet 2>/dev/null; then
-            echo 'Missing database password must fail validation'
+          if env -u APP_ADMIN_PASSWORD docker compose config --quiet 2>/dev/null; then
+            echo 'Missing platform admin password must fail validation'
             exit 1
           fi
       - name: Test container startup configuration
         run: python3 -m unittest discover -s apps/api/python/deployment -p 'test_*.py' -v
+      - name: Test persistent credential generation
+        run: python3 -m unittest discover -s scripts/deployment -p 'test_*.py' -v
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -62,3 +62,17 @@ jobs:
       - name: Build complete project images
         run: |
           docker compose build
+      - name: Verify generated MySQL and Redis credentials
+        run: |
+          docker compose up -d --wait --wait-timeout 180 mysql redis
+          docker compose exec -T mysql sh -ec 'MYSQL_PWD="$(cat /run/credentials/java_password)" mysql -u"$(cat /run/credentials/java_user)" -Nse "SELECT 1" BUCTTA_DATABASE >/dev/null'
+          docker compose exec -T mysql sh -ec 'MYSQL_PWD="$(cat /run/credentials/python_password)" mysql -u"$(cat /run/credentials/python_user)" -Nse "SELECT 1" BUCTTA_DATABASE >/dev/null'
+          docker compose run --rm --no-deps credentials-init
+          docker compose exec -T mysql sh -ec 'MYSQL_PWD="$(cat /run/credentials/java_password)" mysql -u"$(cat /run/credentials/java_user)" -Nse "SELECT 1" BUCTTA_DATABASE >/dev/null'
+          docker compose exec -T redis sh -ec 'REDISCLI_AUTH="$(cat /run/credentials/password)" redis-cli ping | grep -q PONG'
+      - name: Show infrastructure logs on failure
+        if: failure()
+        run: docker compose logs --tail=100 credentials-init mysql redis
+      - name: Stop validation containers
+        if: always()
+        run: docker compose down

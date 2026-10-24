@@ -1,7 +1,7 @@
 {
   "updated_at_utc": "2026-10-24T06:31:19Z",
   "updated_at_utc8": "2026-10-24 14:31:19",
-  "total_lines": 62759,
+  "total_lines": 62871,
   "language_count": 11,
   "top_language": "Java",
   "java_endpoint_count": 148,
@@ -11,10 +11,10 @@
   "language_lines": {
     "Java": 16387,
     "Markdown": 13405,
-    "HTML": 8963,
-    "JavaScript": 8295,
-    "CSS": 6753,
-    "Python": 3447,
+    "HTML": 8981,
+    "JavaScript": 8400,
+    "CSS": 6778,
+    "Python": 3411,
     "Vue": 2912,
     "TypeScript": 1745,
     "YAML": 583,
