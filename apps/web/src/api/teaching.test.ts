@@ -13,7 +13,7 @@ describe('existing teacher service contract', () => {
     const controller = new AbortController()
     await generateKnowledge(input, controller.signal)
     const [url, config] = fetcher.mock.calls[0]!
-    expect(url).toBe('/teacher-ai-api/knowledge/generate')
+    expect(url).toBe('/api/teacher-ai/knowledge/generate')
     expect(config.method).toBe('POST')
     expect(JSON.parse(config.body)).toEqual({ subject: input.subject, grade: input.grade, topic: input.topic, focus: input.focus })
     expect(config.signal).toBe(controller.signal)
@@ -42,7 +42,7 @@ describe('existing teacher service contract', () => {
     vi.stubGlobal('fetch', fetcher)
     const onChunk = vi.fn()
     await streamLesson(input, new AbortController().signal, onChunk)
-    expect(fetcher.mock.calls[0]?.[0]).toBe('/teacher-ai-api/lesson-plan/generate-stream')
+    expect(fetcher.mock.calls[0]?.[0]).toBe('/api/teacher-ai/lesson-plan/generate-stream')
     expect(JSON.parse(fetcher.mock.calls[0]?.[1].body)).not.toHaveProperty('focus')
     expect(onChunk).toHaveBeenCalledExactlyOnceWith('教案')
   })

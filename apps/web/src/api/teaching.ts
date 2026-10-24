@@ -1,9 +1,9 @@
-// 教师 AI 使用独立服务协议，不经过 Java 的 code=2000 响应解包。
+// Java 教师 AI 保留 success/data 协议。
 import type { TeachingCatalog, TeachingInput } from '@/types/teaching'
 import { normalizeKnowledge, normalizeLesson } from '@/utils/teaching-content'
 import { readLessonStream } from '@/utils/lesson-stream'
 
-const base = (import.meta.env.VITE_TEACHER_AI_BASE_URL || '/teacher-ai-api').replace(/\/$/, '')
+const base = '/api/teacher-ai'
 
 /** 校验教师助手的 success/data 封装。 */
 async function request(path: string, signal: AbortSignal, input?: Partial<TeachingInput>): Promise<unknown> {

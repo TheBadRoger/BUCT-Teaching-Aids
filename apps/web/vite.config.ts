@@ -18,11 +18,6 @@ export default defineConfig({
       '/js/': { target: 'http://localhost:80', changeOrigin: true },
       '/css/': { target: 'http://localhost:80', changeOrigin: true },
       '/images/': { target: 'http://localhost:80', changeOrigin: true },
-      '/teacher-ai-api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/teacher-ai-api/, '/api')
-      },
       '/api': {
         target: 'http://localhost:80',
         changeOrigin: true,

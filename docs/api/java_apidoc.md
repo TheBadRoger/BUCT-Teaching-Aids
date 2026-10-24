@@ -2308,7 +2308,7 @@ function reportProgress(courseId, videoId, positionSeconds, durationSeconds) {
 
 ## 学习统计模块 `/api/learning`
 
-> 把原先散落在前端的折算规则（完成率、**成长等级**、标签分布、活跃度趋势）收到后端一处，
+> 后端统一计算完成率、**成长等级**、标签分布和活跃度趋势，
 > 同时服务「成长地图」与「学习分布」两个页面，保证口径一致、可追溯。
 
 ### GET /api/learning/stats
@@ -2384,3 +2384,38 @@ function reportProgress(courseId, videoId, positionSeconds, durationSeconds) {
 - **返回**（失败）：`code: 4001`（无法确定统计对象）、`4042`（学生/教师不存在）
 
 ---
+
+## 教师 AI `/api/teacher-ai`
+
+接口使用 Java 登录会话；未登录或会话失效返回 JSON 401。页面路由为 `#/ai/knowledge` 和 `#/ai/lesson-plan`。
+
+| 方法与路径 | 功能 |
+| --- | --- |
+| `GET /api/teacher-ai/health` | 返回 `status`、`model`、`hasApiKey`，不验证密钥有效性 |
+| `GET /api/teacher-ai/knowledge/subjects` | 学科、教材版本、年级及课型目录 |
+| `POST /api/teacher-ai/knowledge/generate` | 结构化知识点手册 |
+| `POST /api/teacher-ai/lesson-plan/generate` | 结构化教案 |
+| `POST /api/teacher-ai/lesson-plan/generate-stream` | SSE 流式教案 |
+
+| 请求字段 | 规则 |
+| --- | --- |
+| `subject`、`grade`、`topic` | 必填非空字符串 |
+| `focus` | 知识点生成的重点要求，可选 |
+| `lessonType`、`duration`、`teachingStyle`、`extraRequirements` | 教案选项；默认新授课、45 分钟；课时为正数且不超过 1440 |
+| 文本长度 | 每个文本参数最多 20000 字符 |
+
+```json
+{"subject":"数学","grade":"八年级","topic":"一次函数"}
+```
+
+| 返回形式 | 内容 |
+| --- | --- |
+| 普通成功 | `{ "success": true, "data": { ... } }` |
+| 普通失败 | `{ "success": false, "error": "错误说明", "type": "错误类别" }` |
+| SSE 增量 | `data: {"type":"chunk","content":"增量文本"}` |
+| SSE 完成 | `data: {"type":"done"}` |
+| SSE 错误 | `data: {"type":"error","message":"错误说明"}` |
+
+SSE 事件以空行分隔。上游缺失完成标记视为中断；非流式对 429 和临时服务错误最多重试三次，流式不重试。浏览器取消读取不保证供应商停止模型计算。流式响应占用 Servlet 请求线程。
+
+模型配置见[整体部署](../deploy.md#构建与模型配置)。

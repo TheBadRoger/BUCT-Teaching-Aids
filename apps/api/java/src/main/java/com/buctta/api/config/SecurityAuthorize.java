@@ -7,12 +7,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityAuthorize {
+
+    private void loginRequired(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (request.getRequestURI().startsWith(request.getContextPath() + "/api/teacher-ai/")) {
+            response.setStatus(401);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":false,\"error\":\"请先登录\"}");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/enter.html");
+        }
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
@@ -65,11 +77,11 @@ public class SecurityAuthorize {
                 //会话策略：按会话空闲时间失效，失效后跳转登录页
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/enter.html")
+                        .invalidSessionStrategy(this::loginRequired)
                 )
                 //异常处理：未授权时自动跳转到登录页面
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/enter.html"))
+                        .authenticationEntryPoint((request, response, authError) -> loginRequired(request, response))
                 )
                 //关闭 CSRF
                 .csrf(AbstractHttpConfigurer::disable);

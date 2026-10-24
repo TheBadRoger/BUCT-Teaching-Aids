@@ -84,6 +84,17 @@ const handleLogout = async () => {
                     </el-menu-item>
                 </el-sub-menu>
 
+                <el-sub-menu index="news">
+                    <template #title>资讯管理</template>
+                    <el-menu-item index="/news/list">资讯列表</el-menu-item>
+                    <el-menu-item index="/news/add">新增资讯</el-menu-item>
+                    <el-menu-item index="/news/detail">资讯详情</el-menu-item>
+                </el-sub-menu>
+                <el-sub-menu index="review">
+                    <template #title>评价管理</template>
+                    <el-menu-item index="/review/list">评价列表</el-menu-item>
+                    <el-menu-item index="/review/detail">评价详情</el-menu-item>
+                </el-sub-menu>
                 <el-sub-menu index="organization">
                     <template #title>机构管理</template>
                     <el-menu-item index="/organization/list">机构列表</el-menu-item>

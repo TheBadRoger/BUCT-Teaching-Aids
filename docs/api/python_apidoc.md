@@ -21,7 +21,7 @@
 
 - [健康检查](#健康检查)
 - [PBL 生成器模块](#pbl-生成器模块-apipbl)
-- [AI 课堂模块（REST）](#ai-课堂模块-rest---apiclassroom)
+- [AI 课堂模块（REST）](#ai-课堂模块-rest--apiclassroom)
 - [AI 课堂模块（WebSocket）](#ai-课堂模块-websocket)
 - [AI 课堂前端页面](#ai-课堂前端页面)
 - [人脸识别与举手率模块](#人脸识别与举手率模块-apiface_hand_up)

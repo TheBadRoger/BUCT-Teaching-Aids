@@ -4,18 +4,6 @@ ARG MAVEN_IMAGE=maven:3.9-eclipse-temurin-25
 ARG JAVA_IMAGE=eclipse-temurin:25-jre
 ARG PYTHON_IMAGE=python:3.11-slim-bookworm
 
-FROM ${NODE_IMAGE} AS teacher-ai
-ENV NODE_ENV=production PORT=3000
-WORKDIR /app
-COPY apps/api/teacher-ai/package.json apps/api/teacher-ai/package-lock.json ./
-RUN npm ci --omit=dev
-COPY --chown=node:node apps/api/teacher-ai/src ./src
-USER node
-EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-CMD ["node", "src/server.js"]
-
 FROM ${PYTHON_IMAGE} AS python
 ARG PIP_INDEX_URL=https://pypi.org/simple
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PIP_NO_CACHE_DIR=1
@@ -44,8 +32,6 @@ COPY apps/web/package.json apps/web/package-lock.json ./
 RUN npm ci
 COPY apps/web/ ./
 COPY apps/api/java/src/main/resources/static/images/ /api/java/src/main/resources/static/images/
-ARG VITE_TEACHER_AI_BASE_URL=http://localhost:3000/api
-ENV VITE_TEACHER_AI_BASE_URL=${VITE_TEACHER_AI_BASE_URL}
 RUN npm run build -- --base=/js/app/
 
 FROM ${MAVEN_IMAGE} AS builder

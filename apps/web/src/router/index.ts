@@ -27,6 +27,11 @@ const routes: RouteRecordRaw[] = [
     redirect: '/learn',
     component: () => import('@/layout/index.vue'), 
     children: [
+      { path: 'news/list', component: () => import('@/views/news/list.vue') },
+      { path: 'news/add', component: () => import('@/views/news/add.vue') },
+      { path: 'news/detail', component: () => import('@/views/news/detail.vue') },
+      { path: 'review/list', component: () => import('@/views/review/list.vue') },
+      { path: 'review/detail', component: () => import('@/views/review/detail.vue') },
       ...['knowledge', 'lesson-plan'].map(tool => ({
         path: `ai/${tool}`,
         component: () => import('@/views/teaching/index.vue')

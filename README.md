@@ -20,6 +20,51 @@
   <a href="https://github.com/TheBadRoger/BUCT-Teaching-Aids/actions/workflows/python-build.yml"><img alt="Python Build" src="https://img.shields.io/github/actions/workflow/status/TheBadRoger/BUCT-Teaching-Aids/python-build.yml?branch=main&label=Python%20Build&style=flat-square&labelColor=0f172a&color=22c55e" /></a>
 </p>
 
+统一 Vue 前端的 AI 教学平台，提供课程学习、教学管理、教师 AI 工具和课堂分析。页面由 Vue 应用和后端静态页面组成。
+
+## 架构与目录
+
+| 目录 | 职责与技术栈 |
+| --- | --- |
+| `apps/web/` | 唯一前端：Vue 3、TypeScript、Vite、Pinia、Element Plus |
+| `apps/api/java/` | 主业务与教师 AI：Java 25、Spring Boot 4；同时托管前端编译产物 |
+| `apps/api/python/` | Flask / Socket.IO：课堂互动、PBL、视觉识别和学情分析 |
+| `database/` | `init/` 为容器初始化脚本，`manual/` 为按需执行的 SQL |
+| `docs/` | 接口、架构与整体部署说明 |
+| `scripts/` | 仓库工具及生成的统计数据 |
+
+Java 与 Python 使用 MySQL，Java 使用 Redis；Python 课堂模块另有 SQLite。教师 AI 由 Java 提供接口。
+
+## 部署与开发
+
+整套项目通过根目录 `compose.yaml` 和 `Dockerfile` 部署，包含 Java、Python、MySQL、Redis 四个服务：
+
+```bash
+cp .env.example .env
+# 填写必填密码；教师 AI 按需填写 DEEPSEEK_API_KEY
+# 启动前可运行 docker compose config --quiet 检查配置
+docker compose up -d --build --remove-orphans --wait --wait-timeout 300
+```
+
+默认学习入口：`http://127.0.0.1/js/app/index.html#/learn`；管理登录：`http://127.0.0.1/js/app/index.html#/login`。端口、数据卷和更新方法见[Docker 部署](docs/deploy.md)。Vue 在 Docker 构建时编译并打入 Java JAR，编译产物不提交。
+
+前端开发入口见[前端说明](apps/web/README.md)。教师 AI 使用 `DEEPSEEK_API_KEY`；AI 批改和背诵手册使用 `POLYMAS_AUTH_KEY`，密钥只放在服务端。
+
+## 文档导航
+
+| 主题 | 文档 |
+| --- | --- |
+| 后端架构 | [Java 后端](docs/architecture/java_api_intro.md) · [Python 后端](docs/architecture/python_api_intro.md) |
+| 整体部署 | [Docker 配置、更新与数据维护](docs/deploy.md) |
+| 前端 | [开发与构建](apps/web/README.md) · [管理页面及数据来源](apps/web/ADMIN-PAGES.md) |
+| 教师 AI | [接口与流式协议](docs/api/java_apidoc.md#教师-ai-apiteacher-ai) · [模型配置](docs/deploy.md#构建与模型配置) |
+| 接口手册 | [Java](docs/api/java_apidoc.md) · [Python](docs/api/python_apidoc.md) |
+| 页面接口映射 | [静态管理后台](docs/api/admin_frontend_api_map.md) · [学生前台](docs/api/frontend_student_api_map.md) |
+
+资讯仅支持本机草稿，课程评价使用标注的演示数据；邮件、日历和直播等页面的接入范围见管理页面说明。页面映射描述当前 Vue 页面使用的接口。
+
+Agent 协作、实现与文档规范见 [AGENTS.md](AGENTS.md)，与正式使用文档分开维护。
+
 <!-- STATS_SECTION_START -->
 ## 项目统计
 
@@ -68,60 +113,3 @@ pie showData
     "Shell (0.09%)" : 60
 ```
 <!-- STATS_SECTION_END -->
-
-## 开发框架简介
-
-- 管理前端：Vue 3 + TypeScript + Vite + Pinia + Element Plus；保留随后端部署的 HTML/CSS/JavaScript 页面
-
-- 后端：Java SpringBoot + Python Flask
-
-- 数据库：MySQL - 持久化，Redis - 高并发情况下的中间缓存
-
-## 工作进度
-
-**后台管理系统：完成前后端分离**
-
-- 已实现课程相关的大多数功能
-- 实现AI智能批改实验报告，前后端均已实现。
-- 打通教师/学生/课程后台管理页（列表、查看、新增、编辑、删除、导出）的前后端链路，详见 [admin_frontend_api_map.md](docs/api/admin_frontend_api_map.md)
-- 新增 AI 背诵手册：上传 `.txt/.docx/.pdf` 学习资料，自动生成知识归纳、记忆口诀、必背要点、自测题（复用 polymas AI，前端见 `static/recitation/`）。
-
-> 其余项目组的进度，以后就在这里加就行
-
-## 项目文件结构
-
-```text
-apps/
-  api/
-    java/                  # Java Spring Boot 后端
-    python/                # Python Flask 后端
-    teacher-ai/            # 教师 AI Express 接口服务
-  web/                     # 唯一 Vue 前端：学习端、管理端、AI 教学工具
-Dockerfile                 # 全项目镜像构建（多阶段/多目标）
-compose.yaml               # 唯一 Docker 整体部署入口
-.env.example               # 部署变量模板（复制为 .env）
-database/
-  init/                    # 容器数据库初始化脚本
-  manual/                  # 独立 SQL，按需人工执行
-docs/
-  api/                     # 接口文档及页面接口映射
-  architecture/            # 后端架构说明
-  deployment/              # Linux、Windows、Docker 部署说明
-scripts/                   # 仓库工具及生成的统计数据
-```
-
-Java 的 `src/main/resources/static/` 和 Python 的 `static/`、`templates/` 保持在各自应用内，保留现有资源加载方式。各应用使用原有构建和启动命令，不引入新的工作区工具。旧路径对照和运行入口见 [目录说明](docs/project-layout.md)，全部文档见 [文档导航](docs/README.md)。
-
-## AI 配置说明（polymas）
-
-AI 批改、背诵手册等功能共用一个第三方 AI 平台 **polymas**。相关配置在
-`apps/api/java/src/main/resources/application.properties` 的 `app.ai.polymas.*` 段，可通过环境变量 `POLYMAS_AUTH_KEY` 配置。
-
-## 文档
-
-|                   后端接口文档                   |                              后端部署方法                              |                     后端项目介绍                     |
-| :----------------------------------------------: | :--------------------------------------------------------------------: | :--------------------------------------------------: |
-|   [Java](docs/api/java_apidoc.md)   |      [Windows - Java](docs/deployment/java_deploy_win.md)       | [Java](docs/architecture/java_api_intro.md) |
-| [Python](docs/api/python_apidoc.md) |   [Ubuntu Linux - Java](docs/deployment/java_deploy_linux.md)   | [Python](docs/architecture/python_api_intro.md) |
-|                        -                         | [Ubuntu Linux - Python](docs/deployment/python_deploy_linux.md) | - |
-|                        -                         |           [Docker](docs/deployment/docker_deploy.md)            | - |

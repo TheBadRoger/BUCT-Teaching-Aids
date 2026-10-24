@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/BUCT-Teaching-Aids.iml" filepath="$PROJECT_DIR$/.idea/BUCT-Teaching-Aids.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apps/api/java/japi.iml" filepath="$PROJECT_DIR$/apps/api/java/japi.iml" />
     </modules>
   </component>
 </project>

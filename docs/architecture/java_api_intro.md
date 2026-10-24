@@ -1,37 +1,41 @@
-# Java 后端项目简介
+# Java 后端
 
-本文档简要说明本项目 Java 后端的技术框架、分层架构与实现方法，帮助新成员快速理解 `apps/api/java` 的开发方式。
+| 项目 | 实现 |
+| --- | --- |
+| 运行与构建 | Java 25、Spring Boot 4、Maven |
+| HTTP 与认证 | Spring MVC、Spring Security、Cookie Session |
+| 数据访问 | Spring Data JPA、MySQL |
+| 缓存 | Redis，课程访问数据定期写回 MySQL |
+| AI 服务 | DeepSeek 教师 AI；polymas 批改与背诵手册 |
+| 页面托管 | Java static 提供 Vue 构建产物与静态页面 |
+| 测试 | JUnit、Spring Test、Testcontainers |
 
-## 1. 技术框架
+## 分层与业务
 
-- 核心框架：Spring Boot
-- 持久化：MySQL（关系型数据存储）
-- 缓存：Redis（高并发场景下的缓存与热点数据加速）
-- 构建工具：Maven
-- 测试：JUnit（配合 Maven 测试流程）
+```mermaid
+flowchart LR
+    C[controller：HTTP 接口] --> S[service / serviceimp：业务逻辑]
+    S --> D[dao：数据访问]
+    D --> M[(MySQL)]
+    S --> R[(Redis)]
+    S --> A[外部 AI API]
+```
 
-## 2. 分层架构
+| 目录 | 内容 |
+| --- | --- |
+| `controller/` | 用户、机构、师生、课程、笔记、媒体、教参、学习统计与 AI 接口 |
+| `service/`、`serviceimp/` | 服务契约与实现；教师 AI 实现为 `TeacherAIService` |
+| `dao/`、`entities/`、`dto/` | 持久化访问、实体与传输对象 |
+| `config/`、`utils/` | 安全、会话、缓存、配置与公共工具 |
+| `resources/teacher-ai/` | 教师 AI 提示词与学科目录 |
 
-项目整体采用典型分层设计，核心职责如下：
+## 接口与部署
 
-- Controller 层：提供 HTTP 接口，完成参数接收与响应返回
-- Service 层：封装业务逻辑，处理课程、用户、学生等业务流程
-- Repository/DAO 层：负责数据库访问与持久化操作
-- Utils/公共组件：统一响应结构、状态码与通用工具方法
+| 范围 | 协议 |
+| --- | --- |
+| 普通业务 | `ApiResponse`，成功码为 `2000` |
+| 教师 AI | `/api/teacher-ai/**`，使用 `success/data` JSON 和 SSE 事件 |
+| 登录 | 后端将认证上下文保存至 Session，浏览器携带 `JSESSIONID` |
+| Python 能力 | 独立 Flask 服务；浏览器分别访问 Java 与 Python，没有统一后端网关 |
 
-这种设计可以让接口、业务与数据访问解耦，便于维护、测试与扩展。
-
-## 3. 实现方法
-
-- 以 Spring Boot 启动类为入口，自动装配各业务组件
-- 按业务模块组织代码（如用户认证、课程管理、学生管理、笔记与评论互动、AI 报告生成等）
-- 使用统一的接口返回格式，便于前后端联调与错误处理
-- 通过环境配置文件区分开发、生产等运行环境
-- 结合单元测试覆盖主要业务逻辑与接口行为
-
-## 4. 开发建议
-
-- 新增接口时，优先补充对应的 Service 逻辑与测试用例
-- 涉及数据库读写的改动，建议同步检查缓存一致性策略
-- 对外返回结构尽量保持兼容，避免影响既有前端调用
-
+接口参数见[Java 接口手册](../api/java_apidoc.md)，运行配置见[整体部署](../deploy.md)。
