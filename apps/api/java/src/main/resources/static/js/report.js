@@ -243,7 +243,7 @@ function renderPending() {
           <td class="is-wrap">${escapeHtml(course?.courseName ?? "未命名课程")}</td>
           <td>${escapeHtml(course?.teachingTeachers ?? "—")}</td>
           <td><span class="tag">${escapeHtml(course?.courseStatus ?? "未标注")}</span></td>
-          <td><a href="course-info.html?id=${encodeURIComponent(course?.id ?? "")}">查看课程</a></td>
+          <td><a href="/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(course?.courseNumber ?? "")}">查看课程</a></td>
         </tr>`;
     })
     .join("");

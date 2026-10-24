@@ -1,0 +1,36 @@
+name: Platform Frontend
+on:
+  push:
+    branches: [main]
+    paths: ['apps/web/**', '.github/workflows/frontend.yml']
+  pull_request:
+    paths: ['apps/web/**', '.github/workflows/frontend.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - name: Ensure compiled frontend files are not tracked
+        working-directory: .
+        run: |
+          tracked=$(git ls-files apps/web/dist apps/api/java/src/main/resources/static/js/app apps/api/java/src/main/resources/static/index.html)
+          if [ -n "$tracked" ]; then
+            echo 'Compiled frontend files must be produced during Docker build, not committed:'
+            echo "$tracked"
+            exit 1
+          fi

@@ -101,7 +101,7 @@ function render() {
 
   document.title = `${course.courseName ?? "课程"} - 互动视频课时`;
   document.querySelector("#crumb-course").textContent = course.courseName ?? "课程详情";
-  document.querySelector("#crumb-course").href = `course-info.html?courseNumber=${encodeURIComponent(
+  document.querySelector("#crumb-course").href = `/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(
     courseNumber
   )}`;
 
@@ -115,10 +115,10 @@ function render() {
         </p>
       </div>
       <div class="flex gap-sm">
-        <a class="btn" href="course-play.html?courseNumber=${encodeURIComponent(
+        <a class="btn" href="/js/app/index.html#/learn/play?courseNumber=${encodeURIComponent(
           courseNumber
         )}&lesson=${state.lesson.lessonIndex + 1}">切换普通播放</a>
-        <a class="btn btn--primary" href="course-info.html?courseNumber=${encodeURIComponent(
+        <a class="btn btn--primary" href="/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(
           courseNumber
         )}">返回课程</a>
       </div>
@@ -293,7 +293,7 @@ async function main() {
     const result = await fetchLesson();
     if (!result) {
       renderError(host, "未找到对应的课程或课时，请从课程详情页进入。", () => {
-        window.location.href = "course-list.html";
+        window.location.href = "/js/app/index.html#/learn/courses";
       });
       return;
     }

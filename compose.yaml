@@ -1,0 +1,159 @@
+name: buct-teaching-aids
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  teacher-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: teacher-ai
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-alpine}
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    stop_grace_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+      REQUEST_TIMEOUT: ${DEEPSEEK_REQUEST_TIMEOUT:-60000}
+    ports:
+      - "${APP_BIND_IP:-127.0.0.1}:${TEACHER_AI_HOST_PORT:-3000}:3000"
+    logging: *logging
+
+  mysql:
+    image: ${MYSQL_IMAGE:-mysql:8.0}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: BUCTTA_DATABASE
+      BUCTTA_JAVA_DB_PASSWORD: ${BUCTTA_JAVA_DB_PASSWORD:?Set BUCTTA_JAVA_DB_PASSWORD in .env}
+      BUCTTA_PYTHON_DB_PASSWORD: ${BUCTTA_PYTHON_DB_PASSWORD:?Set BUCTTA_PYTHON_DB_PASSWORD in .env}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysql -h 127.0.0.1 -uroot -Nse 'SELECT 1' >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 20
+    logging: *logging
+
+  redis:
+    image: ${REDIS_IMAGE:-redis:7.2-alpine}
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+    command: ["/bin/sh", "-ec", 'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"']
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$REDIS_PASSWORD" redis-cli ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *logging
+
+  java-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: java
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-alpine}
+        VITE_TEACHER_AI_BASE_URL: ${TEACHER_AI_PUBLIC_URL:-http://localhost:3000/api}
+        MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9-eclipse-temurin-25}
+        JAVA_IMAGE: ${JAVA_IMAGE:-eclipse-temurin:25-jre}
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 40s
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      JAVA_TOOL_OPTIONS: ${JAVA_TOOL_OPTIONS:--XX:MaxRAMPercentage=75.0}
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DOCKER_COMPOSE_ENABLED: "false"
+      SPRING_FLYWAY_ENABLED: "false"
+      SERVER_PORT: 8080
+      SERVER_SHUTDOWN: graceful
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BUCTTA_DATABASE?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: java_springboot_buctta
+      BUCTTA_JAVA_DB_PASSWORD: ${BUCTTA_JAVA_DB_PASSWORD:?Set BUCTTA_JAVA_DB_PASSWORD in .env}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+      APP_ADMIN_USERNAME: ${APP_ADMIN_USERNAME:-admin}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?Set APP_ADMIN_PASSWORD in .env}
+      POLYMAS_AUTH_KEY: ${POLYMAS_AUTH_KEY:-}
+      MEDIA_ROOT: /app/data/uploads
+      MEDIA_PUBLIC_URL_PREFIX: ${MEDIA_PUBLIC_URL_PREFIX:-}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${APP_BIND_IP:-127.0.0.1}:${JAVA_HOST_PORT:-80}:8080"
+    volumes:
+      - java_data:/app/data
+    logging: *logging
+
+  python-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: python
+      args:
+        PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.11-slim-bookworm}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 40s
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      DEBUG: "false"
+      PORT: 8080
+      SECRET_KEY: ${PYTHON_SECRET_KEY:?Set PYTHON_SECRET_KEY in .env}
+      MYSQL_HOST: mysql
+      MYSQL_USER: python_flask_buctta
+      MYSQL_PASSWORD: ${BUCTTA_PYTHON_DB_PASSWORD:?Set BUCTTA_PYTHON_DB_PASSWORD in .env}
+      MYSQL_DB: BUCTTA_DATABASE
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-8}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
+      FACE_DB_PATH: /app/face_database/face_db
+      UPLOAD_DIR: /app/data/uploads
+      CLASSROOM_DB_PATH: /app/data/classroom_data.db
+      YOLO_MODEL_PATH: /app/data/models/yolov8n-pose.pt
+      YOLO_CONFIG_DIR: /app/data/ultralytics
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "${APP_BIND_IP:-127.0.0.1}:${PYTHON_HOST_PORT:-8080}:8080"
+    volumes:
+      - ${FACE_DATABASE_DIR:-./apps/api/python/face_database}:/app/face_database
+      - python_data:/app/data
+    logging: *logging
+
+volumes:
+  mysql_data:
+  redis_data:
+  java_data:
+  python_data:

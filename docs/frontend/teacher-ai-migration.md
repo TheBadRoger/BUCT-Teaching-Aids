@@ -2,7 +2,7 @@
 
 ## 新入口
 
-统一前端 `apps/web/admin/` 的侧栏新增「AI 教学工具」：
+统一前端 `apps/web/` 的侧栏新增「AI 教学工具」：
 
 | 页面 | 前端路由 | 原服务接口 |
 | --- | --- | --- |
@@ -13,7 +13,7 @@
 
 页面使用 Vue、TypeScript 和 Element Plus，沿用统一前端的登录守卫与布局。表单支持学科、年级、主题、重点关注、课型、课时、教学风格及额外要求。知识点和教案完整展示原有结构化内容，并提供复制和纯文本导出。
 
-旧助手 `apps/web/teacher-ai-assistant/` 的 Express 服务、API、提示词和静态页面全部保持不变，原入口继续兼容。新页面验证及部署切换完成后，再单独评估移除旧静态界面；这次不删除仍被后端静态资源服务引用的文件。
+教师 AI 的 Express 服务已移至 `apps/api/teacher-ai/`，只提供 API。原 `public/`、静态托管和 HTML 回退已删除，不再存在第二套前端。生成路由、提示词和 DeepSeek 调用代码保持原样；未知路径返回 JSON 404。统一前端位于 `apps/web/`，默认学习入口为 `#/learn`，管理与 AI 页面继续共用同一路由工程。
 
 ## 开发连接
 
@@ -21,12 +21,12 @@
 
 ```bash
 # 第一个终端；密钥使用助手原有 .env，只在服务端配置
-cd apps/web/teacher-ai-assistant
+cd apps/api/teacher-ai
 npm ci
 npm run dev
 
 # 第二个终端，从仓库根目录进入
-cd apps/web/admin
+cd apps/web
 npm ci
 npm run dev
 ```
@@ -35,13 +35,13 @@ npm run dev
 
 开发代理将 `/teacher-ai-api/*` 转发至 `http://localhost:3000/api/*`，与 Java 的 `/api` 以及 Python 的同名知识点接口隔离。若 Express 使用其他端口，调整 Vite 的代理目标。
 
-生产构建不会运行 Vite 开发代理。部署时应为统一前端配置可访问的教师服务公开地址，再重新构建。例如在 `apps/web/admin/.env` 设置：
+生产构建不会运行 Vite 开发代理。部署时应为统一前端配置可访问的教师服务公开地址，再重新构建。例如在 `apps/web/.env` 设置：
 
 ```dotenv
 VITE_TEACHER_AI_BASE_URL=https://ai.example.edu/api
 ```
 
-或者由现有部署入口转发 `/teacher-ai-api/`。本次不新增 Nginx 或修改部署配置。`VITE_` 变量会进入浏览器产物，只能放公开地址，不能放 DeepSeek 密钥。
+Docker 通过 `TEACHER_AI_PUBLIC_URL` 设置此公开地址，在构建阶段注入前端；不引入 Nginx、Caddy 或独立前端容器。`VITE_` 变量会进入浏览器产物，只能放公开地址，不能放 DeepSeek 密钥。
 
 ## 流式行为
 

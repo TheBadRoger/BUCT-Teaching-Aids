@@ -28,7 +28,7 @@
 
 - 这些文件是工作参考，不授权额外改动。用户要求和项目实际锁定版本优先，不因技能建议升级依赖、重命名编排文件、增加框架或改变部署方式。
 - Vue Router 技能描述基于版本 4；本项目锁定版本为 5。公共导航模式可参考，版本相关 API 必须结合当前依赖和官方文档确认，不能据此降级项目。
-- 前端沿用 Vue 3、TypeScript、Element Plus、Pinia 和现有页面风格。Docker 沿用 Java `static/js/admin/` 托管方式，不引入 Nginx 或 Caddy。
+- 前端沿用 Vue 3、TypeScript、Element Plus、Pinia 和现有页面风格。Docker 沿用 Java `static/js/app/` 托管方式，不引入 Nginx 或 Caddy。
 - Docker 附带检查脚本仅按其用途显式运行；项目编排位于 `docker/`，不能直接照搬脚本默认根目录路径。
 - 后端业务逻辑、数据库及部署范围仍以用户当前授权为准。技能安装不等于授权重构这些内容。
 

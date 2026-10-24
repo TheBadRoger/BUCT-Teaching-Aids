@@ -4,17 +4,25 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docker/**'
+      - 'compose.yaml'
+      - 'Dockerfile'
+      - '.env.example'
+      - 'database/init/**'
+      - 'apps/api/python/deployment/**'
       - '.dockerignore'
-      - 'apps/web/admin/**'
-      - 'apps/web/teacher-ai-assistant/**'
+      - 'apps/web/**'
+      - 'apps/api/teacher-ai/**'
       - '.github/workflows/docker-config.yml'
   pull_request:
     paths:
-      - 'docker/**'
+      - 'compose.yaml'
+      - 'Dockerfile'
+      - '.env.example'
+      - 'database/init/**'
+      - 'apps/api/python/deployment/**'
       - '.dockerignore'
-      - 'apps/web/admin/**'
-      - 'apps/web/teacher-ai-assistant/**'
+      - 'apps/web/**'
+      - 'apps/api/teacher-ai/**'
       - '.github/workflows/docker-config.yml'
   workflow_dispatch:
 
@@ -33,29 +41,36 @@ jobs:
       PYTHON_SECRET_KEY: ci-only-secret
     steps:
       - uses: actions/checkout@v4
-      - name: Validate all deployment variants
-        run: |
-          for file in docker/docker-compose*.yml; do
-            docker compose -f "$file" config --quiet
-          done
+      - name: Validate complete deployment
+        run: docker compose config --quiet
       - name: Verify required credentials
         run: |
-          if env -u MYSQL_ROOT_PASSWORD docker compose -f docker/docker-compose.yml config --quiet 2>/dev/null; then
+          if env -u MYSQL_ROOT_PASSWORD docker compose config --quiet 2>/dev/null; then
             echo 'Missing database password must fail validation'
             exit 1
           fi
       - name: Test container startup configuration
-        run: python3 -m unittest discover -s docker/python -p 'test_*.py' -v
-      - name: Build Java image with compiled frontend
+        run: python3 -m unittest discover -s apps/api/python/deployment -p 'test_*.py' -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/api/teacher-ai/package-lock.json
+      - name: Test teacher AI API without calling the model
+        working-directory: apps/api/teacher-ai
         run: |
-          docker compose -f docker/docker-compose.yml build java-app teacher-ai
+          npm ci
+          npm test
+      - name: Build complete project images
+        run: |
+          docker compose build
       - name: Check teacher AI container without calling the model
         run: |
-          docker compose -f docker/docker-compose.yml up -d --no-deps --wait --wait-timeout 120 teacher-ai
+          docker compose up -d --no-deps --wait --wait-timeout 120 teacher-ai
           curl --fail http://127.0.0.1:3000/api/health | python3 -c 'import json,sys; assert json.load(sys.stdin)["status"] == "ok"'
       - name: Show container logs on failure
         if: failure()
-        run: docker compose -f docker/docker-compose.yml logs --tail=100 teacher-ai
+        run: docker compose logs --tail=100 teacher-ai
       - name: Stop smoke-test containers
         if: always()
-        run: docker compose -f docker/docker-compose.yml down
+        run: docker compose down

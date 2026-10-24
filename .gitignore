@@ -60,4 +60,7 @@ site-packages/
 .idea/dataSources.local.xml
 
 # Generated Vue bundle served by the Java application
-/apps/api/java/src/main/resources/static/js/admin/
+/apps/api/java/src/main/resources/static/js/app/
+/apps/api/java/src/main/resources/static/index.html
+**/dist/
+**/node_modules/

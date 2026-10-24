@@ -2,9 +2,9 @@
 
 ## 范围
 
-本阶段升级 `apps/web/admin/`。Vue 单文件组件、入口、路由、接口模块、请求工具和 Vite 配置迁入 TypeScript；保留 Vue 3、Vue Router、Element Plus 和现有页面风格。未修改 Java、Python 后端或数据库，也未将其内嵌静态页面迁出。
+本阶段升级 `apps/web/`。Vue 单文件组件、入口、路由、接口模块、请求工具和 Vite 配置迁入 TypeScript；保留 Vue 3、Vue Router、Element Plus 和现有页面风格。未修改 Java、Python 后端或数据库，也未将其内嵌静态页面迁出。
 
-`apps/web/teacher-ai-assistant/` 保持原状。后续可逐模块迁移教师 AI 工作台、学生学习端和课堂互动页面，无需在本阶段重新实现全部功能。
+教师 AI 的界面已并入本工程；Express 接口移至 `apps/api/teacher-ai/`，重复的旧 AI 页面已删除。学生课程核心流程也已迁入 Vue，其余旧页面按迁移清单逐模块推进。
 
 ## 数据与会话
 
@@ -33,8 +33,8 @@ TypeScript 使用严格模式，不启用 JavaScript 兼容兜底，也不使用
 
 ## 自动检查
 
-在 `apps/web/admin/` 执行 `npm run check`。Vitest 覆盖旧缓存脱敏、损坏缓存、禁止浏览器存储、会话清理、业务响应解包、业务过期码、HTTP 401、HTML 错误响应和课程编号冲突提示。测试不连接真实后端。
+在 `apps/web/` 执行 `npm run check`。Vitest 覆盖旧缓存脱敏、损坏缓存、禁止浏览器存储、会话清理、业务响应解包、业务过期码、HTTP 401、HTML 错误响应和课程编号冲突提示。测试不连接真实后端。
 
 依赖锁文件已更新；本次兼容升级后的 `npm audit` 报告为 0 个已知漏洞。CI 对管理端的推送和 PR 执行安装、Lint、测试、类型检查及生产构建。生产构建仍可能报告 Element Plus 全量注册带来的大体积代码块提示；本次保留现有组件注册方式。
 
-默认生产产物为 `dist/`；`npm run build:static` 可直接输出到 Java 的 `static/js/admin/`。Docker 构建自动将前端打入 Java JAR，使用 Hash 路由兼容静态托管；不增加 Nginx、Caddy 或前端运行服务。实际登录、增删改查及部署访问还需在已有后端环境联调。
+默认生产产物为 `dist/`；`npm run build:static` 可直接输出到 Java 的 `static/js/app/`。Docker 构建自动将前端打入 Java JAR，使用 Hash 路由兼容静态托管；不增加 Nginx、Caddy 或前端运行服务。实际登录、增删改查及部署访问还需在已有后端环境联调。

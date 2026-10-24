@@ -76,36 +76,15 @@ GRANT ALL PRIVILEGES ON BUCTTA_DATABASE.* TO 'java_springboot_buctta'@'localhost
 ---
 * **注意：** 开发环境中，应该将application.properties文件中的```spring.profiles.active```字段设置为```dev```；生产环境中则为```prod```
 
-## **6. 使用 Docker Compose 启动依赖服务（可选）**
+## **6. Docker 整体部署**
 
-如果你希望使用容器来运行数据库和缓存（MySQL / Redis），仓库在 `apps/api/java/compose.yaml` 中提供了配置。
-
-在 Linux 上的常用流程（在 `apps/api/java` 目录下执行）：
+Docker 只支持项目整体部署，不再提供 Java 单独编排或依赖服务单独编排。在仓库根目录复制 `.env.example` 为 `.env`、填写必填变量后执行：
 
 ```bash
-cd /path/to/BUCT-Teaching-Aids/apps/api/java
-# 复制并编辑 .env（如未配置）
-cp .env.example .env
-# 启动 MySQL 和 Redis（docker 版本 >= 20.10 支持 'docker compose'）
-docker compose -f compose.yaml up -d --build
-# 或者，如果使用 docker-compose 可执行程序：
-docker-compose -f compose.yaml up -d --build
+docker compose up -d --build --wait --wait-timeout 300
 ```
 
-说明：该 `compose.yaml` 仅包含 MySQL 与 Redis 服务，Java 应用可以在本地通过 `mvn spring-boot:run` 连接到这些容器提供的服务（使用 `.env` 中的主机/端口配置）。如需将 Java 应用也容器化并一并运行，可基于 `docker/java/Dockerfile` 构建镜像并运行容器：
-
-```bash
-# 在仓库根目录执行（或调整 Dockerfile 路径）
-docker build -t buctta-java:latest -f docker/java/Dockerfile .
-docker run --env-file apps/api/java/.env -p 80:80 --name buctta-java --link some_mysql_container:db buctta-java:latest
-```
-
-停止并移除容器：
-
-```bash
-docker compose -f compose.yaml down
-# 或 docker-compose -f compose.yaml down
-```
+Java（含现场编译的 Vue）、Python、教师 AI、MySQL、Redis 由同一份根目录 `compose.yaml` 管理。详细配置见 [Docker 部署说明](docker_deploy.md)。直接运行 Maven/Java 的开发方式仍可使用自行准备的数据库与 Redis，Java 不再自动启动 Compose。
 
 ## **7. Testcontainers 集成测试（说明）**
 
@@ -129,4 +108,4 @@ export TESTCONTAINERS_RYUK_DISABLED=true
 
 - **测试失败排查**：若测试无法连接到数据库，确认 `TEST` 环境下的 JDBC URL 允许通过容器暴露的端口访问（Testcontainers 通常自动注入）并查看 Docker 日志。
 
-如果需要，我可以把 `compose.yaml` 扩展为包含 Java 服务的完整 docker-compose 示例并提交为可选参考。
+完整容器部署统一使用仓库根目录 `compose.yaml`。

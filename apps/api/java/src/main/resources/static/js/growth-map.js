@@ -146,7 +146,7 @@ function renderTasks(metrics) {
     tasks.push({
       title: "再选 1-2 门课程",
       desc: `当前已选 ${metrics.courseCount} 门，建议扩充到 3 门以上形成学习节奏。`,
-      href: "course-list.html",
+      href: "/js/app/index.html#/learn/courses",
       action: "去选课"
     });
   }

@@ -232,7 +232,7 @@ function renderView(course, extra) {
           <a class="btn" href="my-course-detail.html?mode=edit&courseNumber=${encodeURIComponent(
             course.courseNumber ?? ""
           )}">编辑课程</a>
-          <a class="btn" href="course-info.html?courseNumber=${encodeURIComponent(
+          <a class="btn" href="/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(
             course.courseNumber ?? ""
           )}">学生端预览</a>
         </div>
@@ -277,7 +277,7 @@ function renderView(course, extra) {
                 lesson.videoUrl ? escapeHtml(lesson.videoUrl) : '<span class="text-muted">未配置</span>'
               }</td>
               <td>
-                <a href="course-play.html?courseNumber=${encodeURIComponent(
+                <a href="/js/app/index.html#/learn/play?courseNumber=${encodeURIComponent(
                   course.courseNumber ?? ""
                 )}&lesson=${lesson.index}">试看</a>
               </td>

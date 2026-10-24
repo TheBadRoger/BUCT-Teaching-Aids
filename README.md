@@ -94,11 +94,14 @@ apps/
   api/
     java/                  # Java Spring Boot 后端
     python/                # Python Flask 后端
-  web/
-    admin/                 # Vue 管理端
-    teacher-ai-assistant/  # 教师 AI 助手（含配套 Express 服务）
-docker/                    # Dockerfile、Compose、容器启动配置
-database/manual/           # 独立 SQL，按需人工执行
+    teacher-ai/            # 教师 AI Express 接口服务
+  web/                     # 唯一 Vue 前端：学习端、管理端、AI 教学工具
+Dockerfile                 # 全项目镜像构建（多阶段/多目标）
+compose.yaml               # 唯一 Docker 整体部署入口
+.env.example               # 部署变量模板（复制为 .env）
+database/
+  init/                    # 容器数据库初始化脚本
+  manual/                  # 独立 SQL，按需人工执行
 docs/
   api/                     # 接口文档及页面接口映射
   architecture/            # 后端架构说明

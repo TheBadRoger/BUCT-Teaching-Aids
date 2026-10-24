@@ -87,7 +87,7 @@ async function loadEvents() {
         `状态 ${course.courseStatus ?? "未标注"}`,
         isViewed ? "已完成" : "进行中"
       ],
-      href: `course-info.html?courseNumber=${encodeURIComponent(course.courseNumber ?? "")}`
+      href: `/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(course.courseNumber ?? "")}`
     });
   });
 

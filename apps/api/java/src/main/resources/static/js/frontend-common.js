@@ -446,7 +446,7 @@ const SIDE_NAV_GROUPS = [
     title: "课程",
     roles: ["student", "teacher", "guest"],
     items: [
-      { key: PAGE_KEY.COURSE_LIST, label: "课程大全", href: "course-list.html" }
+      { key: PAGE_KEY.COURSE_LIST, label: "课程大全", href: "/js/app/index.html#/learn/courses" }
     ]
   },
   {
@@ -529,7 +529,7 @@ export function renderSubNav(activeKey) {
   if (!host) return;
   const links = [
     { label: "首页", href: "index.html" },
-    { label: "课程大全", href: "course-list.html" },
+    { label: "课程大全", href: "/js/app/index.html#/learn/courses" },
     { label: "AI 智能体", href: "ai-agent.html" },
     { label: "机构专区", href: "institution.html" },
     { label: "我的易课堂", href: "my-class.html" }
@@ -630,7 +630,7 @@ export async function initPageShell({ active = "", requireLogin = true } = {}) {
  * @param {{href?:string, showStatus?:boolean}} [options] 渲染选项
  * @returns {string} 卡片 HTML
  */
-export function courseCardHtml(course, { href = "course-info.html", showStatus = false } = {}) {
+export function courseCardHtml(course, { href = "/js/app/index.html#/learn/course", showStatus = false } = {}) {
   const key = encodeURIComponent(course?.courseNumber ?? course?.id ?? "");
   const detailUrl = `${href}?courseNumber=${key}`;
   const title = escapeHtml(course?.courseName ?? "未命名课程");
@@ -671,7 +671,7 @@ export function courseCardHtml(course, { href = "course-info.html", showStatus =
  * @returns {string} 详情页地址（携带课程编号）
  */
 export function courseDetailUrl(course) {
-  return `course-info.html?courseNumber=${encodeURIComponent(course?.courseNumber ?? course?.id ?? "")}`;
+  return `/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(course?.courseNumber ?? course?.id ?? "")}`;
 }
 
 /**
@@ -681,7 +681,7 @@ export function courseDetailUrl(course) {
  * @returns {string} 播放页地址
  */
 export function coursePlayUrl(course, lesson = 1) {
-  return `course-play.html?courseNumber=${encodeURIComponent(
+  return `/js/app/index.html#/learn/play?courseNumber=${encodeURIComponent(
     course?.courseNumber ?? course?.id ?? ""
   )}&lesson=${Number(lesson) || 1}`;
 }

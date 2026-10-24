@@ -118,7 +118,7 @@ function renderDetail() {
       return `
         <tr>
           <td class="is-wrap">
-            <a href="course-info.html?courseNumber=${encodeURIComponent(course.courseNumber ?? "")}">${escapeHtml(
+            <a href="/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(course.courseNumber ?? "")}">${escapeHtml(
               course.courseName ?? "未命名课程"
             )}</a>
           </td>

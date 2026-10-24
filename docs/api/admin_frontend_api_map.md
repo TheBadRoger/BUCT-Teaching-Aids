@@ -8,12 +8,12 @@
 
 ## 一、通用约定
 
-- **接口基础路径**：`/api`（前端统一通过 `js/admin-common.js` 中的 `API_BASE` 拼接）。
+- **接口基础路径**：`/api`（前端统一通过 `js/app-common.js` 中的 `API_BASE` 拼接）。
 - **统一响应结构**：`{ code, msg, timestamp, data }`，`code === 2000` 表示成功。
 - **认证**：整个后台受 Spring Security 保护（`anyRequest().authenticated()`）。管理员登录成功后，后端把认证信息写入 Session（`JSESSIONID`，由 Cookie 自动携带），后续请求即可通过校验。
 - **公共前端资源**：
   - `css/admin.css`：后台公共样式（导航、表单、表格、分页、详情）。
-  - `js/admin-common.js`：请求封装（`request / apiGet / apiPost / apiPostForm / apiPut / apiDelete`）、`buildQuery`、`getParam`、`toast`、`escapeHtml`、`renderAdminNav`、`renderPagination`、`requireAdminLogin`、`adminLogout`。
+  - `js/app-common.js`：请求封装（`request / apiGet / apiPost / apiPostForm / apiPut / apiDelete`）、`buildQuery`、`getParam`、`toast`、`escapeHtml`、`renderAdminNav`、`renderPagination`、`requireAdminLogin`、`adminLogout`。
 
 ---
 

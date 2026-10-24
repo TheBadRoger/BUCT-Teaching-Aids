@@ -53,29 +53,18 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, EXECUTE, SHOW VIEW
 ---
 * 注意 开发环境中，应该将application.properties文件中的```spring.profiles.active```字段设置为```dev```；生产环境中则为```prod```
 
-## **6. 使用 Docker Compose 启动依赖服务（可选）**
+## **6. Docker 整体部署**
 
-建议 Windows 用户在 WSL2 + Docker Desktop 环境下运行容器。仓库在 `apps/api/java/compose.yaml` 中提供了 MySQL 与 Redis 的配置，常用流程：
-
-```powershell
-# 推荐在 WSL 或具有 Docker CLI 的环境中运行
-cd \path\to\BUCT-Teaching-Aids\apps\api\java
-# 复制并编辑 .env（如未配置）
-cp .env.example .env
-# 启动 MySQL 与 Redis
-docker compose -f compose.yaml up -d --build
-# 或者使用 docker-compose.exe
-docker-compose -f compose.yaml up -d --build
-```
-
-说明：该 `compose.yaml` 仅包含 MySQL 与 Redis，Java 应用可以在 Windows/WSL 中通过 `mvn spring-boot:run` 连接到这些容器提供的服务。若希望把 Java 应用容器化，可参考仓库中的 `docker/java/Dockerfile` 来构建并运行 Java 镜像。
-
-停止并移除容器：
+建议在 WSL2 + Docker Desktop 的 Linux 容器环境运行。Docker 只保留根目录整体部署配置，不再提供 Java 或依赖服务单独编排。在仓库根目录执行：
 
 ```powershell
-docker compose -f compose.yaml down
-# 或 docker-compose -f compose.yaml down
+Copy-Item .env.example .env
+# 编辑 .env，填写全部必填变量
+docker compose config --quiet
+docker compose up -d --build --wait --wait-timeout 300
 ```
+
+这会统一部署 Java（含 Vue）、Python、教师 AI、MySQL 和 Redis。详细说明见 [Docker 整体部署](docker_deploy.md)。Java 本地开发仍可直接运行，但不再自动启动 Compose。
 
 ## **7. Testcontainers 集成测试（说明）**
 

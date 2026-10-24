@@ -134,7 +134,7 @@ function activityCardHtml(note) {
         <button class="btn btn--sm" type="button" data-action="toggle-comment">评论 ${
           Number(note.commentCount) || 0
         }</button>
-        <a class="btn btn--sm" href="course-info.html?courseNumber=${encodeURIComponent(
+        <a class="btn btn--sm" href="/js/app/index.html#/learn/course?courseNumber=${encodeURIComponent(
           note.course?.courseNumber ?? ""
         )}">查看课程</a>
       </div>
